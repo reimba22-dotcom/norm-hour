@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<!-- M-Telemetry build 2026-11-22 -->
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Нормо-часы">
+<meta name="theme-color" content="#07090F">
+<title>Нормо-часы — M-Telemetry</title>
+<style>
+  :root {
+    --bg: #07090F;
+    --bg-gradient: radial-gradient(circle at 12% -10%, rgba(56, 189, 248, 0.16) 0%, transparent 45%),
+                   radial-gradient(circle at 88% 8%, rgba(245, 158, 11, 0.12) 0%, transparent 42%),
+                   radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+    --surface: rgba(15, 20, 32, 0.80);
+    --surface-solid: #0F1420;
+    --surface-elevated: rgba(24, 32, 48, 0.90);
+    --surface-hover: rgba(34, 44, 66, 0.94);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    --text: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --accent: #38BDF8;
+    --accent-blue: #0A84FF;
+    --accent-glow: rgba(56, 189, 248, 0.35);
+    --gold: #F59E0B;
+    --gold-glow: rgba(245, 158, 11, 0.32);
+    --green: #10B981;
+    --green-glow: rgba(16, 185, 129, 0.30);
+    --red: #F43F5E;
+    --shadow-card: 0 14px 34px -10px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    --shadow-float: 0 22px 48px -12px rgba(0, 0, 0, 0.82), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    --radius-xl: 24px;
+    --radius-lg: 18px;
+    --radius-md: 14px;
+    --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --safe-top: env(safe-area-inset-top, 14px);
+    --safe-bottom: env(safe-area-inset-bottom, 14px);
+  }
+
+  [data-theme="light"] {
+    --bg: #EEF2F7;
+    --bg-gradient: radial-gradient(circle at 12% -10%, rgba(2, 132, 199, 0.14) 0%, transparent 48%),
+                   radial-gradient(circle at 88% 8%, rgba(217, 119, 6, 0.11) 0%, transparent 45%);
+    --surface: rgba(255, 255, 255, 0.85);
+    --surface-solid: #FFFFFF;
+    --surface-elevated: rgba(248, 250, 252, 0.96);
+    --surface-hover: #F1F5F9;
+    --border: rgba(15, 23, 42, 0.08);
+    --border-strong: rgba(15, 23, 42, 0.14);
+    --text: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --accent: #0284C7;
+    --accent-blue: #007AFF;
+    --accent-glow: rgba(2, 132, 199, 0.24);
+    --gold: #D97706;
+    --gold-glow: rgba(217, 119, 6, 0.22);
+    --green: #059669;
+    --green-glow: rgba(5, 150, 105, 0.22);
+    --red: #E11D48;
+    --shadow-card: 0 12px 30px -10px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --shadow-float: 0 20px 44px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.06);
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    background-color: var(--bg);
+    background-image: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.4;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* Ambient Orbs */
+  .ambient-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(75px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.42;
+    animation: orbFloat 14s ease-in-out infinite alternate;
+  }
+  .orb-1 { width: 250px; height: 250px; top: -60px; left: -60px; background: var(--accent); }
+  .orb-2 { width: 210px; height: 210px; top: 140px; right: -70px; background: var(--gold); animation-delay: -5s; }
+  @keyframes orbFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(20px, 28px) scale(1.1); }
+  }
+
+  /* M-Stripe */
+  .m-stripe {
+    display: inline-block;
+    height: 3px;
+    width: 42px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #00A0E3 0%, #00A0E3 33.3%, #334155 33.3%, #334155 66.6%, #E22718 66.6%, #E22718 100%);
+    vertical-align: middle;
+  }
+
+  .app-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: calc(var(--safe-top) + 10px) 14px calc(var(--safe-bottom) + 124px);
+  }
+
+  /* Top Header matching screenshot structure */
+  .top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    animation: fadeSlideDown 0.45s var(--ease-spring) both;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .app-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: linear-gradient(145deg, #0A84FF, #005BB5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 8px 20px -4px rgba(10, 132, 255, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+    flex-shrink: 0;
+  }
+  .header-eyebrow {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .header-page-title {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  /* Glass Card */
+  .glass-card {
+    background: var(--surface);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Segmented Control (День / Неделя / Месяц / Период) */
+  .seg-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px;
+  }
+  .seg-bar.three {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  [data-theme="light"] .seg-bar { background: rgba(15, 23, 42, 0.06); }
+  .seg-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 7px 4px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.22s var(--ease-spring);
+  }
+  .seg-btn.active {
+    background: var(--surface-elevated);
+    color: var(--text);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+
+  /* Date Navigator Row */
+  .date-nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 4px 6px;
+  }
+  .nav-arrow {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.16s var(--ease-bounce), background 0.16s;
+  }
+  .nav-arrow:active {
+    transform: scale(0.86);
+    background: var(--surface-hover);
+  }
+  .nav-date-label {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: capitalize;
+  }
+
+  /* Orders Hero Card (Screenshot 3) */
+  .earnings-box {
+    padding: 14px 16px 16px;
+    margin-bottom: 12px;
+    animation: fadeSlideUp 0.45s var(--ease-spring) both;
+  }
+  .earn-caption-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 6px;
+  }
+  .earn-eyebrow {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+  .earn-big-num {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--green);
+    text-shadow: 0 0 28px var(--green-glow);
+    margin: 2px 0 12px;
+  }
+  .earn-sub-tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .sub-tile {
+    border-radius: 16px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-strong);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .sub-tile.blue {
+    background: linear-gradient(145deg, rgba(10, 132, 255, 0.16), rgba(15, 20, 32, 0.6));
+    border-color: rgba(56, 189, 248, 0.28);
+  }
+  .sub-tile-k {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+  .sub-tile.blue .sub-tile-k { color: var(--accent); }
+  .sub-tile-v {
+    font-size: 24px;
+    font-weight: 800;
+    margin-top: 2px;
+    letter-spacing: -0.02em;
+  }
+  .earn-formula {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+  .earn-formula b { color: var(--text); font-weight: 700; }
+
+  /* Action Row (+ Добавить + 3 icon buttons) */
+  .action-strip {
+    display: grid;
+    grid-template-columns: 1fr 48px 48px 48px;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .btn-add-main {
+    height: 48px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: linear-gradient(135deg, #0A84FF 0%, #0066CC 100%);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px -6px rgba(10, 132, 255, 0.55);
+    transition: transform 0.18s var(--ease-bounce);
+  }
+  .btn-add-main:active { transform: scale(0.96); }
+  .icon-sq-btn {
+    height: 48px;
+    width: 48px;
+    border-radius: 15px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.18s var(--ease-bounce), border-color 0.2s;
+  }
+  .icon-sq-btn:active { transform: scale(0.9); }
+
+  /* Search Row */
+  .search-strip {
+    display: grid;
+    grid-template-columns: 1fr 46px;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .search-box {
+    position: relative;
+  }
+  .search-box svg {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  .input-field {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-box .input-field { padding-left: 38px; height: 46px; }
+  .input-field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  /* Order Cards */
+  .day-group-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    padding: 4px 4px 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .order-card {
+    position: relative;
+    padding: 14px 15px;
+    margin-bottom: 10px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .order-card::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 12px; bottom: 12px;
+    width: 3.5px;
+    border-radius: 0 4px 4px 0;
+    background: var(--accent-blue);
+  }
+  .order-card.draft::before { background: var(--gold); }
+  .ru-plate {
+    display: inline-flex;
+    align-items: center;
+    background: #F8FAFC;
+    color: #0F172A;
+    border: 1.5px solid #334155;
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-size: 11px;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .mini-btn {
+    border: 1px solid var(--border-strong);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    border-radius: 9px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .mini-btn:active { transform: scale(0.92); }
+  .mini-btn.danger { color: var(--red); border-color: rgba(244, 63, 94, 0.3); }
+  .mini-btn.photo { color: var(--gold); border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.1); }
+
+  /* Calendar (Screenshots 1 & 2) */
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .cal-dow {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    padding-bottom: 4px;
+  }
+  .cal-cell {
+    height: 62px;
+    min-width: 0;
+    border-radius: 13px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.035);
+    padding: 5px 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.16s var(--ease-bounce), border-color 0.18s;
+  }
+  .cal-cell:active { transform: scale(0.92); }
+  .cal-cell.work {
+    background: rgba(16, 185, 129, 0.16);
+    border-color: rgba(16, 185, 129, 0.38);
+  }
+  .cal-cell.off {
+    background: rgba(148, 163, 184, 0.06);
+  }
+  .cal-cell.vacation {
+    background: rgba(245, 158, 11, 0.18);
+    border-color: rgba(245, 158, 11, 0.42);
+  }
+  .cal-cell.unpaid {
+    background: rgba(244, 63, 94, 0.18);
+    border-color: rgba(244, 63, 94, 0.42);
+  }
+  .cal-cell.selected {
+    box-shadow: 0 0 0 2px var(--accent-blue);
+    border-color: var(--accent-blue);
+  }
+  .cal-day-num {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  .cal-day-money {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  .cal-cell.off .cal-day-money { color: var(--text-secondary); }
+  .cal-day-tag {
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--text-secondary);
+    line-height: 1;
+  }
+  .cal-cell.work .cal-day-tag { color: var(--green); }
+
+  .legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .leg-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 4px;
+  }
+
+  /* Summary Table (Screenshot 2: Итоги месяца) */
+  .summary-list {
+    margin-top: 8px;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .summary-row:last-child {
+    border-bottom: none;
+    padding-top: 14px;
+    padding-bottom: 2px;
+  }
+  .summary-k { color: var(--text-secondary); font-weight: 500; }
+  .summary-v { font-weight: 700; color: var(--text); }
+
+  /* Stats KPI Grid (Screenshots 4 & 5) */
+  .stat-hero-green {
+    padding: 18px;
+    margin-bottom: 12px;
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.18), rgba(15, 20, 32, 0.85));
+    border: 1px solid rgba(16, 185, 129, 0.32);
+  }
+  .kpi-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .kpi-card {
+    padding: 15px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+  }
+  .kpi-card.blue-tint {
+    background: linear-gradient(145deg, rgba(10, 132, 255, 0.14), var(--surface));
+    border-color: rgba(10, 132, 255, 0.28);
+  }
+  .kpi-k {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .kpi-v {
+    font-size: 22px;
+    font-weight: 800;
+    margin-top: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  /* Bottom Tab Bar */
+  .tabbar-dock {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: calc(var(--safe-bottom) + 8px);
+    max-width: 540px;
+    margin: 0 auto;
+    z-index: 40;
+    background: rgba(15, 20, 32, 0.88);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid var(--border-strong);
+    border-radius: 24px;
+    padding: 6px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+    box-shadow: var(--shadow-float);
+  }
+  [data-theme="light"] .tabbar-dock { background: rgba(255, 255, 255, 0.92); }
+  .tab-item {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: 18px;
+    padding: 7px 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s var(--ease-spring);
+  }
+  .tab-item .lbl { font-size: 10px; font-weight: 700; }
+  .tab-item.active {
+    background: rgba(10, 132, 255, 0.18);
+    color: var(--accent-blue);
+    box-shadow: inset 0 0 0 1px rgba(10, 132, 255, 0.32);
+  }
+
+  /* Bottom Sheet Modal */
+  .sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 6, 14, 0.74);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 90;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+  .sheet-panel {
+    width: 100%;
+    max-width: 600px;
+    max-height: 92vh;
+    overflow-y: auto;
+    background: var(--surface-solid);
+    border-top: 1px solid var(--border-strong);
+    border-radius: 28px 28px 0 0;
+    padding: 12px 16px calc(var(--safe-bottom) + 24px);
+    box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.7);
+    transform: translateY(100%);
+    transition: transform 0.35s var(--ease-spring);
+  }
+  .sheet-backdrop.open .sheet-panel { transform: translateY(0); }
+  .sheet-grabber {
+    width: 38px; height: 5px;
+    border-radius: 99px;
+    background: var(--border-strong);
+    margin: 0 auto 12px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .field-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+  }
+  .job-item-row {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+  .btn-primary-full {
+    width: 100%;
+    border: none;
+    border-radius: 15px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg, #0A84FF 0%, #0066CC 100%);
+    box-shadow: 0 10px 26px -6px rgba(10, 132, 255, 0.5);
+    cursor: pointer;
+  }
+  .btn-primary-full:active { transform: scale(0.97); }
+
+  /* Toast */
+  .island-toast {
+    position: fixed;
+    top: calc(var(--safe-top) + 8px);
+    left: 50%;
+    transform: translate(-50%, -150%);
+    z-index: 120;
+    background: #090D16;
+    color: #F8FAFC;
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+    transition: transform 0.38s var(--ease-bounce);
+    max-width: 92vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .island-toast.show { transform: translate(-50%, 0); }
+
+  .scan-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(10, 132, 255, 0.14);
+    border: 1px solid rgba(10, 132, 255, 0.35);
+    margin-bottom: 12px;
+  }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2.5px solid rgba(56, 189, 248, 0.25);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="ambient-orb orb-1"></div>
+<div class="ambient-orb orb-2"></div>
+
+<div id="toast" class="island-toast">Готово</div>
+
+<input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
+<input type="file" id="galleryInput" accept="image/*" class="hidden">
+<input type="file" id="jsonFileInput" accept=".json,application/json" class="hidden">
+
+<div class="app-shell">
+  <!-- Top Header matching screenshots -->
+  <header class="top-header">
+    <div class="header-left">
+      <div class="app-icon-box" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="header-eyebrow">
+          <span>НОРМО-ЧАСЫ</span>
+          <span class="m-stripe"></span>
+        </div>
+        <h1 class="header-page-title" id="pageHeaderTitle">Заказы</h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="mainView"></main>
+</div>
+
+<!-- Bottom Navigation Dock -->
+<nav class="tabbar-dock" aria-label="Навигация">
+  <button class="tab-item active" data-tab="orders">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
+    <span class="lbl">Заказы</span>
+  </button>
+  <button class="tab-item" data-tab="schedule">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span class="lbl">График</span>
+  </button>
+  <button class="tab-item" data-tab="stats">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span class="lbl">Статистика</span>
+  </button>
+  <button class="tab-item" data-tab="history">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+    <span class="lbl">История</span>
+  </button>
+  <button class="tab-item" data-tab="settings">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span class="lbl">Настройки</span>
+  </button>
+</nav>
+
+<!-- Order Editor Sheet -->
+<div class="sheet-backdrop" id="orderSheet">
+  <div class="sheet-panel">
+    <div class="sheet-grabber"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h2 id="sheetTitle" style="font-size:18px;font-weight:800;">Новый заказ-наряд</h2>
+      <button class="mini-btn" id="closeSheetBtn">Закрыть</button>
+    </div>
+
+    <div id="aiScanStatus" class="scan-banner hidden">
+      <div class="spinner"></div>
+      <div>
+        <div style="font-size:13px;font-weight:800;">Gemini Vision анализирует бланк...</div>
+        <div style="font-size:11px;color:var(--text-secondary);">Извлекаем номер З/Н, авто, работы и AW</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <button type="button" class="mini-btn photo" style="padding:10px;text-align:center;" onclick="triggerPhoto('camera')">Камера (OCR)</button>
+      <button type="button" class="mini-btn" style="padding:10px;text-align:center;" onclick="triggerPhoto('gallery')">Из медиатеки</button>
+    </div>
+
+    <div id="photoPreviewBox" class="hidden" style="margin-bottom:12px;position:relative;">
+      <img id="photoPreviewImg" src="" alt="Фото З/Н" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;border:1px solid var(--border-strong);">
+      <button type="button" class="mini-btn danger" id="removePhotoBtn" style="position:absolute;top:8px;right:8px;background:rgba(15,20,32,0.88);">Удалить</button>
+    </div>
+
+    <form id="orderForm">
+      <input type="hidden" id="fId">
+      <div class="form-grid">
+        <div>
+          <label class="field-label">Номер З/Н</label>
+          <input type="text" id="fNumber" class="input-field" placeholder="78425111">
+        </div>
+        <div>
+          <label class="field-label">Дата</label>
+          <input type="date" id="fDate" class="input-field" required>
+        </div>
+      </div>
+
+      <div class="form-grid" style="grid-template-columns:0.8fr 1fr 1.1fr;">
+        <div>
+          <label class="field-label">Марка</label>
+          <input type="text" id="fBrand" class="input-field" value="BMW">
+        </div>
+        <div>
+          <label class="field-label">Модель</label>
+          <input type="text" id="fModel" class="input-field" placeholder="X5 / 3 серии">
+        </div>
+        <div>
+          <label class="field-label">Госномер</label>
+          <input type="text" id="fPlate" class="input-field" placeholder="К632ОХ797">
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;">
+        <label class="field-label" style="margin:0;">Выполненные работы (AW)</label>
+        <button type="button" class="mini-btn" id="addJobBtn" style="color:var(--accent);">+ Работа</button>
+      </div>
+      <div id="jobsList"></div>
+
+      <div class="glass-card" style="padding:12px 14px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;background:rgba(10,132,255,0.1);border-color:rgba(10,132,255,0.28);">
+        <div>
+          <div style="font-size:10px;color:var(--text-secondary);font-weight:800;">ИТОГО ПО З/Н</div>
+          <div class="num" id="liveCalcAw" style="font-size:14px;font-weight:800;">0 AW · 0.00 н/ч</div>
+        </div>
+        <div class="num" id="liveCalcMoney" style="font-size:20px;font-weight:800;color:var(--green);">0 ₽</div>
+      </div>
+
+      <div class="form-grid">
+        <div>
+          <label class="field-label">Статус</label>
+          <select id="fStatus" class="input-field">
+            <option value="confirmed">Подтверждён</option>
+            <option value="draft">Черновик</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Комментарий</label>
+          <input type="text" id="fComment" class="input-field" placeholder="Заметка...">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary-full">Сохранить заказ-наряд</button>
+    </form>
+  </div>
+</div>
+
+<!-- Calendar Day Action Sheet -->
+<div class="sheet-backdrop" id="dayActionSheet" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="sheet-panel">
+    <div class="sheet-grabber"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 id="daySheetTitle" style="font-size:18px;font-weight:800;">12 ноября 2026</h3>
+      <button class="mini-btn" onclick="document.getElementById('dayActionSheet').classList.remove('open')">Закрыть</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;" id="dayStatusBtns"></div>
+    <div id="daySheetOrdersInfo" style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;"></div>
+    <button class="btn-primary-full" id="daySheetAddOrderBtn">+ Добавить заказ-наряд на этот день</button>
+  </div>
+</div>
+
+<!-- Text Paste OCR Sheet -->
+<div class="sheet-backdrop" id="textPasteSheet" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="sheet-panel">
+    <div class="sheet-grabber"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h3 style="font-size:18px;font-weight:800;">Вставить текст З/Н</h3>
+      <button class="mini-btn" onclick="document.getElementById('textPasteSheet').classList.remove('open')">Закрыть</button>
+    </div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">
+      Скопируйте текст с фото через встроенный «Сканер текста» iPhone и вставьте ниже — приложение разберёт номер З/Н, дату, госномер и AW.
+    </div>
+    <textarea id="pasteRawArea" class="input-field" rows="6" placeholder="Вставьте распознанный текст заказ-наряда..." style="margin-bottom:12px;resize:vertical;"></textarea>
+    <button class="btn-primary-full" onclick="parsePastedText()">Распознать и заполнить</button>
+  </div>
+</div>
+
+<!-- Photo Viewer -->
+<div class="sheet-backdrop" id="photoViewerModal" onclick="this.classList.remove('open')">
+  <div class="sheet-panel" style="text-align:center;" onclick="event.stopPropagation()">
+    <div class="sheet-grabber"></div>
+    <img id="viewerFullImg" src="" alt="Фото документа" style="width:100%;max-height:74vh;object-fit:contain;border-radius:16px;margin-bottom:12px;">
+    <button class="btn-primary-full" onclick="document.getElementById('photoViewerModal').classList.remove('open')">Закрыть</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => {});
+  }
+
+  const STORAGE_KEY = 'normo_hours_m_telemetry_v2';
+  let memoryFallback = null;
+
+  const SEED_SNAPSHOT = {
+    orders: [
+      { id: "444eca18-4afb-4d34-8f51-4b234081f608", number: "78421829", brand: "BMW", model: "3 серии", plate: "X845BP799", date: "2026-11-12", jobs: [{ id: "j1", title: "Замена обеих передних амортизационных стоек, Снятие и установка обоих задних амортизаторов, РЕГУЛИРОВКА УГЛОВ УСТАНОВКИ КОЛЕС, Шиномонтаж до 19R+ проверка УУК, Разработка рулевых тяг", aw100: 13600 }], aw100: 13600, hours100: 1133, earningsKop: 738933, comment: "", status: "confirmed", photoId: null },
+      { id: "ac09dd27-0bf7-41ed-8ae8-70547396f632", number: "78445384", brand: "BMW", model: "X7", plate: "Н209АУ997", date: "2026-11-11", jobs: [{ id: "j2", title: "Шиномонтаж 20/21R + проверка УУК", aw100: 4000 }], aw100: 4000, hours100: 333, earningsKop: 217333, comment: "", status: "confirmed", photoId: null },
+      { id: "3eaf3d39-6136-4224-9cac-e386d6096238", number: "78446095", brand: "BMW", model: "X5", plate: "К632ОХ797", date: "2026-11-11", jobs: [{ id: "j3", title: "Выполнение проверки автомобиля, ТО в обычном объеме, ТО двигателя по регламенту Oelservice BMW, ТО сменного элемента воздушного фильтра, ТО Микрофильтр, Прокачка тормозной системы DSC", aw100: 2600 }], aw100: 2600, hours100: 217, earningsKop: 141267, comment: "", status: "confirmed", photoId: null },
+      { id: "66d79a4a-6289-442a-a129-74d22dd35e83", number: "78440569", brand: "BMW", model: "X6", plate: "С777ОМ777", date: "2026-11-11", jobs: [{ id: "j4", title: "Выполнение проверки автомобиля, Замена продольного рычага", aw100: 1400 }], aw100: 1400, hours100: 117, earningsKop: 76067, comment: "", status: "confirmed", photoId: null },
+      { id: "68d950d0-d7e8-497f-975b-718089027e65", number: "78448942", brand: "BMW", model: "X1", plate: "У672МХ977", date: "2026-11-11", jobs: [{ id: "j5", title: "Выполнение проверки автомобиля, ТО в обычном объеме, ТО по регламенту Oelservice, ТО Микрофильтр", aw100: 1300 }], aw100: 1300, hours100: 108, earningsKop: 70633, comment: "", status: "confirmed", photoId: null },
+      { id: "0ceaa545-904d-4ad5-959e-f59a5e1314e8", number: "78440699", brand: "BMW", model: "X3", plate: "У403ОА977", date: "2026-11-11", jobs: [{ id: "j6", title: "Выполнение проверки автомобиля", aw100: 1200 }], aw100: 1200, hours100: 100, earningsKop: 65200, comment: "", status: "confirmed", photoId: null },
+      { id: "5cd6d5ff-c237-4c36-a28f-b3d53f627aba", number: "78440517", brand: "BMW", model: "3 серии", plate: "", date: "2026-11-11", jobs: [{ id: "j7", title: "ТО в обычном объеме, ТО по регламенту Oelservice", aw100: 500 }], aw100: 500, hours100: 42, earningsKop: 27167, comment: "", status: "confirmed", photoId: null },
+      { id: "838672b4-3952-4c2b-9649-0d553a8093af", number: "78318173", brand: "BMW", model: "X7", plate: "О763КН977", date: "2026-11-08", jobs: [{ id: "j8", title: "РЕГУЛИРОВКА УГЛОВ УСТАНОВКИ КОЛЕС, МОЙКА ПОДКАПОТНОГО ПРОСТРАНСТВА, Разработка рулевых тяг, МОЙКА ОСН.РАДИАТОРОВ BMW M, Замена поперечных рычагов", aw100: 12900 }], aw100: 12900, hours100: 1075, earningsKop: 700900, comment: "", status: "confirmed", photoId: null },
+      { id: "56a162bc-7347-4715-b104-2492bcad1e95", number: "78428733", brand: "BMW", model: "X5", plate: "О252ЕХ550", date: "2026-11-08", jobs: [{ id: "j9", title: "С/У, балансировка колес + проверка УУК", aw100: 2300 }], aw100: 2300, hours100: 192, earningsKop: 124967, comment: "", status: "confirmed", photoId: null },
+      { id: "09c55550-387c-4712-a8c7-8f19ae4de012", number: "78429780", brand: "BMW", model: "X3", plate: "A454BB250", date: "2026-11-08", jobs: [{ id: "j10", title: "ТО в обычном объеме, ТО по регламенту Oelservice", aw100: 500 }], aw100: 500, hours100: 42, earningsKop: 27167, comment: "", status: "confirmed", photoId: null },
+      { id: "b3c3360c-49b7-478e-9eaa-f7e786ef8fc2", number: "78425252", brand: "BMW", model: "X1", plate: "А545АЕ977", date: "2026-11-07", jobs: [{ id: "j11", title: "Выполнение проверки автомобиля, Шиномонтаж до 19R+ проверка УУК, Замена тормозной жидкости", aw100: 5000 }], aw100: 5000, hours100: 417, earningsKop: 271667, comment: "", status: "confirmed", photoId: null },
+      { id: "f8af552c-a847-4020-9644-24ee9f7a2471", number: "78419684", brand: "BMW", model: "X5", plate: "", date: "2026-11-07", jobs: [{ id: "j12", title: "Шиномонтаж 20/21R + проверка УУК", aw100: 4000 }], aw100: 4000, hours100: 333, earningsKop: 217333, comment: "", status: "confirmed", photoId: null },
+      { id: "41d959e8-032f-48fd-a344-782e0be537df", number: "78426965", brand: "BMW", model: "X1", plate: "К830СС799", date: "2026-11-07", jobs: [{ id: "j13", title: "ТО в обычном объеме, ТО Oelservice, Замена воздушного фильтра, Замена микрофильтра, С/У, балансировка колес + проверка УУК", aw100: 3200 }], aw100: 3200, hours100: 267, earningsKop: 173867, comment: "", status: "confirmed", photoId: null },
+      { id: "43ba4705-7176-4c28-8198-4e8aa9ca17c4", number: "78425535", brand: "BMW", model: "5 серии", plate: "В794НА777", date: "2026-11-07", jobs: [{ id: "j14", title: "Выполнение проверки автомобиля, ТО в обычном объеме, ТО Oelservice, Замена жидкости в тормозной системе", aw100: 2000 }], aw100: 2000, hours100: 167, earningsKop: 108667, comment: "", status: "confirmed", photoId: null },
+      { id: "09a178e0-bd3a-4f83-bc36-3c62dea3f52d", number: "78425111", brand: "BMW", model: "X4", plate: "X979KA790", date: "2026-11-07", jobs: [{ id: "j15", title: "ТО в обычном объеме, ТО воздушного фильтра, ТО Oelservice, ТО Микрофильтр, ТО Свечи зажигания", aw100: 1300 }], aw100: 1300, hours100: 108, earningsKop: 70633, comment: "", status: "confirmed", photoId: null },
+      { id: "0ab2e718-a4d6-4eae-a929-a6161fa6e741", number: "78412695", brand: "BMW", model: "1 серии", plate: "Р568УУ197", date: "2026-11-06", jobs: [{ id: "j16", title: "ТО в обычном объеме, ТО Oelservice, Мойка подкапотного пространства, Шиномонтаж + проверка УУК", aw100: 5100 }], aw100: 5100, hours100: 425, earningsKop: 277100, comment: "", status: "confirmed", photoId: null },
+      { id: "78125ae9-b621-4fc2-9382-f06d2336b7b5", number: "78420900", brand: "BMW", model: "X3", plate: "О427МС790", date: "2026-11-06", jobs: [{ id: "j17", title: "С/У, балансировка колес + проверка УУК", aw100: 2300 }], aw100: 2300, hours100: 192, earningsKop: 124967, comment: "", status: "confirmed", photoId: null },
+      { id: "e1d4efaa-ba70-4cdd-b786-acc139cde22d", number: "78395849", brand: "BMW", model: "X1", plate: "Т375ХЕ799", date: "2026-11-06", jobs: [{ id: "j18", title: "С/У, балансировка колес + проверка УУК", aw100: 2300 }], aw100: 2300, hours100: 192, earningsKop: 124967, comment: "", status: "confirmed", photoId: null },
+      { id: "c26c5ef6-45ff-488e-9050-decbff5232c9", number: "78421114", brand: "BMW", model: "X3", plate: "", date: "2026-11-06", jobs: [{ id: "j19", title: "Выполнение проверки автомобиля, ТО в обычном объеме, ТО Oelservice, ТО «Микрофильтр»", aw100: 1300 }], aw100: 1300, hours100: 108, earningsKop: 70633, comment: "", status: "confirmed", photoId: null },
+      { id: "ae3dab7a-ac88-431f-8256-87ebb2943cf3", number: "78413118", brand: "BMW", model: "X3", plate: "P320OA797", date: "2026-11-06", jobs: [{ id: "j20", title: "Замена тормозной жидкости", aw100: 800 }], aw100: 800, hours100: 67, earningsKop: 43467, comment: "", status: "confirmed", photoId: null },
+      { id: "c05a91e2-4ee2-4a3c-bf79-48da862e9549", number: "", brand: "BMW", model: "", plate: "", date: "2026-11-06", jobs: [{ id: "j21", title: "Замена задних колодок", aw100: 700 }], aw100: 700, hours100: 58, earningsKop: 38033, comment: "", status: "confirmed", photoId: null },
+      { id: "27586ba0-8be8-4233-8416-a88040cca0d9", number: "78413127", brand: "BMW", model: "X3", plate: "Н355НЕ977", date: "2026-11-06", jobs: [{ id: "j22", title: "ТО в обычном объеме, ТО по регламенту Oelservice", aw100: 500 }], aw100: 500, hours100: 42, earningsKop: 27167, comment: "", status: "confirmed", photoId: null },
+      { id: "4c391628-58ea-4eb6-b88c-4dc02fd5ce73", number: "", brand: "", model: "", plate: "", date: "2026-11-05", jobs: [{ id: "j23", title: "Ранее за ноябрь, без разбивки (18 нормо-часов)", aw100: 21600 }], aw100: 21600, hours100: 1800, earningsKop: 1173600, comment: "", status: "confirmed", photoId: null },
+      { id: "4d515fc8-1174-4a8f-b271-558030c1dded", number: "", brand: "", model: "", plate: "", date: "2026-10-31", jobs: [{ id: "j24", title: "За октябрь, без разбивки (60,4 нормо-часа)", aw100: 72480 }], aw100: 72480, hours100: 6040, earningsKop: 3938080, comment: "", status: "confirmed", photoId: null }
+    ],
+    days: {
+      "2026-11-02": "work", "2026-11-03": "work", "2026-11-06": "work", "2026-11-07": "work",
+      "2026-11-08": "work", "2026-11-11": "work", "2026-11-12": "work", "2026-11-16": "work",
+      "2026-11-17": "work", "2026-11-20": "work", "2026-11-21": "work", "2026-11-22": "work",
+      "2026-11-25": "work", "2026-11-26": "work", "2026-11-27": "off", "2026-11-30": "work"
+    },
+    settings: {
+      monthlySalaryKop: 3200000,
+      awRateKop: 5433,
+      hourRateKop: 65200,
+      awPerHour100: 1200,
+      schedule: { type: "custom", startDate: "2026-11-02", pattern: "РРВВРРРВВРРВВВ" },
+      theme: "dark",
+      geminiKey: ""
+    },
+    adjustments: [],
+    photos: {}
+  };
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.orders)) return parsed;
+      }
+    } catch (e) {}
+    return memoryFallback || JSON.parse(JSON.stringify(SEED_SNAPSHOT));
+  }
+
+  function saveState() {
+    memoryFallback = state;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  let state = loadState();
+  let currentTab = 'orders';
+  let periodMode = 'month'; // day | week | month | custom
+  let anchorDate = '2026-11-12';
+  let customFrom = '2026-11-01';
+  let customTo = '2026-11-30';
+  let calSubView = 'month'; // month | week | day
+  let selectedCalDay = '2026-11-21';
+  let searchQuery = '';
+  let statusFilter = 'all';
+  let activePhotoDataUrl = null;
+
+  function applyTheme() {
+    const t = state.settings.theme || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#07090F' : '#EEF2F7');
+  }
+  applyTheme();
+
+  function uid() { return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7); }
+  function fmtRub(kop) { return Math.round((kop || 0) / 100).toLocaleString('ru-RU') + ' ₽'; }
+  function fmtRubDec(kop) {
+    return ((kop || 0) / 100).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽';
+  }
+  function fmtShortK(kop) {
+    const rub = (kop || 0) / 100;
+    if (rub <= 0) return '';
+    if (rub >= 1000) {
+      const k = (rub / 1000).toFixed(1).replace('.', ',').replace(',0', '');
+      return k + 'к ₽';
+    }
+    return Math.round(rub) + ' ₽';
+  }
+  function fmtDateRu(iso) {
+    if (!iso) return '';
+    const [y, m, d] = iso.split('-');
+    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    return `${parseInt(d, 10)} ${months[parseInt(m, 10) - 1]} ${y}`;
+  }
+  function fmtMonthTitle(ym) {
+    const [y, m] = ym.split('-').map(Number);
+    const names = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+    return names[m - 1] + ' ' + y;
+  }
+
+  function toast(text) {
+    const el = document.getElementById('toast');
+    el.textContent = text;
+    el.classList.add('show');
+    clearTimeout(window._tTimer);
+    window._tTimer = setTimeout(() => el.classList.remove('show'), 2600);
+  }
+
+  function calcOrderMetrics(aw100) {
+    const awPerHour = (state.settings.awPerHour100 || 1200) / 100;
+    const aw = aw100 / 100;
+    const hours = aw / awPerHour;
+    const hours100 = Math.round(hours * 100);
+    const earningsKop = Math.round(hours * (state.settings.hourRateKop || 65200));
+    return { aw, hours, hours100, earningsKop };
+  }
+
+  // Period range helper
+  function getActiveRange() {
+    if (periodMode === 'day') {
+      return { start: anchorDate, end: anchorDate, label: anchorDate === '2026-11-21' ? 'Сегодня' : fmtDateRu(anchorDate) };
+    }
+    if (periodMode === 'week') {
+      const d = new Date(anchorDate + 'T00:00:00');
+      const day = (d.getDay() + 6) % 7;
+      const mon = new Date(d); mon.setDate(d.getDate() - day);
+      const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+      const s = mon.toISOString().slice(0, 10);
+      const e = sun.toISOString().slice(0, 10);
+      return { start: s, end: e, label: `${s.slice(8)}.${s.slice(5,7)} — ${e.slice(8)}.${e.slice(5,7)}` };
+    }
+    if (periodMode === 'custom') {
+      return { start: customFrom, end: customTo, label: `${customFrom.slice(8)}.${customFrom.slice(5,7)} — ${customTo.slice(8)}.${customTo.slice(5,7)}` };
+    }
+    const ym = anchorDate.slice(0, 7);
+    const [y, m] = ym.split('-').map(Number);
+    const lastD = new Date(y, m, 0).getDate();
+    return { start: `${ym}-01`, end: `${ym}-${String(lastD).padStart(2, '0')}`, label: fmtMonthTitle(ym) };
+  }
+
+  window.setPeriodMode = (mode) => { periodMode = mode; render(); };
+  window.shiftPeriod = (dir) => {
+    const d = new Date(anchorDate + 'T00:00:00');
+    if (periodMode === 'day') d.setDate(d.getDate() + dir);
+    else if (periodMode === 'week') d.setDate(d.getDate() + dir * 7);
+    else d.setMonth(d.getMonth() + dir);
+    anchorDate = d.toISOString().slice(0, 10);
+    render();
+  };
+
+  function calcSalaryForRange(start, end) {
+    // Calculate salary share based on work/vacation days in each month touched
+    let totalSalaryKop = 0;
+    const cur = new Date(start + 'T00:00:00');
+    const last = new Date(end + 'T00:00:00');
+    while (cur <= last) {
+      const iso = cur.toISOString().slice(0, 10);
+      const ym = iso.slice(0, 7);
+      const st = state.days[iso];
+      if (st === 'work' || st === 'vacation') {
+        const monthWorkDays = Object.entries(state.days).filter(([k, v]) => k.startsWith(ym) && (v === 'work' || v === 'vacation')).length || 15;
+        totalSalaryKop += (state.settings.monthlySalaryKop || 0) / monthWorkDays;
+      }
+      cur.setDate(cur.getDate() + 1);
+    }
+    return Math.round(totalSalaryKop);
+  }
+
+  // Tab Switcher
+  const TAB_TITLES = { orders: 'Заказы', schedule: 'График', stats: 'Статистика', history: 'История', settings: 'Настройки' };
+  document.querySelectorAll('.tab-item').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTab = btn.dataset.tab;
+      render();
+    };
+  });
+
+  function render() {
+    document.getElementById('pageHeaderTitle').textContent = TAB_TITLES[currentTab] || 'Нормо-часы';
+    const main = document.getElementById('mainView');
+    if (currentTab === 'orders') renderOrders(main);
+    else if (currentTab === 'schedule') renderSchedule(main);
+    else if (currentTab === 'stats') renderStats(main);
+    else if (currentTab === 'history') renderHistory(main);
+    else if (currentTab === 'settings') renderSettings(main);
+  }
+
+  function renderPeriodSwitcherHtml() {
+    const r = getActiveRange();
+    return `
+      <div class="seg-bar">
+        <button class="seg-btn ${periodMode==='day'?'active':''}" onclick="setPeriodMode('day')">День</button>
+        <button class="seg-btn ${periodMode==='week'?'active':''}" onclick="setPeriodMode('week')">Неделя</button>
+        <button class="seg-btn ${periodMode==='month'?'active':''}" onclick="setPeriodMode('month')">Месяц</button>
+        <button class="seg-btn ${periodMode==='custom'?'active':''}" onclick="setPeriodMode('custom')">Период</button>
+      </div>
+      ${periodMode === 'custom' ? `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+          <input type="date" class="input-field" style="padding:8px 10px;font-size:13px;" value="${customFrom}" onchange="customFrom=this.value;render()">
+          <input type="date" class="input-field" style="padding:8px 10px;font-size:13px;" value="${customTo}" onchange="customTo=this.value;render()">
+        </div>
+      ` : `
+        <div class="date-nav-row">
+          <button class="nav-arrow" onclick="shiftPeriod(-1)">‹</button>
+          <div class="nav-date-label">${r.label}</div>
+          <button class="nav-arrow" onclick="shiftPeriod(1)">›</button>
+        </div>
+      `}
+    `;
+  }
+
+  // 1. ORDERS TAB (Matching Screenshot 3)
+  function renderOrders(container) {
+    const r = getActiveRange();
+    const rangeOrders = state.orders
+      .filter(o => o.date >= r.start && o.date <= r.end)
+      .sort((a, b) => b.date.localeCompare(a.date));
+
+    const confirmed = rangeOrders.filter(o => o.status !== 'draft');
+    const totalAw100 = confirmed.reduce((s, o) => s + (o.aw100 || 0), 0);
+    const totalHours = (totalAw100 / 100) / ((state.settings.awPerHour100 || 1200) / 100);
+    const pieceKop = confirmed.reduce((s, o) => s + (o.earningsKop || 0), 0);
+    const salaryKop = calcSalaryForRange(r.start, r.end);
+    const totalKop = pieceKop + salaryKop;
+
+    const filtered = rangeOrders.filter(o => {
+      if (statusFilter === 'confirmed' && o.status === 'draft') return false;
+      if (statusFilter === 'draft' && o.status !== 'draft') return false;
+      if (statusFilter === 'photo' && !o.photoId) return false;
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const hay = `${o.number} ${o.brand} ${o.model} ${o.plate} ${(o.jobs||[]).map(j=>j.title).join(' ')}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    const groups = {};
+    filtered.forEach(o => {
+      if (!groups[o.date]) groups[o.date] = [];
+      groups[o.date].push(o);
+    });
+
+    let html = `
+      <section class="glass-card earnings-box">
+        ${renderPeriodSwitcherHtml()}
+        <div class="earn-caption-row">
+          <span class="earn-eyebrow">ЗАРАБОТОК</span>
+          <span style="font-size:12px;color:var(--text-secondary);font-weight:600;">${confirmed.length ? confirmed.length + ' заказ-нарядов' : 'нет заказов'}</span>
+        </div>
+        <div class="earn-big-num num">${fmtRub(totalKop)}</div>
+
+        <div class="earn-sub-tiles">
+          <div class="sub-tile blue">
+            <div class="sub-tile-k">AW</div>
+            <div class="sub-tile-v num">${(totalAw100 / 100).toFixed(0)}</div>
+          </div>
+          <div class="sub-tile">
+            <div class="sub-tile-k">НОРМО-ЧАСЫ</div>
+            <div class="sub-tile-v num">${totalHours.toFixed(2).replace('.', ',')}</div>
+          </div>
+        </div>
+
+        <div class="earn-formula num">
+          Оклад <b>${fmtRub(salaryKop)}</b> &nbsp;+&nbsp; нормо-часы <b>${fmtRub(pieceKop)}</b>
+        </div>
+      </section>
+
+      <div class="action-strip">
+        <button class="btn-add-main" onclick="openOrderModal()">
+          <span style="font-size:20px;line-height:1;">+</span> Добавить
+        </button>
+        <button class="icon-sq-btn" onclick="triggerPhoto('camera')" title="Камера OCR">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </button>
+        <button class="icon-sq-btn" onclick="triggerPhoto('gallery')" title="Медиатека">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </button>
+        <button class="icon-sq-btn" onclick="document.getElementById('textPasteSheet').classList.add('open')" title="Вставить текст">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </button>
+      </div>
+
+      <div class="search-strip">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="input-field" id="orderSearchInp" placeholder="Поиск: автомобиль, госномер, №..." value="${escapeHtml(searchQuery)}">
+        </div>
+        <button class="icon-sq-btn" style="height:46px;width:46px;${statusFilter!=='all'?'border-color:var(--accent-blue);color:var(--accent-blue);':''}" id="cycleFilterBtn" title="Фильтр">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        </button>
+      </div>
+    `;
+
+    const dates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+    if (!dates.length) {
+      html += `<div style="text-align:center;padding:28px 12px;color:var(--text-secondary);font-size:15px;font-weight:600;">Заказов за период нет</div>`;
+    } else {
+      dates.forEach(dt => {
+        const list = groups[dt];
+        const dKop = list.reduce((s, o) => s + (o.earningsKop || 0), 0);
+        const dAw = list.reduce((s, o) => s + (o.aw100 || 0), 0) / 100;
+        html += `<div class="day-group-hdr"><span>${fmtDateRu(dt)} · ${list.length} З/Н</span><span class="num" style="color:var(--green);">${dAw} AW · ${fmtRub(dKop)}</span></div>`;
+        list.forEach(o => {
+          const car = [o.brand, o.model].filter(Boolean).join(' ') || 'Заказ-наряд';
+          const jobsStr = (o.jobs || []).map(j => j.title).join('; ');
+          html += `
+            <article class="order-card ${o.status==='draft'?'draft':''}">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+                <div>
+                  <div style="font-size:16px;font-weight:800;display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
+                    <span>${escapeHtml(car)}</span>
+                    ${o.plate ? `<span class="ru-plate">${escapeHtml(o.plate)}</span>` : ''}
+                    ${o.number ? `<span style="font-size:11px;font-weight:700;color:var(--accent);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:6px;" class="num">#${escapeHtml(o.number)}</span>` : ''}
+                  </div>
+                </div>
+                <div style="text-align:right;flex-shrink:0;">
+                  <div class="num" style="font-size:16px;font-weight:800;color:var(--green);">${fmtRubDec(o.earningsKop)}</div>
+                  <div class="num" style="font-size:11px;font-weight:700;color:var(--text-secondary);">${(o.aw100||0)/100} AW · ${((o.hours100||0)/100).toFixed(2)} н/ч</div>
+                </div>
+              </div>
+              <div style="margin-top:8px;font-size:13px;color:var(--text-secondary);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(jobsStr)}</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:9px;border-top:1px solid var(--border);">
+                <div>
+                  ${o.photoId && state.photos[o.photoId] ? `<button class="mini-btn photo" onclick="viewPhoto('${o.photoId}')">Фото</button>` : ''}
+                </div>
+                <div style="display:flex;gap:6px;">
+                  <button class="mini-btn" onclick="editOrder('${o.id}')">Изменить</button>
+                  <button class="mini-btn" onclick="duplicateOrder('${o.id}')">Копия</button>
+                  <button class="mini-btn danger" onclick="deleteOrder('${o.id}')">✕</button>
+                </div>
+              </div>
+            </article>
+          `;
+        });
+      });
+    }
+
+    container.innerHTML = html;
+
+    const sInp = document.getElementById('orderSearchInp');
+    if (sInp) {
+      sInp.oninput = (e) => {
+        searchQuery = e.target.value;
+        renderOrders(container);
+        const ni = document.getElementById('orderSearchInp');
+        if (ni) { ni.focus(); ni.setSelectionRange(searchQuery.length, searchQuery.length); }
+      };
+    }
+    const fBtn = document.getElementById('cycleFilterBtn');
+    if (fBtn) {
+      fBtn.onclick = () => {
+        const modes = ['all', 'confirmed', 'draft', 'photo'];
+        const labels = { all: 'Фильтр: Все', confirmed: 'Фильтр: Подтверждённые', draft: 'Фильтр: Черновики', photo: 'Фильтр: С фото' };
+        statusFilter = modes[(modes.indexOf(statusFilter) + 1) % modes.length];
+        toast(labels[statusFilter]);
+        renderOrders(container);
+      };
+    }
+  }
+
+  // 2. SCHEDULE TAB (Matching Screenshots 1 & 2)
+  function renderSchedule(container) {
+    const ym = anchorDate.slice(0, 7);
+    const [y, m] = ym.split('-').map(Number);
+    const firstDay = new Date(y, m - 1, 1);
+    const daysInMonth = new Date(y, m, 0).getDate();
+    const startOffset = (firstDay.getDay() + 6) % 7;
+
+    const monthDaysEntries = Object.entries(state.days || {}).filter(([d]) => d.startsWith(ym));
+    const workDaysCount = monthDaysEntries.filter(([, v]) => v === 'work').length;
+    const vacDaysCount = monthDaysEntries.filter(([, v]) => v === 'vacation').length;
+    const unpaidDaysCount = monthDaysEntries.filter(([, v]) => v === 'unpaid').length;
+    const paidDaysCount = workDaysCount + vacDaysCount;
+    const daySalaryKop = paidDaysCount > 0 ? Math.round((state.settings.monthlySalaryKop || 0) / paidDaysCount) : 0;
+
+    const monthOrders = state.orders.filter(o => o.date.startsWith(ym) && o.status !== 'draft');
+    const monthAw100 = monthOrders.reduce((s, o) => s + (o.aw100 || 0), 0);
+    const monthPieceKop = monthOrders.reduce((s, o) => s + (o.earningsKop || 0), 0);
+    const totalMonthKop = (state.settings.monthlySalaryKop || 0) + monthPieceKop;
+
+    let cellsHtml = '';
+    for (let i = 0; i < startOffset; i++) cellsHtml += `<div></div>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = `${ym}-${String(d).padStart(2, '0')}`;
+      const st = state.days[iso] || 'off';
+      const dayOrdersKop = monthOrders.filter(o => o.date === iso).reduce((s, o) => s + (o.earningsKop || 0), 0);
+      const dayBaseKop = (st === 'work' || st === 'vacation') ? daySalaryKop : 0;
+      const daySumKop = dayOrdersKop + dayBaseKop;
+      const tag = st === 'work' ? 'Р' : st === 'vacation' ? 'О' : st === 'unpaid' ? 'Б' : '';
+      cellsHtml += `
+        <div class="cal-cell ${st} ${selectedCalDay===iso?'selected':''}" onclick="openDaySheet('${iso}')">
+          <span class="cal-day-num num">${d}</span>
+          <span class="cal-day-money num">${daySumKop > 0 ? fmtShortK(daySumKop) : ''}</span>
+          <span class="cal-day-tag">${tag}</span>
+        </div>
+      `;
+    }
+
+    container.innerHTML = `
+      <section class="glass-card" style="padding:14px;margin-bottom:14px;animation:fadeSlideUp 0.45s var(--ease-spring) both;">
+        <div style="display:grid;grid-template-columns:1fr 42px;gap:8px;align-items:center;">
+          <div class="seg-bar three">
+            <button class="seg-btn ${calSubView==='month'?'active':''}" onclick="calSubView='month';render()">Месяц</button>
+            <button class="seg-btn ${calSubView==='week'?'active':''}" onclick="calSubView='week';render()">Неделя</button>
+            <button class="seg-btn ${calSubView==='day'?'active':''}" onclick="calSubView='day';render()">День</button>
+          </div>
+          <button class="icon-sq-btn" style="width:42px;height:38px;border-radius:12px;" onclick="autoFillSchedule()" title="Заполнить по шаблону">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          </button>
+        </div>
+
+        <div class="date-nav-row">
+          <button class="nav-arrow" onclick="shiftMonthOnly(-1)">‹</button>
+          <div class="nav-date-label">${fmtMonthTitle(ym)}</div>
+          <button class="nav-arrow" onclick="shiftMonthOnly(1)">›</button>
+        </div>
+
+        <div class="cal-grid">
+          <div class="cal-dow">Пн</div><div class="cal-dow">Вт</div><div class="cal-dow">Ср</div>
+          <div class="cal-dow">Чт</div><div class="cal-dow">Пт</div><div class="cal-dow">Сб</div><div class="cal-dow">Вс</div>
+          ${cellsHtml}
+        </div>
+
+        <div class="legend-row">
+          <span class="legend-item"><span class="leg-dot" style="background:var(--green);"></span>Рабочий</span>
+          <span class="legend-item"><span class="leg-dot" style="background:rgba(148,163,184,0.35);"></span>Выходной</span>
+          <span class="legend-item"><span class="leg-dot" style="background:var(--gold);"></span>Отпуск</span>
+          <span class="legend-item"><span class="leg-dot" style="background:var(--red);"></span>За свой счёт</span>
+        </div>
+      </section>
+
+      <section class="glass-card" style="padding:18px;animation:fadeSlideUp 0.5s var(--ease-spring) both;">
+        <h2 style="font-size:18px;font-weight:800;margin-bottom:6px;">Итоги месяца</h2>
+        <div class="summary-list">
+          <div class="summary-row"><span class="summary-k">Рабочих по графику</span><span class="summary-v num">${paidDaysCount}</span></div>
+          <div class="summary-row"><span class="summary-k">Отмечено рабочих</span><span class="summary-v num">${workDaysCount}</span></div>
+          <div class="summary-row"><span class="summary-k">Отпуск</span><span class="summary-v num">${vacDaysCount}</span></div>
+          <div class="summary-row"><span class="summary-k">За свой счёт</span><span class="summary-v num">${unpaidDaysCount}</span></div>
+          <div class="summary-row"><span class="summary-k">Оклад (месячный)</span><span class="summary-v num">${fmtRub(state.settings.monthlySalaryKop)}</span></div>
+          <div class="summary-row"><span class="summary-k">Оклад за рабочий день</span><span class="summary-v num">${fmtRubDec(daySalaryKop)}</span></div>
+          <div class="summary-row"><span class="summary-k">Начислено оклада</span><span class="summary-v num">${fmtRub(state.settings.monthlySalaryKop)}</span></div>
+          <div class="summary-row"><span class="summary-k">По нормо-часам (${Math.round(monthAw100/100)} AW)</span><span class="summary-v num">${fmtRub(monthPieceKop)}</span></div>
+          <div class="summary-row">
+            <span style="font-size:16px;font-weight:800;">Итого</span>
+            <span class="num" style="font-size:20px;font-weight:800;color:var(--green);">${fmtRub(totalMonthKop)}</span>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  window.shiftMonthOnly = (dir) => {
+    const d = new Date(anchorDate + 'T00:00:00');
+    d.setMonth(d.getMonth() + dir);
+    anchorDate = d.toISOString().slice(0, 10);
+    render();
+  };
+
+  window.openDaySheet = (iso) => {
+    selectedCalDay = iso;
+    document.getElementById('daySheetTitle').textContent = fmtDateRu(iso);
+    const curSt = state.days[iso] || 'off';
+    const statuses = [
+      { id: 'work', label: 'Рабочий (Р)', color: 'var(--green)' },
+      { id: 'off', label: 'Выходной', color: 'var(--text-secondary)' },
+      { id: 'vacation', label: 'Отпуск (О)', color: 'var(--gold)' },
+      { id: 'unpaid', label: 'За свой счёт', color: 'var(--red)' }
+    ];
+    document.getElementById('dayStatusBtns').innerHTML = statuses.map(s => `
+      <button class="mini-btn" style="padding:11px;${curSt===s.id ? 'border-color:'+s.color+';background:rgba(255,255,255,0.1);color:'+s.color : ''}" onclick="setDayStatus('${iso}','${s.id}')">${s.label}</button>
+    `).join('');
+    const dayOrds = state.orders.filter(o => o.date === iso);
+    document.getElementById('daySheetOrdersInfo').textContent = dayOrds.length
+      ? `Заказ-нарядов в этот день: ${dayOrds.length} на сумму ${fmtRub(dayOrds.reduce((s,o)=>s+o.earningsKop,0))}`
+      : 'В этот день заказ-нарядов пока нет.';
+    document.getElementById('daySheetAddOrderBtn').onclick = () => {
+      document.getElementById('dayActionSheet').classList.remove('open');
+      openOrderModal(iso);
+    };
+    document.getElementById('dayActionSheet').classList.add('open');
+    render();
+  };
+
+  window.setDayStatus = (iso, st) => {
+    state.days[iso] = st;
+    saveState();
+    document.getElementById('dayActionSheet').classList.remove('open');
+    toast('Статус дня обновлён');
+    render();
+  };
+
+  window.autoFillSchedule = () => {
+    const ym = anchorDate.slice(0, 7);
+    const pat = (state.settings.schedule?.pattern || 'РРВВРРРВВРРВВВ').toUpperCase();
+    const startStr = state.settings.schedule?.startDate || '2026-11-02';
+    const startMs = new Date(startStr + 'T00:00:00').getTime();
+    const [y, m] = ym.split('-').map(Number);
+    const daysInMonth = new Date(y, m, 0).getDate();
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = `${ym}-${String(d).padStart(2, '0')}`;
+      const diff = Math.floor((new Date(iso + 'T00:00:00').getTime() - startMs) / 86400000);
+      if (diff >= 0) state.days[iso] = pat[diff % pat.length] === 'Р' ? 'work' : 'off';
+    }
+    saveState();
+    toast('График заполнен по шаблону ' + pat);
+    render();
+  };
+
+  // 3. STATS TAB (Matching Screenshots 4 & 5)
+  function renderStats(container) {
+    const r = getActiveRange();
+    const orders = state.orders.filter(o => o.date >= r.start && o.date <= r.end && o.status !== 'draft');
+    const totalAw = orders.reduce((s, o) => s + (o.aw100 || 0), 0) / 100;
+    const totalHours = totalAw / ((state.settings.awPerHour100 || 1200) / 100);
+    const pieceKop = orders.reduce((s, o) => s + (o.earningsKop || 0), 0);
+    const salaryKop = calcSalaryForRange(r.start, r.end);
+    const totalKop = pieceKop + salaryKop;
+
+    const workDaysInRange = Object.entries(state.days).filter(([d, v]) => d >= r.start && d <= r.end && v === 'work').length || 1;
+    const avgEarnDayKop = totalKop / workDaysInRange;
+    const avgAwDay = totalAw / workDaysInRange;
+
+    // Best day & best order
+    const dayTotals = {};
+    orders.forEach(o => { dayTotals[o.date] = (dayTotals[o.date] || 0) + (o.earningsKop || 0); });
+    const bestDayEntry = Object.entries(dayTotals).sort((a, b) => b[1] - a[1])[0];
+    const bestOrder = [...orders].sort((a, b) => (b.earningsKop || 0) - (a.earningsKop || 0))[0];
+
+    // Stacked bar chart data
+    const chartDays = Object.keys(dayTotals).sort();
+    const dayBaseKop = Math.round((state.settings.monthlySalaryKop || 0) / 15);
+    const maxStack = Math.max(...chartDays.map(d => (dayTotals[d] || 0) + dayBaseKop), 1200000);
+    let barsSvg = '';
+    if (chartDays.length) {
+      const colW = 100 / chartDays.length;
+      chartDays.forEach((dt, idx) => {
+        const pH = Math.round(((dayTotals[dt] || 0) / maxStack) * 110);
+        const sH = Math.round((dayBaseKop / maxStack) * 110);
+        const x = idx * colW + colW * 0.25;
+        const w = Math.min(18, colW * 0.5);
+        barsSvg += `
+          <rect x="${x}%" y="${120 - sH}" width="${w}" height="${sH}" rx="3" fill="#D97706"></rect>
+          <rect x="${x}%" y="${118 - sH - pH}" width="${w}" height="${pH}" rx="3" fill="#10B981"></rect>
+          <text x="${x}%" y="135" fill="var(--text-secondary)" font-size="9" font-weight="700">${dt.slice(8)}</text>
+        `;
+      });
+    }
+
+    container.innerHTML = `
+      <section class="glass-card" style="padding:14px;margin-bottom:12px;">
+        ${renderPeriodSwitcherHtml()}
+      </section>
+
+      <section class="glass-card stat-hero-green">
+        <div style="font-size:13px;color:var(--text-secondary);font-weight:600;">Общий заработок</div>
+        <div class="num" style="font-size:34px;font-weight:800;color:var(--green);margin-top:4px;letter-spacing:-0.03em;">${fmtRub(totalKop)}</div>
+      </section>
+
+      <div class="kpi-grid-2">
+        <div class="kpi-card">
+          <div class="kpi-k">По нормо-часам (AW)</div>
+          <div class="kpi-v num">${fmtRub(pieceKop)}</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-k">Фиксированный оклад</div>
+          <div class="kpi-v num">${fmtRub(salaryKop)}</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-k">Выполнено заказов</div>
+          <div class="kpi-v num">${orders.length}</div>
+        </div>
+        <div class="kpi-card blue-tint">
+          <div class="kpi-k">Всего AW</div>
+          <div class="kpi-v num" style="color:var(--accent-blue);">${Math.round(totalAw)}</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-k">Нормо-часы</div>
+          <div class="kpi-v num">${totalHours.toFixed(2).replace('.', ',')}</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-k">Средний заработок за рабочий день</div>
+          <div class="kpi-v num">${fmtRub(avgEarnDayKop)}</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-k">Среднее AW за рабочий день</div>
+          <div class="kpi-v num">${avgAwDay.toFixed(2).replace('.', ',')}</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-k">Самый прибыльный день</div>
+          <div class="kpi-v num">${bestDayEntry ? fmtRub(bestDayEntry[1]) : '0 ₽'}</div>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:3px;">${bestDayEntry ? fmtDateRu(bestDayEntry[0]) : ''}</div>
+        </div>
+      </div>
+
+      <section class="kpi-card" style="margin-bottom:12px;">
+        <div class="kpi-k">Самый прибыльный заказ</div>
+        <div class="kpi-v num">${bestOrder ? fmtRub(bestOrder.earningsKop) : '0 ₽'}</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">
+          ${bestOrder ? `• ${bestOrder.date.split('-').reverse().join('.')} ${bestOrder.model ? '· BMW ' + bestOrder.model : ''}` : 'Нет данных'}
+        </div>
+      </section>
+
+      <section class="glass-card" style="padding:16px;">
+        <div style="font-size:17px;font-weight:800;margin-bottom:10px;">Заработок по дням</div>
+        ${chartDays.length ? `
+          <svg width="100%" height="145">
+            <line x1="0" y1="10" x2="100%" y2="10" stroke="var(--border)" stroke-dasharray="3"/>
+            <line x1="0" y1="65" x2="100%" y2="65" stroke="var(--border)" stroke-dasharray="3"/>
+            ${barsSvg}
+          </svg>
+          <div style="display:flex;gap:14px;font-size:11px;color:var(--text-secondary);margin-top:6px;">
+            <span><b style="color:#10B981;">■</b> Нормо-часы</span>
+            <span><b style="color:#D97706;">■</b> Оклад</span>
+          </div>
+        ` : '<div style="font-size:13px;color:var(--text-secondary);">Нет заказов за выбранный период</div>'}
+      </section>
+    `;
+  }
+
+  // 4. HISTORY TAB
+  function renderHistory(container) {
+    const monthsMap = {};
+    state.orders.forEach(o => {
+      const ym = o.date.slice(0, 7);
+      if (!monthsMap[ym]) monthsMap[ym] = { count: 0, aw100: 0, kop: 0 };
+      monthsMap[ym].count += 1;
+      monthsMap[ym].aw100 += (o.aw100 || 0);
+      monthsMap[ym].kop += (o.earningsKop || 0);
+    });
+    const yms = Object.keys(monthsMap).sort((a, b) => b.localeCompare(a));
+
+    container.innerHTML = `
+      <section class="glass-card" style="padding:16px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div style="font-size:17px;font-weight:800;">Архив по месяцам</div>
+          <button class="mini-btn" style="color:var(--green);" onclick="exportCsv()">Экспорт CSV</button>
+        </div>
+        ${yms.map(ym => {
+          const it = monthsMap[ym];
+          const h = (it.aw100 / 100) / ((state.settings.awPerHour100 || 1200) / 100);
+          return `
+            <div class="order-card" style="cursor:pointer;" onclick="jumpToMonth('${ym}')">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                  <div style="font-size:16px;font-weight:800;">${fmtMonthTitle(ym)}</div>
+                  <div style="font-size:12px;color:var(--text-secondary);">${it.count} З/Н · ${h.toFixed(1)} н/ч (${Math.round(it.aw100/100)} AW)</div>
+                </div>
+                <div class="num" style="font-size:17px;font-weight:800;color:var(--green);">${fmtRub(it.kop)} ›</div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </section>
+    `;
+  }
+
+  window.jumpToMonth = (ym) => {
+    anchorDate = `${ym}-12`;
+    periodMode = 'month';
+    currentTab = 'orders';
+    document.querySelectorAll('.tab-item').forEach(b => b.classList.toggle('active', b.dataset.tab === 'orders'));
+    render();
+  };
+
+  window.exportCsv = () => {
+    const rows = [['Дата','Номер З/Н','Марка','Модель','Госномер','AW','Нормо-часы','Сумма (руб)','Работы']];
+    state.orders.forEach(o => {
+      rows.push([o.date, o.number||'', o.brand||'', o.model||'', o.plate||'', (o.aw100||0)/100, ((o.hours100||0)/100).toFixed(2), ((o.earningsKop||0)/100).toFixed(2), (o.jobs||[]).map(j=>j.title).join('; ')]);
+    });
+    const csv = '\uFEFF' + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    a.download = `normo-hours-${anchorDate.slice(0, 7)}.csv`;
+    a.click();
+    toast('CSV-файл выгружен');
+  };
+
+  // 5. SETTINGS TAB
+  function renderSettings(container) {
+    const s = state.settings;
+    container.innerHTML = `
+      <section class="glass-card" style="padding:16px;margin-bottom:12px;">
+        <div style="font-size:16px;font-weight:800;margin-bottom:4px;">Gemini Vision OCR</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">
+          Бесплатный API-ключ из <b>aistudio.google.com/apikey</b> для точного распознавания фото заказ-нарядов.
+        </div>
+        <label class="field-label">Gemini API Key</label>
+        <div style="display:flex;gap:8px;">
+          <input type="password" id="setGeminiKey" class="input-field" placeholder="AIzaSy..." value="${escapeHtml(s.geminiKey || '')}">
+          <button class="mini-btn" onclick="const i=document.getElementById('setGeminiKey');i.type=i.type==='password'?'text':'password'">Показать</button>
+        </div>
+      </section>
+
+      <section class="glass-card" style="padding:16px;margin-bottom:12px;">
+        <div style="font-size:16px;font-weight:800;margin-bottom:12px;">Ставки и график</div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Оклад в месяц (₽)</label>
+            <input type="number" id="setSalary" class="input-field" value="${Math.round((s.monthlySalaryKop || 0) / 100)}">
+          </div>
+          <div>
+            <label class="field-label">Ставка за 1 н/ч (₽)</label>
+            <input type="number" id="setHourRate" class="input-field" value="${Math.round((s.hourRateKop || 0) / 100)}">
+          </div>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label">AW в 1 н/ч</label>
+            <input type="number" id="setAwPerHour" class="input-field" value="${(s.awPerHour100 || 1200) / 100}">
+          </div>
+          <div>
+            <label class="field-label">Шаблон смен</label>
+            <input type="text" id="setPattern" class="input-field" value="${escapeHtml(s.schedule?.pattern || 'РРВВРРРВВРРВВВ')}">
+          </div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label class="field-label">Тема оформления</label>
+          <select id="setTheme" class="input-field">
+            <option value="dark" ${s.theme==='dark'?'selected':''}>M-Dark (Тёмная)</option>
+            <option value="light" ${s.theme==='light'?'selected':''}>Silver (Светлая)</option>
+          </select>
+        </div>
+        <button class="btn-primary-full" onclick="saveSettingsForm()">Сохранить настройки</button>
+      </section>
+
+      <section class="glass-card" style="padding:16px;">
+        <div style="font-size:16px;font-weight:800;margin-bottom:10px;">Резервная копия JSON</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button class="mini-btn" style="padding:11px;text-align:center;" onclick="exportBackupJson()">Экспорт JSON</button>
+          <button class="mini-btn" style="padding:11px;text-align:center;" onclick="document.getElementById('jsonFileInput').click()">Импорт JSON</button>
+        </div>
+      </section>
+    `;
+  }
+
+  window.saveSettingsForm = () => {
+    state.settings.geminiKey = document.getElementById('setGeminiKey').value.trim();
+    state.settings.monthlySalaryKop = Math.round((parseFloat(document.getElementById('setSalary').value) || 0) * 100);
+    state.settings.hourRateKop = Math.round((parseFloat(document.getElementById('setHourRate').value) || 652) * 100);
+    const awH = parseFloat(document.getElementById('setAwPerHour').value) || 12;
+    state.settings.awPerHour100 = Math.round(awH * 100);
+    state.settings.awRateKop = Math.round(state.settings.hourRateKop / awH);
+    state.settings.schedule.pattern = document.getElementById('setPattern').value.trim() || 'РРВВРРРВВРРВВВ';
+    state.settings.theme = document.getElementById('setTheme').value;
+    applyTheme();
+    saveState();
+    toast('Настройки сохранены');
+    render();
+  };
+
+  window.exportBackupJson = () => {
+    const clean = JSON.parse(JSON.stringify(state));
+    if (clean.settings) clean.settings.geminiKey = '';
+    const payload = { app: 'normo-hours', version: 1, exportedAt: new Date().toISOString(), snapshot: clean };
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
+    a.download = `normo-hours-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    toast('Резервная копия скачана');
+  };
+
+  document.getElementById('jsonFileInput').onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        const snap = parsed.snapshot || parsed;
+        if (!Array.isArray(snap.orders)) throw new Error();
+        const keepKey = state.settings.geminiKey || '';
+        state = {
+          orders: snap.orders || [],
+          days: snap.days || {},
+          settings: { ...SEED_SNAPSHOT.settings, ...(snap.settings || {}), geminiKey: snap.settings?.geminiKey || keepKey },
+          adjustments: snap.adjustments || [],
+          photos: snap.photos || {}
+        };
+        applyTheme();
+        saveState();
+        toast(`Загружено ${state.orders.length} заказ-нарядов`);
+        render();
+      } catch (err) { toast('Ошибка чтения JSON'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  // ORDER SHEET & JOBS
+  const sheet = document.getElementById('orderSheet');
+  document.getElementById('closeSheetBtn').onclick = () => sheet.classList.remove('open');
+  sheet.onclick = (e) => { if (e.target === sheet) sheet.classList.remove('open'); };
+
+  function renderJobInputs(jobs) {
+    const list = document.getElementById('jobsList');
+    list.innerHTML = '';
+    (jobs && jobs.length ? jobs : [{ id: uid(), title: '', aw100: 0 }]).forEach(j => {
+      const row = document.createElement('div');
+      row.className = 'job-item-row';
+      row.innerHTML = `
+        <div style="display:flex;gap:6px;align-items:center;">
+          <input type="text" class="input-field job-title-inp" placeholder="Работа..." value="${escapeHtml(j.title || '')}" style="flex:1;padding:9px 10px;">
+          <input type="number" step="0.1" class="input-field job-aw-inp num" placeholder="AW" value="${j.aw100 ? j.aw100 / 100 : ''}" style="width:74px;padding:9px 6px;text-align:center;">
+          <button type="button" class="mini-btn danger del-job-btn">✕</button>
+        </div>
+      `;
+      row.querySelector('.del-job-btn').onclick = () => { if (list.children.length > 1) { row.remove(); updateLiveCalc(); } };
+      row.querySelector('.job-aw-inp').oninput = updateLiveCalc;
+      list.appendChild(row);
+    });
+    updateLiveCalc();
+  }
+
+  document.getElementById('addJobBtn').onclick = () => {
+    const list = document.getElementById('jobsList');
+    const row = document.createElement('div');
+    row.className = 'job-item-row';
+    row.innerHTML = `
+      <div style="display:flex;gap:6px;align-items:center;">
+        <input type="text" class="input-field job-title-inp" placeholder="Работа..." style="flex:1;padding:9px 10px;">
+        <input type="number" step="0.1" class="input-field job-aw-inp num" placeholder="AW" style="width:74px;padding:9px 6px;text-align:center;">
+        <button type="button" class="mini-btn danger del-job-btn">✕</button>
+      </div>
+    `;
+    row.querySelector('.del-job-btn').onclick = () => { if (list.children.length > 1) { row.remove(); updateLiveCalc(); } };
+    row.querySelector('.job-aw-inp').oninput = updateLiveCalc;
+    list.appendChild(row);
+  };
+
+  function updateLiveCalc() {
+    let totalAw100 = 0;
+    document.querySelectorAll('.job-aw-inp').forEach(inp => {
+      const val = parseFloat(inp.value);
+      if (!isNaN(val)) totalAw100 += Math.round(val * 100);
+    });
+    const m = calcOrderMetrics(totalAw100);
+    document.getElementById('liveCalcAw').textContent = `${m.aw} AW · ${m.hours.toFixed(2)} н/ч`;
+    document.getElementById('liveCalcMoney').textContent = fmtRubDec(m.earningsKop);
+  }
+
+  window.openOrderModal = (presetDate) => {
+    document.getElementById('sheetTitle').textContent = 'Новый заказ-наряд';
+    document.getElementById('fId').value = '';
+    document.getElementById('fNumber').value = '';
+    document.getElementById('fDate').value = presetDate || anchorDate;
+    document.getElementById('fBrand').value = 'BMW';
+    document.getElementById('fModel').value = '';
+    document.getElementById('fPlate').value = '';
+    document.getElementById('fStatus').value = 'confirmed';
+    document.getElementById('fComment').value = '';
+    activePhotoDataUrl = null;
+    document.getElementById('photoPreviewBox').classList.add('hidden');
+    renderJobInputs([{ id: uid(), title: '', aw100: 0 }]);
+    sheet.classList.add('open');
+  };
+
+  window.editOrder = (id) => {
+    const o = state.orders.find(x => x.id === id);
+    if (!o) return;
+    document.getElementById('sheetTitle').textContent = 'Редактировать З/Н';
+    document.getElementById('fId').value = o.id;
+    document.getElementById('fNumber').value = o.number || '';
+    document.getElementById('fDate').value = o.date;
+    document.getElementById('fBrand').value = o.brand || 'BMW';
+    document.getElementById('fModel').value = o.model || '';
+    document.getElementById('fPlate').value = o.plate || '';
+    document.getElementById('fStatus').value = o.status || 'confirmed';
+    document.getElementById('fComment').value = o.comment || '';
+    activePhotoDataUrl = (o.photoId && state.photos[o.photoId]) ? state.photos[o.photoId] : null;
+    if (activePhotoDataUrl) {
+      document.getElementById('photoPreviewImg').src = activePhotoDataUrl;
+      document.getElementById('photoPreviewBox').classList.remove('hidden');
+    } else document.getElementById('photoPreviewBox').classList.add('hidden');
+    renderJobInputs(o.jobs);
+    sheet.classList.add('open');
+  };
+
+  window.duplicateOrder = (id) => {
+    const o = state.orders.find(x => x.id === id);
+    if (!o) return;
+    const copy = JSON.parse(JSON.stringify(o));
+    copy.id = uid();
+    state.orders.unshift(copy);
+    saveState();
+    toast('Создана копия З/Н');
+    render();
+  };
+
+  window.deleteOrder = (id) => {
+    const o = state.orders.find(x => x.id === id);
+    if (o && o.photoId) delete state.photos[o.photoId];
+    state.orders = state.orders.filter(x => x.id !== id);
+    saveState();
+    toast('Заказ-наряд удалён');
+    render();
+  };
+
+  window.viewPhoto = (photoId) => {
+    const src = state.photos[photoId];
+    if (!src) return;
+    document.getElementById('viewerFullImg').src = src;
+    document.getElementById('photoViewerModal').classList.add('open');
+  };
+
+  document.getElementById('removePhotoBtn').onclick = () => {
+    activePhotoDataUrl = null;
+    document.getElementById('photoPreviewBox').classList.add('hidden');
+  };
+
+  document.getElementById('orderForm').onsubmit = (e) => {
+    e.preventDefault();
+    const id = document.getElementById('fId').value || uid();
+    const jobs = [];
+    let totalAw100 = 0;
+    document.querySelectorAll('.job-item-row').forEach(row => {
+      const title = row.querySelector('.job-title-inp').value.trim();
+      const aw = parseFloat(row.querySelector('.job-aw-inp').value);
+      if (title || !isNaN(aw)) {
+        const aw100 = Math.round((isNaN(aw) ? 0 : aw) * 100);
+        totalAw100 += aw100;
+        jobs.push({ id: uid(), title: title || 'Работа без названия', aw100 });
+      }
+    });
+    const m = calcOrderMetrics(totalAw100);
+    let photoId = activePhotoDataUrl ? 'ph-' + id : null;
+    if (photoId) state.photos[photoId] = activePhotoDataUrl;
+
+    const record = {
+      id,
+      number: document.getElementById('fNumber').value.trim(),
+      brand: document.getElementById('fBrand').value.trim(),
+      model: document.getElementById('fModel').value.trim(),
+      plate: document.getElementById('fPlate').value.trim().toUpperCase(),
+      date: document.getElementById('fDate').value,
+      jobs, aw100: totalAw100, hours100: m.hours100, earningsKop: m.earningsKop,
+      comment: document.getElementById('fComment').value.trim(),
+      status: document.getElementById('fStatus').value,
+      photoId
+    };
+    const idx = state.orders.findIndex(x => x.id === id);
+    if (idx >= 0) state.orders[idx] = record;
+    else state.orders.unshift(record);
+    anchorDate = record.date;
+    saveState();
+    sheet.classList.remove('open');
+    toast('Заказ-наряд сохранён');
+    render();
+  };
+
+  // Text Paste Parser
+  window.parsePastedText = () => {
+    const txt = document.getElementById('pasteRawArea').value || '';
+    document.getElementById('textPasteSheet').classList.remove('open');
+    openOrderModal();
+    const numM = txt.match(/(?:З\/Н|Заказ-наряд|№)\s*[:#]?\s*(\d{5,10})/i);
+    if (numM) document.getElementById('fNumber').value = numM[1];
+    const plateM = txt.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s*\d{2,3}/i);
+    if (plateM) document.getElementById('fPlate').value = plateM[0].replace(/\s+/g, '').toUpperCase();
+    const lines = txt.split('\n').map(l => l.trim()).filter(Boolean);
+    const parsedJobs = [];
+    lines.forEach(l => {
+      const m = l.match(/(.+?)\s+(\d+(?:[.,]\d+)?)\s*(?:AW|н\/ч)?$/i);
+      if (m && m[1].length > 5 && parseFloat(m[2]) > 0 && parseFloat(m[2]) < 500) {
+        parsedJobs.push({ id: uid(), title: m[1].trim(), aw100: Math.round(parseFloat(m[2].replace(',', '.')) * 100) });
+      }
+    });
+    if (parsedJobs.length) renderJobInputs(parsedJobs);
+    toast('Текст разобран');
+  };
+
+  // Camera & Gemini Vision OCR
+  window.triggerPhoto = (source) => {
+    if (!sheet.classList.contains('open')) openOrderModal();
+    if (source === 'camera') document.getElementById('cameraInput').click();
+    else document.getElementById('galleryInput').click();
+  };
+
+  function compressImage(file, maxW = 1280, quality = 0.78) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(1, maxW / Math.max(img.width, img.height));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = reject;
+        img.src = reader.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handlePhotoSelected(e) {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    try {
+      const dataUrl = await compressImage(file, 1280, 0.76);
+      activePhotoDataUrl = dataUrl;
+      document.getElementById('photoPreviewImg').src = dataUrl;
+      document.getElementById('photoPreviewBox').classList.remove('hidden');
+
+      const apiKey = (state.settings.geminiKey || '').trim();
+      if (!apiKey) {
+        toast('Фото прикреплено (для OCR укажите ключ Gemini в Настройках)');
+        return;
+      }
+      const banner = document.getElementById('aiScanStatus');
+      banner.classList.remove('hidden');
+      const base64Data = dataUrl.split(',')[1];
+      const prompt = `Ты парсер заказ-нарядов BMW. Верни ТОЛЬКО JSON: {"number":"","date":"YYYY-MM-DD","brand":"BMW","model":"","plate":"","jobs":[{"title":"","aw":0}]}. Включай ТОЛЬКО выполненные работы (игнорируй запчасти и суммы в рублях).`;
+      const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }],
+          generationConfig: { responseMimeType: 'application/json' }
+        })
+      });
+      const json = await resp.json();
+      banner.classList.add('hidden');
+      if (!resp.ok) throw new Error(json.error?.message || 'Ошибка API');
+      const parsed = JSON.parse(json.candidates?.[0]?.content?.parts?.[0]?.text || '{}');
+      if (parsed.number) document.getElementById('fNumber').value = parsed.number;
+      if (parsed.date && /^\d{4}-\d{2}-\d{2}$/.test(parsed.date)) document.getElementById('fDate').value = parsed.date;
+      if (parsed.brand) document.getElementById('fBrand').value = parsed.brand;
+      if (parsed.model) document.getElementById('fModel').value = parsed.model;
+      if (parsed.plate) document.getElementById('fPlate').value = parsed.plate;
+      if (Array.isArray(parsed.jobs) && parsed.jobs.length) {
+        renderJobInputs(parsed.jobs.map(j => ({ id: uid(), title: j.title || '', aw100: Math.round((parseFloat(j.aw) || 0) * 100) })));
+      }
+      toast('Заказ-наряд распознан через Gemini');
+    } catch (err) {
+      document.getElementById('aiScanStatus').classList.add('hidden');
+      toast('Ошибка распознавания: ' + (err.message || 'проверьте ключ'));
+    }
+  }
+
+  document.getElementById('cameraInput').onchange = handlePhotoSelected;
+  document.getElementById('galleryInput').onchange = handlePhotoSelected;
+
+  function escapeHtml(str) {
+    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
