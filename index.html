@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- M-Telemetry clean build 2026-11-22-gemini-fast -->
+<!-- M-Telemetry BMW-Cockpit Motion Edition v16 -->
 <html lang="ru" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -758,9 +758,962 @@
     to { opacity: 1; transform: translateY(0); }
   }
   .hidden { display: none !important; }
+
+  /* ===== BMW M-TELEMETRY ANIMATIONS SUITE ===== */
+  .m-stripe {
+    position: relative;
+    overflow: hidden;
+  }
+  .m-stripe::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.75) 50%, transparent 80%);
+    transform: translateX(-120%);
+    animation: mStripeSheen 4.2s ease-in-out infinite;
+  }
+  @keyframes mStripeSheen {
+    0%, 62% { transform: translateX(-120%); }
+    100% { transform: translateX(140%); }
+  }
+
+  .btn-add-main {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-add-main::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; width: 45%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.28), transparent);
+    transform: translateX(-220%);
+    animation: btnSheen 5.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes btnSheen {
+    0%, 72% { transform: translateX(-220%); }
+    100% { transform: translateX(320%); }
+  }
+
+  /* Header BMW Ignition Button */
+  .ignition-pill-btn {
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 189, 248, 0.32);
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(10, 132, 255, 0.16));
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    box-shadow: 0 6px 18px -6px rgba(10, 132, 255, 0.45), inset 0 1px 0 rgba(255,255,255,0.14);
+    transition: transform 0.18s var(--ease-bounce), border-color 0.2s, box-shadow 0.2s;
+  }
+  [data-theme="light"] .ignition-pill-btn {
+    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(2, 132, 199, 0.12));
+    color: #0F172A;
+  }
+  .ignition-pill-btn:active {
+    transform: scale(0.92);
+    border-color: var(--accent);
+    box-shadow: 0 0 18px var(--accent-glow);
+  }
+  .ignition-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #38BDF8;
+    box-shadow: 0 0 8px #38BDF8;
+    animation: igDotPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes igDotPulse {
+    0%, 100% { opacity: 0.55; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.18); }
+  }
+
+  /* BMW Welcome Splash Screen (Headlights Ignition + Iconic Glow + Live Cockpit) */
+  .bmw-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: radial-gradient(ellipse at 50% 44%, #0B1324 0%, #050811 54%, #020307 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 1;
+    transition: opacity 0.52s var(--ease-spring), transform 0.52s var(--ease-spring), filter 0.52s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+  }
+  .bmw-splash.closing {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: blur(8px);
+    pointer-events: none;
+  }
+  .bmw-splash.gone {
+    display: none !important;
+  }
+  .splash-stage {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .splash-beam-left, .splash-beam-right {
+    position: absolute;
+    top: 22px;
+    width: 180px;
+    height: 150px;
+    border-radius: 50%;
+    filter: blur(36px);
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(224, 242, 254, 0.85) 0%, rgba(56, 189, 248, 0.42) 45%, transparent 75%);
+  }
+  .splash-beam-left { left: 4%; }
+  .splash-beam-right { right: 4%; }
+  .bmw-splash.igniting .splash-beam-left,
+  .bmw-splash.igniting .splash-beam-right {
+    animation: beamBloom 2.1s var(--ease-spring) forwards;
+  }
+  @keyframes beamBloom {
+    0% { opacity: 0; transform: scale(0.45); }
+    18% { opacity: 0.08; transform: scale(0.65); }
+    32% { opacity: 0.92; transform: scale(1.12); }
+    44% { opacity: 0.52; transform: scale(0.95); }
+    72% { opacity: 0.68; transform: scale(1.04); }
+    84% { opacity: 1; transform: scale(1.25); }
+    100% { opacity: 0.62; transform: scale(1.05); }
+  }
+
+  /* Anamorphic horizontal lens flare */
+  .splash-flare {
+    position: absolute;
+    top: 93px;
+    left: 50%;
+    width: 96%;
+    height: 2px;
+    transform: translateX(-50%) scaleX(0);
+    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.25) 18%, rgba(255, 255, 255, 0.95) 50%, rgba(56, 189, 248, 0.25) 82%, transparent 100%);
+    box-shadow: 0 0 18px 2px rgba(56, 189, 248, 0.75);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .bmw-splash.igniting .splash-flare {
+    animation: lensFlareSweep 1.85s var(--ease-spring) 0.32s forwards;
+  }
+  @keyframes lensFlareSweep {
+    0% { opacity: 0; transform: translateX(-50%) scaleX(0.05); }
+    24% { opacity: 1; transform: translateX(-50%) scaleX(1.06); }
+    58% { opacity: 0.25; transform: translateX(-50%) scaleX(0.75); }
+    82% { opacity: 0.85; transform: translateX(-50%) scaleX(1.12); }
+    100% { opacity: 0; transform: translateX(-50%) scaleX(1.3); }
+  }
+
+  .bmw-front-svg {
+    width: 100%;
+    max-width: 390px;
+    height: auto;
+    position: relative;
+    z-index: 2;
+    overflow: visible;
+  }
+  .bmw-hood-line {
+    fill: none;
+    stroke: rgba(148, 163, 184, 0.16);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    opacity: 0;
+  }
+  .bmw-splash.igniting .bmw-hood-line {
+    animation: fadeInSoft 0.8s ease 0.45s forwards;
+  }
+  .bmw-kidney {
+    fill: rgba(4, 8, 18, 0.85);
+    stroke: #E0F2FE;
+    stroke-width: 2.3;
+    stroke-linejoin: round;
+    stroke-dasharray: 220;
+    stroke-dashoffset: 220;
+    filter: drop-shadow(0 0 6px rgba(186, 230, 253, 0.75));
+  }
+  .bmw-splash.igniting .bmw-kidney {
+    animation: kidneyTrace 0.85s var(--ease-spring) 0.08s forwards;
+  }
+  @keyframes kidneyTrace {
+    0% { stroke-dashoffset: 220; opacity: 0.2; }
+    100% { stroke-dashoffset: 0; opacity: 1; }
+  }
+  .bmw-slat {
+    stroke: rgba(148, 163, 184, 0.22);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    opacity: 0;
+  }
+  .bmw-splash.igniting .bmw-slat {
+    animation: fadeInSoft 0.6s ease 0.45s forwards;
+  }
+
+  /* Angel Eyes / L-Shaped DRLs */
+  .bmw-drl {
+    fill: none;
+    stroke: #F8FAFC;
+    stroke-width: 3.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 14px rgba(56, 189, 248, 0.85));
+  }
+  .bmw-splash.igniting .bmw-drl {
+    animation: drlIgnite 1.95s ease-out 0.18s forwards;
+  }
+  @keyframes drlIgnite {
+    0% { opacity: 0; stroke: #F59E0B; filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.9)); }
+    10% { opacity: 0.95; stroke: #F59E0B; filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.95)); }
+    18% { opacity: 0.15; stroke: #F59E0B; }
+    26% { opacity: 1; stroke: #FFFFFF; filter: drop-shadow(0 0 14px #FFFFFF) drop-shadow(0 0 26px rgba(56, 189, 248, 0.95)); }
+    38% { opacity: 0.85; stroke: #F0F9FF; filter: drop-shadow(0 0 8px #FFFFFF) drop-shadow(0 0 16px rgba(56, 189, 248, 0.8)); }
+    78% { opacity: 0.92; stroke: #F8FAFC; }
+    88% { opacity: 1; stroke: #FFFFFF; filter: drop-shadow(0 0 18px #FFFFFF) drop-shadow(0 0 30px rgba(56, 189, 248, 1)); }
+    100% { opacity: 0.95; stroke: #F8FAFC; filter: drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 18px rgba(56, 189, 248, 0.85)); }
+  }
+
+  .bmw-brow {
+    fill: none;
+    stroke: rgba(224, 242, 254, 0.88);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    opacity: 0;
+    filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.8));
+  }
+  .bmw-splash.igniting .bmw-brow {
+    animation: fadeInSoft 0.55s ease 0.52s forwards;
+  }
+
+  /* BMW Laserlight Signature Blue Accents */
+  .bmw-laser-core {
+    fill: none;
+    stroke: #00B4FF;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    opacity: 0;
+    filter: drop-shadow(0 0 8px #00A0E3) drop-shadow(0 0 16px #0A84FF);
+  }
+  .bmw-splash.igniting .bmw-laser-core {
+    animation: laserCoreGlow 0.9s ease 0.56s forwards;
+  }
+  @keyframes laserCoreGlow {
+    0% { opacity: 0; }
+    45% { opacity: 1; }
+    100% { opacity: 0.92; }
+  }
+
+  /* M-Tricolor Horizon Slash */
+  .splash-m-bar {
+    width: 220px;
+    height: 4px;
+    border-radius: 99px;
+    margin-top: 10px;
+    background: linear-gradient(90deg, #00A0E3 0%, #00A0E3 33.3%, #1E40AF 33.3%, #1E40AF 66.6%, #E22718 66.6%, #E22718 100%);
+    box-shadow: 0 0 18px rgba(0, 160, 227, 0.45), 0 0 18px rgba(226, 39, 24, 0.35);
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  .bmw-splash.igniting .splash-m-bar {
+    animation: mBarReveal 0.65s var(--ease-spring) 0.68s forwards;
+  }
+  @keyframes mBarReveal {
+    0% { transform: scaleX(0); opacity: 0; }
+    100% { transform: scaleX(1); opacity: 1; }
+  }
+
+  /* Live Cockpit RPM Sweep */
+  .splash-rpm-wrap {
+    width: 220px;
+    margin-top: 18px;
+    opacity: 0;
+  }
+  .bmw-splash.igniting .splash-rpm-wrap {
+    animation: fadeInSoft 0.4s ease 0.72s forwards;
+  }
+  .splash-rpm-track {
+    height: 6px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .splash-rpm-fill {
+    height: 100%;
+    width: 100%;
+    transform-origin: left center;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, #00A0E3 0%, #38BDF8 55%, #F59E0B 80%, #E22718 100%);
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+  }
+  .bmw-splash.igniting .splash-rpm-fill {
+    animation: rpmSweep 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.78s forwards;
+  }
+  @keyframes rpmSweep {
+    0% { transform: scaleX(0); }
+    58% { transform: scaleX(1); }
+    100% { transform: scaleX(0.28); }
+  }
+
+  .splash-title {
+    margin-top: 14px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: #F8FAFC;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .bmw-splash.igniting .splash-title {
+    animation: titleUp 0.55s var(--ease-spring) 0.8s forwards;
+  }
+  .splash-sub {
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #38BDF8;
+    opacity: 0;
+  }
+  .bmw-splash.igniting .splash-sub {
+    animation: fadeInSoft 0.5s ease 1.05s forwards;
+  }
+  .splash-skip-hint {
+    position: absolute;
+    bottom: calc(var(--safe-bottom) + 24px);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgba(148, 163, 184, 0.55);
+  }
+  @keyframes titleUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInSoft {
+    to { opacity: 1; }
+  }
+
+  /* BMW M-Laser OCR Scanner Overlay on Photo Preview */
+  #photoPreviewBox {
+    overflow: hidden;
+    border-radius: 14px;
+  }
+  .ocr-laser-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    background: linear-gradient(180deg, rgba(10, 132, 255, 0.12), rgba(56, 189, 248, 0.04));
+    box-shadow: inset 0 0 0 1.5px rgba(56, 189, 248, 0.65);
+  }
+  #photoPreviewBox.scanning .ocr-laser-overlay {
+    opacity: 1;
+  }
+  .ocr-laser-beam {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    top: 0;
+    background: linear-gradient(90deg, transparent 0%, #00A0E3 15%, #FFFFFF 50%, #00A0E3 85%, transparent 100%);
+    box-shadow: 0 0 14px 3px rgba(56, 189, 248, 0.95), 0 -16px 26px rgba(10, 132, 255, 0.45);
+  }
+  #photoPreviewBox.scanning .ocr-laser-beam {
+    animation: laserScanSweep 1.35s ease-in-out infinite alternate;
+  }
+  @keyframes laserScanSweep {
+    0% { top: 4%; }
+    100% { top: 94%; }
+  }
+  .ocr-hud-corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: #38BDF8;
+    border-style: solid;
+    border-width: 0;
+  }
+  .ocr-hud-corner.tl { top: 6px; left: 6px; border-top-width: 2.5px; border-left-width: 2.5px; border-top-left-radius: 4px; }
+  .ocr-hud-corner.tr { top: 6px; right: 6px; border-top-width: 2.5px; border-right-width: 2.5px; border-top-right-radius: 4px; }
+  .ocr-hud-corner.bl { bottom: 6px; left: 6px; border-bottom-width: 2.5px; border-left-width: 2.5px; border-bottom-left-radius: 4px; }
+  .ocr-hud-corner.br { bottom: 6px; right: 6px; border-bottom-width: 2.5px; border-right-width: 2.5px; border-bottom-right-radius: 4px; }
+
+  #photoPreviewBox.scan-ok .ocr-laser-overlay {
+    opacity: 1;
+    background: rgba(16, 185, 129, 0.18);
+    box-shadow: inset 0 0 0 2px #10B981;
+    animation: scanOkPulse 0.75s ease forwards;
+  }
+  #photoPreviewBox.scan-ok .ocr-laser-beam { display: none; }
+  #photoPreviewBox.scan-ok .ocr-hud-corner { border-color: #10B981; }
+  @keyframes scanOkPulse {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* M-Performance Order Save Ribbon Flash */
+  .m-save-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    z-index: 150;
+    background: linear-gradient(90deg, #00A0E3 0%, #00A0E3 33.3%, #1D4ED8 33.3%, #1D4ED8 66.6%, #E22718 66.6%, #E22718 100%);
+    box-shadow: 0 2px 20px rgba(56, 189, 248, 0.8), 0 2px 20px rgba(226, 39, 24, 0.65);
+    transform: scaleX(0);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .m-save-flash.fire {
+    animation: mSaveRibbon 0.85s var(--ease-spring) forwards;
+  }
+  @keyframes mSaveRibbon {
+    0% { transform: scaleX(0); opacity: 1; transform-origin: left; }
+    48% { transform: scaleX(1); opacity: 1; transform-origin: left; }
+    52% { transform: scaleX(1); opacity: 1; transform-origin: right; }
+    100% { transform: scaleX(0); opacity: 0; transform-origin: right; }
+  }
+
+  .hero-pulse-ok {
+    animation: heroGreenGlow 0.9s var(--ease-spring);
+  }
+  @keyframes heroGreenGlow {
+    0% { box-shadow: var(--shadow-card); }
+    35% { box-shadow: 0 0 0 1.5px rgba(16, 185, 129, 0.75), 0 0 36px rgba(16, 185, 129, 0.38); }
+    100% { box-shadow: var(--shadow-card); }
+  }
+
+  /* Smooth staggered entrance for cards */
+  .anim-card {
+    animation: cardGlideIn 0.36s var(--ease-spring) both;
+  }
+  @keyframes cardGlideIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bmw-splash, .m-stripe::after, .btn-add-main::after, .ambient-orb, .anim-card {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+
+  /* ===== BMW M-COCKPIT INTERNAL ANIMATIONS v16 ===== */
+
+  /* Drive Modes (Comfort / M1 Sport+ / M CS) */
+  [data-drive="sport"] {
+    --accent: #FB7185;
+    --accent-blue: #E22718;
+    --accent-glow: rgba(226, 39, 24, 0.38);
+    --bg-gradient: radial-gradient(circle at 12% -10%, rgba(226, 39, 24, 0.20) 0%, transparent 48%),
+                   radial-gradient(circle at 88% 8%, rgba(245, 158, 11, 0.16) 0%, transparent 45%),
+                   radial-gradient(circle at 50% 100%, rgba(244, 63, 94, 0.10) 0%, transparent 50%);
+  }
+  [data-drive="mcs"] {
+    --accent: #FACC15;
+    --accent-blue: #EAB308;
+    --accent-glow: rgba(250, 204, 21, 0.34);
+    --bg-gradient: radial-gradient(circle at 12% -10%, rgba(250, 204, 21, 0.17) 0%, transparent 48%),
+                   radial-gradient(circle at 88% 8%, rgba(16, 185, 129, 0.15) 0%, transparent 45%),
+                   radial-gradient(circle at 50% 100%, rgba(245, 158, 11, 0.10) 0%, transparent 50%);
+  }
+  [data-drive="sport"] .orb-1 { background: #E22718; }
+  [data-drive="sport"] .orb-2 { background: #F59E0B; }
+  [data-drive="mcs"] .orb-1 { background: #FACC15; }
+  [data-drive="mcs"] .orb-2 { background: #10B981; }
+  [data-drive="sport"] .btn-add-main,
+  [data-drive="sport"] .btn-primary-full {
+    background: linear-gradient(135deg, #E22718 0%, #991B1B 100%);
+    box-shadow: 0 10px 26px -6px rgba(226, 39, 24, 0.55);
+  }
+  [data-drive="mcs"] .btn-add-main,
+  [data-drive="mcs"] .btn-primary-full {
+    background: linear-gradient(135deg, #CA8A04 0%, #854D0E 100%);
+    box-shadow: 0 10px 26px -6px rgba(234, 179, 8, 0.45);
+  }
+  [data-drive="mcs"] .bmw-drl {
+    stroke: #FDE047;
+    filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.95)) drop-shadow(0 0 18px rgba(234, 179, 8, 0.85));
+  }
+
+  /* Header Controls Cluster */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .m-mode-btn {
+    height: 38px;
+    padding: 0 11px;
+    border-radius: 999px;
+    border: 1px solid rgba(226, 39, 24, 0.45);
+    background: linear-gradient(145deg, rgba(226, 39, 24, 0.22), rgba(15, 20, 32, 0.88));
+    color: #FCA5A5;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 6px 16px -6px rgba(226, 39, 24, 0.5), inset 0 1px 0 rgba(255,255,255,0.18);
+    transition: transform 0.18s var(--ease-bounce), all 0.25s ease;
+  }
+  .m-mode-btn:active { transform: scale(0.88); }
+  [data-drive="sport"] .m-mode-btn {
+    background: linear-gradient(135deg, #E22718, #B91C1C);
+    color: #FFF;
+    border-color: rgba(255,255,255,0.35);
+    box-shadow: 0 0 18px rgba(226, 39, 24, 0.65);
+  }
+  [data-drive="mcs"] .m-mode-btn {
+    background: linear-gradient(135deg, #EAB308, #A16207);
+    color: #0F172A;
+    border-color: rgba(254, 240, 138, 0.65);
+    box-shadow: 0 0 18px rgba(250, 204, 21, 0.55);
+  }
+
+  /* Wrench Icon Torque Spin on Tap */
+  .app-icon-box {
+    cursor: pointer;
+    transition: transform 0.2s var(--ease-bounce), box-shadow 0.25s ease;
+  }
+  .app-icon-box:active { transform: scale(0.9); }
+  .app-icon-box.torque-spin svg {
+    animation: wrenchTorque 0.62s var(--ease-bounce);
+  }
+  @keyframes wrenchTorque {
+    0% { transform: rotate(0deg) scale(1); }
+    30% { transform: rotate(-28deg) scale(1.14); }
+    72% { transform: rotate(378deg) scale(1.06); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  /* M-Mode Cockpit Banner */
+  .mode-hud-banner {
+    position: fixed;
+    top: calc(var(--safe-top) + 54px);
+    left: 50%;
+    transform: translate(-50%, -22px) scale(0.9);
+    z-index: 130;
+    padding: 8px 18px;
+    border-radius: 14px;
+    background: rgba(8, 12, 22, 0.92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 14px 34px rgba(0,0,0,0.7);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #F8FAFC;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.34s var(--ease-bounce);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mode-hud-banner.show {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+
+  /* Shift-Lights Telemetry Bar inside Orders Hero Card */
+  .shift-lights-wrap {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .shift-lights-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .shift-lights-row {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 4px;
+  }
+  .shift-led {
+    height: 6px;
+    border-radius: 99px;
+    background: rgba(148, 163, 184, 0.14);
+    transform: scaleY(0.75);
+    transition: background 0.28s ease, box-shadow 0.28s ease, transform 0.28s var(--ease-bounce);
+  }
+  .shift-led.lit {
+    transform: scaleY(1);
+    animation: ledPop 0.38s var(--ease-bounce) both;
+  }
+  .shift-led.lit.c-cyan { background: #38BDF8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.8); }
+  .shift-led.lit.c-blue { background: #0A84FF; box-shadow: 0 0 8px rgba(10, 132, 255, 0.8); }
+  .shift-led.lit.c-gold { background: #F59E0B; box-shadow: 0 0 9px rgba(245, 158, 11, 0.85); }
+  .shift-led.lit.c-red  { background: #F43F5E; box-shadow: 0 0 10px rgba(244, 63, 94, 0.9); }
+  @keyframes ledPop {
+    0% { opacity: 0.2; transform: scaleY(0.4); }
+    60% { opacity: 1; transform: scaleY(1.35); }
+    100% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* Directional Date / Period Slide Transitions */
+  .slide-from-right {
+    animation: slideFromRight 0.34s var(--ease-spring) both;
+  }
+  .slide-from-left {
+    animation: slideFromLeft 0.34s var(--ease-spring) both;
+  }
+  @keyframes slideFromRight {
+    from { opacity: 0; transform: translateX(22px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideFromLeft {
+    from { opacity: 0; transform: translateX(-22px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Tab View Cross-Fade + Spring Lift */
+  .view-enter {
+    animation: viewLiftIn 0.34s var(--ease-spring) both;
+  }
+  @keyframes viewLiftIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.99); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Bottom Dock Sliding Glass Pill + Per-Tab Micro-Animations */
+  .tabbar-dock {
+    position: fixed;
+    overflow: hidden;
+  }
+  .tab-pill-slider {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    width: calc((100% - 12px - 16px) / 5);
+    border-radius: 18px;
+    background: rgba(10, 132, 255, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.36), 0 4px 16px -4px var(--accent-glow);
+    transition: transform 0.38s cubic-bezier(0.32, 1.28, 0.56, 1), background 0.3s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  [data-drive="sport"] .tab-pill-slider {
+    background: rgba(226, 39, 24, 0.22);
+    box-shadow: inset 0 0 0 1px rgba(244, 63, 94, 0.45), 0 4px 16px -4px rgba(226, 39, 24, 0.5);
+  }
+  [data-drive="mcs"] .tab-pill-slider {
+    background: rgba(234, 179, 8, 0.22);
+    box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.48), 0 4px 16px -4px rgba(234, 179, 8, 0.45);
+  }
+  .tab-item {
+    position: relative;
+    z-index: 1;
+  }
+  .tab-item.active {
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--accent-blue);
+  }
+  .tab-item svg {
+    transition: transform 0.28s var(--ease-bounce);
+  }
+  .tab-item:active svg { transform: scale(0.84); }
+  .tab-item.active[data-tab="orders"] svg { animation: iconPop 0.42s var(--ease-bounce); }
+  .tab-item.active[data-tab="schedule"] svg { animation: iconTilt 0.44s var(--ease-bounce); }
+  .tab-item.active[data-tab="stats"] svg { animation: iconPop 0.42s var(--ease-bounce); }
+  .tab-item.active[data-tab="history"] svg { animation: iconSpinBack 0.52s var(--ease-spring); }
+  .tab-item.active[data-tab="settings"] svg { animation: iconGearTurn 0.58s var(--ease-spring); }
+  @keyframes iconPop {
+    0% { transform: scale(0.82) translateY(2px); }
+    60% { transform: scale(1.16) translateY(-2px); }
+    100% { transform: scale(1) translateY(0); }
+  }
+  @keyframes iconTilt {
+    0% { transform: rotate(0deg) scale(0.9); }
+    45% { transform: rotate(-10deg) scale(1.14); }
+    100% { transform: rotate(0deg) scale(1); }
+  }
+  @keyframes iconSpinBack {
+    0% { transform: rotate(110deg) scale(0.85); }
+    100% { transform: rotate(0deg) scale(1); }
+  }
+  @keyframes iconGearTurn {
+    0% { transform: rotate(0deg) scale(0.9); }
+    60% { transform: rotate(105deg) scale(1.14); }
+    100% { transform: rotate(90deg) scale(1); }
+  }
+
+  /* Touch Ripple Effect */
+  .bmw-ripple-host {
+    position: relative;
+    overflow: hidden;
+  }
+  .bmw-ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    background: radial-gradient(circle, rgba(255,255,255,0.34) 0%, rgba(56,189,248,0.18) 50%, transparent 72%);
+    pointer-events: none;
+    animation: bmwRippleOut 0.55s ease-out forwards;
+    z-index: 4;
+  }
+  @keyframes bmwRippleOut {
+    to { transform: scale(3.4); opacity: 0; }
+  }
+
+  /* Order Card Delete / Clone / License Plate Glint */
+  .order-card {
+    transition: transform 0.25s var(--ease-spring), opacity 0.25s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+  }
+  .order-card.order-exit {
+    transform: translateX(72px) scale(0.94);
+    opacity: 0;
+    border-color: rgba(244, 63, 94, 0.55);
+    box-shadow: -12px 0 28px rgba(244, 63, 94, 0.35);
+    pointer-events: none;
+  }
+  .order-card.order-clone-in {
+    animation: cloneFlash 0.65s var(--ease-spring) both;
+  }
+  @keyframes cloneFlash {
+    0% { opacity: 0; transform: translateY(-14px) scale(0.95); box-shadow: 0 0 0 2px var(--accent), 0 0 28px var(--accent-glow); }
+    55% { opacity: 1; transform: translateY(0) scale(1.01); box-shadow: 0 0 0 1.5px var(--accent), 0 0 20px var(--accent-glow); }
+    100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: var(--shadow-card); }
+  }
+  .ru-plate {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .ru-plate::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.85) 50%, transparent 75%);
+    transform: translateX(-140%);
+  }
+  .ru-plate.glint::after {
+    animation: plateGlint 0.55s ease;
+  }
+  @keyframes plateGlint {
+    from { transform: translateX(-140%); }
+    to { transform: translateX(150%); }
+  }
+
+  /* Order Editor: Torque Bar, Money Pop, Job Row Enter/Exit */
+  .live-torque-track {
+    width: 100%;
+    height: 4px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .live-torque-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #00A0E3 0%, #38BDF8 50%, #10B981 82%, #F59E0B 100%);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.65);
+    transition: width 0.34s var(--ease-spring);
+  }
+  .money-pop {
+    animation: moneyBounce 0.32s var(--ease-bounce);
+  }
+  @keyframes moneyBounce {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.12); text-shadow: 0 0 18px var(--green-glow); }
+    100% { transform: scale(1); }
+  }
+  .job-row-enter {
+    animation: jobRowIn 0.28s var(--ease-spring) both;
+  }
+  .job-row-exit {
+    animation: jobRowOut 0.22s ease forwards;
+    overflow: hidden;
+  }
+  @keyframes jobRowIn {
+    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes jobRowOut {
+    to { opacity: 0; transform: translateX(28px) scale(0.95); max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; border-width: 0; }
+  }
+
+  /* Calendar Diagonal Wave & Status Pulse */
+  .cal-cell-wave {
+    animation: calPopIn 0.34s var(--ease-spring) both;
+  }
+  @keyframes calPopIn {
+    from { opacity: 0; transform: scale(0.84) translateY(6px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .cal-cell.status-flash {
+    animation: calStatusLock 0.58s var(--ease-bounce);
+  }
+  @keyframes calStatusLock {
+    0% { transform: scale(0.86); }
+    50% { transform: scale(1.1); box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.45); }
+    100% { transform: scale(1); }
+  }
+
+  /* Stats Live Cockpit Ring Gauge & Rising Bars */
+  .stats-hero-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .cockpit-ring-wrap {
+    position: relative;
+    width: 78px;
+    height: 78px;
+    flex-shrink: 0;
+  }
+  .cockpit-ring-svg {
+    width: 78px;
+    height: 78px;
+    transform: rotate(-90deg);
+  }
+  .cockpit-ring-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 7;
+  }
+  .cockpit-ring-fg {
+    fill: none;
+    stroke: url(#mGaugeGrad);
+    stroke-width: 7;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.65));
+  }
+  .cockpit-ring-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .bar-grow {
+    transform-box: fill-box;
+    transform-origin: bottom center;
+    animation: barRise 0.56s var(--ease-spring) both;
+  }
+  @keyframes barRise {
+    from { transform: scaleY(0); opacity: 0.25; }
+    to { transform: scaleY(1); opacity: 1; }
+  }
+
+  /* M-Performance Save Micro-Sparks */
+  .m-spark {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 160;
+    animation: sparkFly 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes sparkFly {
+    0% { opacity: 1; transform: translate(0, 0) scale(1.1); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.1); }
+  }
+
 </style>
 </head>
 <body>
+
+<!-- BMW M-Telemetry Ignition Splash -->
+<div id="bmwSplash" class="bmw-splash gone" onclick="closeBmwSplash()">
+  <div class="splash-stage">
+    <div class="splash-beam-left"></div>
+    <div class="splash-beam-right"></div>
+    <div class="splash-flare"></div>
+
+    <svg class="bmw-front-svg" viewBox="0 0 420 170" aria-hidden="true">
+      <!-- Subtle Hood Contours -->
+      <path class="bmw-hood-line" d="M 122,30 Q 158,62 174,84" />
+      <path class="bmw-hood-line" d="M 298,30 Q 262,62 246,84" />
+
+      <!-- Left Headlight Assembly (BMW LCI Twin L-DRL + Laserlight Blue Core) -->
+      <path class="bmw-brow" d="M 38,83 Q 92,70 147,82" />
+      <path class="bmw-drl" d="M 38,94 L 58,108 L 88,108 L 97,85" />
+      <path class="bmw-drl" d="M 96,108 L 126,106 L 136,86" />
+      <line class="bmw-laser-core" x1="64" y1="93" x2="82" y2="93" />
+      <line class="bmw-laser-core" x1="106" y1="92" x2="122" y2="92" />
+
+      <!-- Right Headlight Assembly (Mirror) -->
+      <path class="bmw-brow" d="M 382,83 Q 328,70 273,82" />
+      <path class="bmw-drl" d="M 382,94 L 362,108 L 332,108 L 323,85" />
+      <path class="bmw-drl" d="M 324,108 L 294,106 L 284,86" />
+      <line class="bmw-laser-core" x1="356" y1="93" x2="338" y2="93" />
+      <line class="bmw-laser-core" x1="314" y1="92" x2="298" y2="92" />
+
+      <!-- Iconic Glow Double Kidney Grille -->
+      <path class="bmw-kidney" d="M 203,92 L 171,88 C 161,88 156,95 157,106 L 162,132 C 164,142 172,147 182,145 L 201,141 C 204,140 205,137 205,131 L 205,98 C 205,94 204,92 203,92 Z" />
+      <path class="bmw-kidney" d="M 217,92 L 249,88 C 259,88 264,95 263,106 L 258,132 C 256,142 248,147 238,145 L 219,141 C 216,140 215,137 215,131 L 215,98 C 215,94 216,92 217,92 Z" />
+
+      <!-- M Horizontal Grille Slats -->
+      <line class="bmw-slat" x1="164" y1="104" x2="199" y2="105" />
+      <line class="bmw-slat" x1="165" y1="115" x2="199" y2="116" />
+      <line class="bmw-slat" x1="167" y1="126" x2="199" y2="127" />
+      <line class="bmw-slat" x1="221" y1="105" x2="256" y2="104" />
+      <line class="bmw-slat" x1="221" y1="116" x2="255" y2="115" />
+      <line class="bmw-slat" x1="221" y1="127" x2="253" y2="126" />
+    </svg>
+
+    <div class="splash-m-bar"></div>
+
+    <div class="splash-rpm-wrap">
+      <div class="splash-rpm-track">
+        <div class="splash-rpm-fill"></div>
+      </div>
+    </div>
+
+    <div class="splash-title">M-TELEMETRY</div>
+    <div class="splash-sub" id="splashStatusText">IGNITION · SYSTEM READY</div>
+  </div>
+  <div class="splash-skip-hint">Нажмите, чтобы пропустить</div>
+</div>
+
+<div id="mSaveFlash" class="m-save-flash"></div>
+<div id="modeHudBanner" class="mode-hud-banner">
+  <span class="m-stripe" style="width:24px;"></span>
+  <span id="modeHudText">M1 MODE · SPORT+</span>
+</div>
+
 
 <div class="ambient-orb orb-1"></div>
 <div class="ambient-orb orb-2"></div>
@@ -775,7 +1728,7 @@
   <!-- Top Header matching screenshots -->
   <header class="top-header">
     <div class="header-left">
-      <div class="app-icon-box" aria-hidden="true">
+      <div class="app-icon-box" id="appLogoIcon" onclick="revAppLogo()" title="M-Telemetry">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
         </svg>
@@ -788,6 +1741,17 @@
         <h1 class="header-page-title" id="pageHeaderTitle">Заказы</h1>
       </div>
     </div>
+    <div class="header-actions">
+      <button class="m-mode-btn" id="mModeBtn" onclick="cycleDriveMode()" title="Режим M-Drive (Comfort / M1 Sport+ / M CS)">M1</button>
+      <button class="ignition-pill-btn" onclick="playBmwIgnition(true)" title="Запуск BMW Ignition">
+      <span class="ignition-dot"></span>
+      <svg width="24" height="12" viewBox="0 0 36 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M2 8 L6 12 L13 12 L15 4" stroke="#F8FAFC"/>
+        <path d="M34 8 L30 12 L23 12 L21 4" stroke="#F8FAFC"/>
+        <circle cx="18" cy="8" r="1.3" fill="#38BDF8" stroke="none"/>
+      </svg>
+    </button>
+    </div>
   </header>
 
   <main id="mainView"></main>
@@ -795,6 +1759,7 @@
 
 <!-- Bottom Navigation Dock -->
 <nav class="tabbar-dock" aria-label="Навигация">
+  <div class="tab-pill-slider" id="tabPillSlider" aria-hidden="true"></div>
   <button class="tab-item active" data-tab="orders">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
     <span class="lbl">Заказы</span>
@@ -841,8 +1806,15 @@
     </div>
 
     <div id="photoPreviewBox" class="hidden" style="margin-bottom:12px;position:relative;">
-      <img id="photoPreviewImg" src="" alt="Фото З/Н" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;border:1px solid var(--border-strong);">
-      <button type="button" class="mini-btn danger" id="removePhotoBtn" style="position:absolute;top:8px;right:8px;background:rgba(15,20,32,0.88);">Удалить</button>
+      <img id="photoPreviewImg" src="" alt="Фото З/Н" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;border:1px solid var(--border-strong);display:block;">
+      <div class="ocr-laser-overlay" aria-hidden="true">
+        <div class="ocr-laser-beam"></div>
+        <span class="ocr-hud-corner tl"></span>
+        <span class="ocr-hud-corner tr"></span>
+        <span class="ocr-hud-corner bl"></span>
+        <span class="ocr-hud-corner br"></span>
+      </div>
+      <button type="button" class="mini-btn danger" id="removePhotoBtn" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(15,20,32,0.88);">Удалить</button>
     </div>
 
     <form id="orderForm">
@@ -879,12 +1851,15 @@
       </div>
       <div id="jobsList"></div>
 
-      <div class="glass-card" style="padding:12px 14px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;background:rgba(10,132,255,0.1);border-color:rgba(10,132,255,0.28);">
-        <div>
-          <div style="font-size:10px;color:var(--text-secondary);font-weight:800;">ИТОГО ПО З/Н</div>
-          <div class="num" id="liveCalcAw" style="font-size:14px;font-weight:800;">0 AW · 0.00 н/ч</div>
+      <div class="glass-card" style="padding:12px 14px;margin:12px 0;background:rgba(10,132,255,0.1);border-color:rgba(10,132,255,0.28);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:10px;color:var(--text-secondary);font-weight:800;">ИТОГО ПО З/Н</div>
+            <div class="num" id="liveCalcAw" style="font-size:14px;font-weight:800;">0 AW · 0.00 н/ч</div>
+          </div>
+          <div class="num" id="liveCalcMoney" style="font-size:20px;font-weight:800;color:var(--green);">0 ₽</div>
         </div>
-        <div class="num" id="liveCalcMoney" style="font-size:20px;font-weight:800;color:var(--green);">0 ₽</div>
+        <div class="live-torque-track"><div class="live-torque-fill" id="liveTorqueFill"></div></div>
       </div>
 
       <div class="form-grid">
@@ -964,6 +1939,8 @@
       awPerHour100: 1200,
       schedule: { type: "custom", startDate: new Date().toISOString().slice(0, 10), pattern: "РРВВ" },
       theme: "dark",
+      splashEnabled: true,
+      driveMode: "comfort",
       ocrProvider: "ocrspace",
       ocrSpaceKey: "",
       geminiKey: ""
@@ -997,7 +1974,31 @@
   let state = loadState();
   let currentTab = 'orders';
   let periodMode = 'month'; // day | week | month | custom
-  const todayIso = new Date().toISOString().slice(0, 10);
+
+  function toLocalIso(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+  function parseLocalIso(iso) {
+    const [y, m, d] = (iso || '').split('-').map(Number);
+    return new Date(y, (m || 1) - 1, d || 1);
+  }
+  function addDaysIso(iso, delta) {
+    const d = parseLocalIso(iso);
+    d.setDate(d.getDate() + delta);
+    return toLocalIso(d);
+  }
+  function addMonthsIso(iso, delta) {
+    const [y, m, day] = iso.split('-').map(Number);
+    const target = new Date(y, m - 1 + delta, 1);
+    const maxD = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+    target.setDate(Math.min(day, maxD));
+    return toLocalIso(target);
+  }
+
+  const todayIso = toLocalIso(new Date());
   let anchorDate = todayIso;
   let customFrom = todayIso.slice(0, 7) + '-01';
   let customTo = todayIso;
@@ -1009,9 +2010,15 @@
 
   function applyTheme() {
     const t = state.settings.theme || 'dark';
+    const dm = state.settings.driveMode || 'comfort';
     document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-drive', dm);
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', t === 'dark' ? '#07090F' : '#EEF2F7');
+    const mBtn = document.getElementById('mModeBtn');
+    if (mBtn) {
+      mBtn.textContent = dm === 'sport' ? 'M1+' : dm === 'mcs' ? 'CS' : 'M1';
+    }
   }
   applyTheme();
 
@@ -1058,22 +2065,25 @@
     return { aw, hours, hours100, earningsKop };
   }
 
-  // Period range helper
+  // Period range helper (strictly local date arithmetic, zero UTC drift)
   function getActiveRange() {
+    const nowIso = toLocalIso(new Date());
     if (periodMode === 'day') {
-      return { start: anchorDate, end: anchorDate, label: anchorDate === '2026-11-21' ? 'Сегодня' : fmtDateRu(anchorDate) };
+      return { start: anchorDate, end: anchorDate, label: anchorDate === nowIso ? 'Сегодня' : fmtDateRu(anchorDate) };
     }
     if (periodMode === 'week') {
-      const d = new Date(anchorDate + 'T00:00:00');
+      const d = parseLocalIso(anchorDate);
       const day = (d.getDay() + 6) % 7;
       const mon = new Date(d); mon.setDate(d.getDate() - day);
       const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-      const s = mon.toISOString().slice(0, 10);
-      const e = sun.toISOString().slice(0, 10);
+      const s = toLocalIso(mon);
+      const e = toLocalIso(sun);
       return { start: s, end: e, label: `${s.slice(8)}.${s.slice(5,7)} — ${e.slice(8)}.${e.slice(5,7)}` };
     }
     if (periodMode === 'custom') {
-      return { start: customFrom, end: customTo, label: `${customFrom.slice(8)}.${customFrom.slice(5,7)} — ${customTo.slice(8)}.${customTo.slice(5,7)}` };
+      const s = customFrom <= customTo ? customFrom : customTo;
+      const e = customFrom <= customTo ? customTo : customFrom;
+      return { start: s, end: e, label: `${s.slice(8)}.${s.slice(5,7)} — ${e.slice(8)}.${e.slice(5,7)}` };
     }
     const ym = anchorDate.slice(0, 7);
     const [y, m] = ym.split('-').map(Number);
@@ -1081,23 +2091,33 @@
     return { start: `${ym}-01`, end: `${ym}-${String(lastD).padStart(2, '0')}`, label: fmtMonthTitle(ym) };
   }
 
-  window.setPeriodMode = (mode) => { periodMode = mode; render(); };
+  let navSlideDir = 0; // -1 left, +1 right
+  let lastClonedId = null;
+  let lastStatusPulseIso = null;
+  let dominoCalFill = false;
+
+  window.setPeriodMode = (mode) => { navSlideDir = 0; periodMode = mode; render(); };
   window.shiftPeriod = (dir) => {
-    const d = new Date(anchorDate + 'T00:00:00');
-    if (periodMode === 'day') d.setDate(d.getDate() + dir);
-    else if (periodMode === 'week') d.setDate(d.getDate() + dir * 7);
-    else d.setMonth(d.getMonth() + dir);
-    anchorDate = d.toISOString().slice(0, 10);
+    navSlideDir = dir;
+    if (periodMode === 'day') anchorDate = addDaysIso(anchorDate, dir);
+    else if (periodMode === 'week') anchorDate = addDaysIso(anchorDate, dir * 7);
+    else anchorDate = addMonthsIso(anchorDate, dir);
+    selectedCalDay = anchorDate;
+    render();
+  };
+  window.setCustomDate = (which, val) => {
+    if (!val) return;
+    if (which === 'from') customFrom = val;
+    else customTo = val;
     render();
   };
 
   function calcSalaryForRange(start, end) {
-    // Calculate salary share based on work/vacation days in each month touched
     let totalSalaryKop = 0;
-    const cur = new Date(start + 'T00:00:00');
-    const last = new Date(end + 'T00:00:00');
+    const cur = parseLocalIso(start);
+    const last = parseLocalIso(end);
     while (cur <= last) {
-      const iso = cur.toISOString().slice(0, 10);
+      const iso = toLocalIso(cur);
       const ym = iso.slice(0, 7);
       const st = state.days[iso];
       if (st === 'work' || st === 'vacation') {
@@ -1109,25 +2129,48 @@
     return Math.round(totalSalaryKop);
   }
 
-  // Tab Switcher
+  // Tab Switcher + iDrive Sliding Dock Pill
+  const TAB_ORDER = ['orders', 'schedule', 'stats', 'history', 'settings'];
   const TAB_TITLES = { orders: 'Заказы', schedule: 'График', stats: 'Статистика', history: 'История', settings: 'Настройки' };
+
+  function updateDockPill() {
+    const slider = document.getElementById('tabPillSlider');
+    if (!slider) return;
+    const idx = Math.max(0, TAB_ORDER.indexOf(currentTab));
+    slider.style.transform = `translateX(calc(${idx * 100}% + ${idx * 4}px))`;
+  }
+
+  let prevRenderedTab = '';
   document.querySelectorAll('.tab-item').forEach(btn => {
     btn.onclick = () => {
+      const next = btn.dataset.tab;
+      if (next === currentTab) return;
       document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      currentTab = btn.dataset.tab;
+      currentTab = next;
+      navSlideDir = 0;
+      updateDockPill();
       render();
     };
   });
 
   function render() {
     document.getElementById('pageHeaderTitle').textContent = TAB_TITLES[currentTab] || 'Нормо-часы';
+    updateDockPill();
     const main = document.getElementById('mainView');
+    const isTabChange = prevRenderedTab && prevRenderedTab !== currentTab;
+    prevRenderedTab = currentTab;
     if (currentTab === 'orders') renderOrders(main);
     else if (currentTab === 'schedule') renderSchedule(main);
     else if (currentTab === 'stats') renderStats(main);
     else if (currentTab === 'history') renderHistory(main);
     else if (currentTab === 'settings') renderSettings(main);
+    if (isTabChange) {
+      main.classList.remove('view-enter');
+      void main.offsetWidth;
+      main.classList.add('view-enter');
+    }
+    navSlideDir = 0;
   }
 
   function renderPeriodSwitcherHtml() {
@@ -1141,13 +2184,13 @@
       </div>
       ${periodMode === 'custom' ? `
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
-          <input type="date" class="input-field" style="padding:8px 10px;font-size:13px;" value="${customFrom}" onchange="customFrom=this.value;render()">
-          <input type="date" class="input-field" style="padding:8px 10px;font-size:13px;" value="${customTo}" onchange="customTo=this.value;render()">
+          <input type="date" class="input-field" style="padding:8px 10px;font-size:13px;" value="${customFrom}" onchange="setCustomDate('from', this.value)">
+          <input type="date" class="input-field" style="padding:8px 10px;font-size:13px;" value="${customTo}" onchange="setCustomDate('to', this.value)">
         </div>
       ` : `
         <div class="date-nav-row">
           <button class="nav-arrow" onclick="shiftPeriod(-1)">‹</button>
-          <div class="nav-date-label">${r.label}</div>
+          <div class="nav-date-label ${navSlideDir>0?'slide-from-right':navSlideDir<0?'slide-from-left':''}">${r.label}</div>
           <button class="nav-arrow" onclick="shiftPeriod(1)">›</button>
         </div>
       `}
@@ -1187,27 +2230,50 @@
     });
 
     let html = `
-      <section class="glass-card earnings-box">
+      <section class="glass-card earnings-box" id="ordersHeroCard">
         ${renderPeriodSwitcherHtml()}
         <div class="earn-caption-row">
           <span class="earn-eyebrow">ЗАРАБОТОК</span>
           <span style="font-size:12px;color:var(--text-secondary);font-weight:600;">${confirmed.length ? confirmed.length + ' заказ-нарядов' : 'нет заказов'}</span>
         </div>
-        <div class="earn-big-num num">${fmtRub(totalKop)}</div>
+        <div class="earn-big-num num" id="heroTotalMoney">${fmtRub(totalKop)}</div>
 
         <div class="earn-sub-tiles">
           <div class="sub-tile blue">
             <div class="sub-tile-k">AW</div>
-            <div class="sub-tile-v num">${(totalAw100 / 100).toFixed(0)}</div>
+            <div class="sub-tile-v num" id="heroTotalAw">${(totalAw100 / 100).toFixed(0)}</div>
           </div>
           <div class="sub-tile">
             <div class="sub-tile-k">НОРМО-ЧАСЫ</div>
-            <div class="sub-tile-v num">${totalHours.toFixed(2).replace('.', ',')}</div>
+            <div class="sub-tile-v num" id="heroTotalHours">${totalHours.toFixed(2).replace('.', ',')}</div>
           </div>
         </div>
 
         <div class="earn-formula num">
           Оклад <b>${fmtRub(salaryKop)}</b> &nbsp;+&nbsp; нормо-часы <b>${fmtRub(pieceKop)}</b>
+        </div>
+
+        <div class="shift-lights-wrap">
+          <div class="shift-lights-hdr">
+            <span>M-SHIFT · НАГРУЗКА AW</span>
+            <span class="num">${(() => {
+              const target = periodMode === 'day' ? 120 : periodMode === 'week' ? 600 : 1800;
+              return Math.min(100, Math.round(((totalAw100 / 100) / target) * 100)) + '%';
+            })()}</span>
+          </div>
+          <div class="shift-lights-row">
+            ${(() => {
+              const target = periodMode === 'day' ? 120 : periodMode === 'week' ? 600 : 1800;
+              const litCount = Math.min(12, Math.round(((totalAw100 / 100) / target) * 12));
+              let leds = '';
+              for (let i = 0; i < 12; i++) {
+                const col = i < 4 ? 'c-cyan' : i < 7 ? 'c-blue' : i < 10 ? 'c-gold' : 'c-red';
+                const lit = i < litCount ? `lit ${col}` : '';
+                leds += `<span class="shift-led ${lit}" style="animation-delay:${i * 38}ms"></span>`;
+              }
+              return leds;
+            })()}
+          </div>
         </div>
       </section>
 
@@ -1246,16 +2312,20 @@
         const dKop = list.reduce((s, o) => s + (o.earningsKop || 0), 0);
         const dAw = list.reduce((s, o) => s + (o.aw100 || 0), 0) / 100;
         html += `<div class="day-group-hdr"><span>${fmtDateRu(dt)} · ${list.length} З/Н</span><span class="num" style="color:var(--green);">${dAw} AW · ${fmtRub(dKop)}</span></div>`;
-        list.forEach(o => {
+        list.forEach((o, oIdx) => {
           const car = [o.brand, o.model].filter(Boolean).join(' ') || 'Заказ-наряд';
           const jobsStr = (o.jobs || []).map(j => j.title).join('; ');
+          const isCloned = lastClonedId && lastClonedId === o.id;
+          const slideCls = navSlideDir > 0 ? 'slide-from-right' : navSlideDir < 0 ? 'slide-from-left' : '';
+          const cardAnim = isCloned ? 'order-clone-in' : (slideCls || (!searchQuery.trim() ? 'anim-card' : ''));
+          const staggerStyle = !searchQuery.trim() && !isCloned && oIdx < 8 ? `style="animation-delay:${oIdx * 35}ms"` : '';
           html += `
-            <article class="order-card ${o.status==='draft'?'draft':''}">
+            <article class="order-card bmw-ripple-host ${o.status==='draft'?'draft':''} ${cardAnim}" data-order-id="${o.id}" ${staggerStyle}>
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
                 <div>
                   <div style="font-size:16px;font-weight:800;display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
                     <span>${escapeHtml(car)}</span>
-                    ${o.plate ? `<span class="ru-plate">${escapeHtml(o.plate)}</span>` : ''}
+                    ${o.plate ? `<span class="ru-plate" onclick="this.classList.remove('glint');void this.offsetWidth;this.classList.add('glint')">${escapeHtml(o.plate)}</span>` : ''}
                     ${o.number ? `<span style="font-size:11px;font-weight:700;color:var(--accent);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:6px;" class="num">#${escapeHtml(o.number)}</span>` : ''}
                   </div>
                 </div>
@@ -1282,6 +2352,10 @@
     }
 
     container.innerHTML = html;
+    lastClonedId = null;
+    if (!searchQuery.trim()) {
+      animateTelemetryNumbers(totalKop, totalAw100 / 100, totalHours);
+    }
 
     const sInp = document.getElementById('orderSearchInp');
     if (sInp) {
@@ -1304,7 +2378,23 @@
     }
   }
 
-  // 2. SCHEDULE TAB (Matching Screenshots 1 & 2)
+  // 2. SCHEDULE TAB (Месяц / Неделя / День all working)
+  window.setCalSubView = (v) => { calSubView = v; render(); };
+  window.shiftScheduleNav = (dir) => {
+    navSlideDir = dir;
+    if (calSubView === 'day') {
+      selectedCalDay = addDaysIso(selectedCalDay, dir);
+      anchorDate = selectedCalDay;
+    } else if (calSubView === 'week') {
+      selectedCalDay = addDaysIso(selectedCalDay, dir * 7);
+      anchorDate = selectedCalDay;
+    } else {
+      anchorDate = addMonthsIso(anchorDate, dir);
+      selectedCalDay = anchorDate;
+    }
+    render();
+  };
+
   function renderSchedule(container) {
     const ym = anchorDate.slice(0, 7);
     const [y, m] = ym.split('-').map(Number);
@@ -1324,20 +2414,91 @@
     const monthPieceKop = monthOrders.reduce((s, o) => s + (o.earningsKop || 0), 0);
     const totalMonthKop = (state.settings.monthlySalaryKop || 0) + monthPieceKop;
 
-    let cellsHtml = '';
-    for (let i = 0; i < startOffset; i++) cellsHtml += `<div></div>`;
-    for (let d = 1; d <= daysInMonth; d++) {
-      const iso = `${ym}-${String(d).padStart(2, '0')}`;
-      const st = state.days[iso] || 'off';
-      const dayOrdersKop = monthOrders.filter(o => o.date === iso).reduce((s, o) => s + (o.earningsKop || 0), 0);
+    let navTitle = fmtMonthTitle(ym);
+    let bodyHtml = '';
+
+    if (calSubView === 'month') {
+      let cellsHtml = '';
+      for (let i = 0; i < startOffset; i++) cellsHtml += `<div></div>`;
+      for (let d = 1; d <= daysInMonth; d++) {
+        const iso = `${ym}-${String(d).padStart(2, '0')}`;
+        const st = state.days[iso] || 'off';
+        const dayOrdersKop = monthOrders.filter(o => o.date === iso).reduce((s, o) => s + (o.earningsKop || 0), 0);
+        const dayBaseKop = (st === 'work' || st === 'vacation') ? daySalaryKop : 0;
+        const daySumKop = dayOrdersKop + dayBaseKop;
+        const tag = st === 'work' ? 'Р' : st === 'vacation' ? 'О' : st === 'unpaid' ? 'Б' : '';
+        const isPulse = lastStatusPulseIso === iso;
+        const waveDelay = dominoCalFill ? (d * 18) : (navSlideDir ? ((d % 7) * 22 + Math.floor(d / 7) * 18) : 0);
+        const waveCls = (dominoCalFill || navSlideDir) ? 'cal-cell-wave' : '';
+        cellsHtml += `
+          <div class="cal-cell bmw-ripple-host ${st} ${selectedCalDay===iso?'selected':''} ${waveCls} ${isPulse?'status-flash':''}" style="${waveDelay ? 'animation-delay:'+waveDelay+'ms' : ''}" onclick="openDaySheet('${iso}')">
+            <span class="cal-day-num num">${d}</span>
+            <span class="cal-day-money num">${daySumKop > 0 ? fmtShortK(daySumKop) : ''}</span>
+            <span class="cal-day-tag">${tag}</span>
+          </div>
+        `;
+      }
+      bodyHtml = `
+        <div class="cal-grid">
+          <div class="cal-dow">Пн</div><div class="cal-dow">Вт</div><div class="cal-dow">Ср</div>
+          <div class="cal-dow">Чт</div><div class="cal-dow">Пт</div><div class="cal-dow">Сб</div><div class="cal-dow">Вс</div>
+          ${cellsHtml}
+        </div>
+      `;
+    } else if (calSubView === 'week') {
+      const base = parseLocalIso(selectedCalDay);
+      const dow = (base.getDay() + 6) % 7;
+      const mon = new Date(base); mon.setDate(base.getDate() - dow);
+      const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+      const sIso = toLocalIso(mon), eIso = toLocalIso(sun);
+      navTitle = `${sIso.slice(8)}.${sIso.slice(5,7)} — ${eIso.slice(8)}.${eIso.slice(5,7)}`;
+      const dowNames = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+      let weekCells = '';
+      for (let i = 0; i < 7; i++) {
+        const cur = new Date(mon); cur.setDate(mon.getDate() + i);
+        const iso = toLocalIso(cur);
+        const st = state.days[iso] || 'off';
+        const dayOrds = state.orders.filter(o => o.date === iso && o.status !== 'draft');
+        const dayOrdersKop = dayOrds.reduce((s, o) => s + (o.earningsKop || 0), 0);
+        const dayBaseKop = (st === 'work' || st === 'vacation') ? daySalaryKop : 0;
+        const daySumKop = dayOrdersKop + dayBaseKop;
+        const tag = st === 'work' ? 'Р' : st === 'vacation' ? 'О' : st === 'unpaid' ? 'Б' : '';
+        weekCells += `
+          <div class="cal-cell ${st} ${selectedCalDay===iso?'selected':''}" style="height:76px;" onclick="openDaySheet('${iso}')">
+            <span class="cal-day-num num">${cur.getDate()}</span>
+            <span class="cal-day-money num">${daySumKop > 0 ? fmtShortK(daySumKop) : ''}</span>
+            <span class="cal-day-tag">${tag || (dayOrds.length ? dayOrds.length + ' З/Н' : '')}</span>
+          </div>
+        `;
+      }
+      bodyHtml = `
+        <div class="cal-grid">
+          ${dowNames.map(n => `<div class="cal-dow">${n}</div>`).join('')}
+          ${weekCells}
+        </div>
+      `;
+    } else {
+      // Day detail view inside Schedule
+      navTitle = fmtDateRu(selectedCalDay);
+      const st = state.days[selectedCalDay] || 'off';
+      const stNames = { work: 'Рабочий день', off: 'Выходной', vacation: 'Отпуск', unpaid: 'За свой счёт' };
+      const stColors = { work: 'var(--green)', off: 'var(--text-secondary)', vacation: 'var(--gold)', unpaid: 'var(--red)' };
+      const dayOrds = state.orders.filter(o => o.date === selectedCalDay);
+      const dayOrdersKop = dayOrds.filter(o => o.status !== 'draft').reduce((s, o) => s + (o.earningsKop || 0), 0);
+      const dayAw = dayOrds.filter(o => o.status !== 'draft').reduce((s, o) => s + (o.aw100 || 0), 0) / 100;
       const dayBaseKop = (st === 'work' || st === 'vacation') ? daySalaryKop : 0;
-      const daySumKop = dayOrdersKop + dayBaseKop;
-      const tag = st === 'work' ? 'Р' : st === 'vacation' ? 'О' : st === 'unpaid' ? 'Б' : '';
-      cellsHtml += `
-        <div class="cal-cell ${st} ${selectedCalDay===iso?'selected':''}" onclick="openDaySheet('${iso}')">
-          <span class="cal-day-num num">${d}</span>
-          <span class="cal-day-money num">${daySumKop > 0 ? fmtShortK(daySumKop) : ''}</span>
-          <span class="cal-day-tag">${tag}</span>
+      bodyHtml = `
+        <div style="padding:12px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:13px;font-weight:800;color:${stColors[st]};">${stNames[st]}</span>
+            <button class="mini-btn" onclick="openDaySheet('${selectedCalDay}')">Сменить статус</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">
+            <div class="sub-tile" style="padding:10px;"><div class="sub-tile-k">ИТОГО ДЕНЬ</div><div class="num" style="font-size:16px;font-weight:800;color:var(--green);margin-top:2px;">${fmtRub(dayOrdersKop + dayBaseKop)}</div></div>
+            <div class="sub-tile blue" style="padding:10px;"><div class="sub-tile-k">AW</div><div class="num" style="font-size:16px;font-weight:800;margin-top:2px;">${dayAw}</div></div>
+            <div class="sub-tile" style="padding:10px;"><div class="sub-tile-k">ЗАКАЗЫ</div><div class="num" style="font-size:16px;font-weight:800;margin-top:2px;">${dayOrds.length}</div></div>
+          </div>
+          <button class="btn-primary-full" style="padding:11px;font-size:14px;" onclick="openOrderModal('${selectedCalDay}')">+ Добавить заказ на этот день</button>
         </div>
       `;
     }
@@ -1346,9 +2507,9 @@
       <section class="glass-card" style="padding:14px;margin-bottom:14px;animation:fadeSlideUp 0.45s var(--ease-spring) both;">
         <div style="display:grid;grid-template-columns:1fr 42px;gap:8px;align-items:center;">
           <div class="seg-bar three">
-            <button class="seg-btn ${calSubView==='month'?'active':''}" onclick="calSubView='month';render()">Месяц</button>
-            <button class="seg-btn ${calSubView==='week'?'active':''}" onclick="calSubView='week';render()">Неделя</button>
-            <button class="seg-btn ${calSubView==='day'?'active':''}" onclick="calSubView='day';render()">День</button>
+            <button class="seg-btn ${calSubView==='month'?'active':''}" onclick="setCalSubView('month')">Месяц</button>
+            <button class="seg-btn ${calSubView==='week'?'active':''}" onclick="setCalSubView('week')">Неделя</button>
+            <button class="seg-btn ${calSubView==='day'?'active':''}" onclick="setCalSubView('day')">День</button>
           </div>
           <button class="icon-sq-btn" style="width:42px;height:38px;border-radius:12px;" onclick="autoFillSchedule()" title="Заполнить по шаблону">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
@@ -1356,16 +2517,12 @@
         </div>
 
         <div class="date-nav-row">
-          <button class="nav-arrow" onclick="shiftMonthOnly(-1)">‹</button>
-          <div class="nav-date-label">${fmtMonthTitle(ym)}</div>
-          <button class="nav-arrow" onclick="shiftMonthOnly(1)">›</button>
+          <button class="nav-arrow" onclick="shiftScheduleNav(-1)">‹</button>
+          <div class="nav-date-label ${navSlideDir>0?'slide-from-right':navSlideDir<0?'slide-from-left':''}">${navTitle}</div>
+          <button class="nav-arrow" onclick="shiftScheduleNav(1)">›</button>
         </div>
 
-        <div class="cal-grid">
-          <div class="cal-dow">Пн</div><div class="cal-dow">Вт</div><div class="cal-dow">Ср</div>
-          <div class="cal-dow">Чт</div><div class="cal-dow">Пт</div><div class="cal-dow">Сб</div><div class="cal-dow">Вс</div>
-          ${cellsHtml}
-        </div>
+        ${bodyHtml}
 
         <div class="legend-row">
           <span class="legend-item"><span class="leg-dot" style="background:var(--green);"></span>Рабочий</span>
@@ -1393,17 +2550,13 @@
         </div>
       </section>
     `;
+    lastStatusPulseIso = null;
+    dominoCalFill = false;
   }
-
-  window.shiftMonthOnly = (dir) => {
-    const d = new Date(anchorDate + 'T00:00:00');
-    d.setMonth(d.getMonth() + dir);
-    anchorDate = d.toISOString().slice(0, 10);
-    render();
-  };
 
   window.openDaySheet = (iso) => {
     selectedCalDay = iso;
+    anchorDate = iso;
     document.getElementById('daySheetTitle').textContent = fmtDateRu(iso);
     const curSt = state.days[iso] || 'off';
     const statuses = [
@@ -1429,6 +2582,7 @@
 
   window.setDayStatus = (iso, st) => {
     state.days[iso] = st;
+    lastStatusPulseIso = iso;
     saveState();
     document.getElementById('dayActionSheet').classList.remove('open');
     toast('Статус дня обновлён');
@@ -1438,15 +2592,16 @@
   window.autoFillSchedule = () => {
     const ym = anchorDate.slice(0, 7);
     const pat = (state.settings.schedule?.pattern || 'РРВВ').toUpperCase();
-    const startStr = state.settings.schedule?.startDate || '2026-11-02';
-    const startMs = new Date(startStr + 'T00:00:00').getTime();
+    const startStr = state.settings.schedule?.startDate || `${ym}-01`;
+    const startMs = parseLocalIso(startStr).getTime();
     const [y, m] = ym.split('-').map(Number);
     const daysInMonth = new Date(y, m, 0).getDate();
     for (let d = 1; d <= daysInMonth; d++) {
       const iso = `${ym}-${String(d).padStart(2, '0')}`;
-      const diff = Math.floor((new Date(iso + 'T00:00:00').getTime() - startMs) / 86400000);
+      const diff = Math.round((parseLocalIso(iso).getTime() - startMs) / 86400000);
       if (diff >= 0) state.days[iso] = pat[diff % pat.length] === 'Р' ? 'work' : 'off';
     }
+    dominoCalFill = true;
     saveState();
     toast('График заполнен по шаблону ' + pat);
     render();
@@ -1482,11 +2637,12 @@
       chartDays.forEach((dt, idx) => {
         const pH = Math.round(((dayTotals[dt] || 0) / maxStack) * 110);
         const sH = Math.round((dayBaseKop / maxStack) * 110);
-        const x = idx * colW + colW * 0.25;
-        const w = Math.min(18, colW * 0.5);
+        const x = idx * colW + colW * 0.35;
+        const w = chartDays.length === 1 ? 22 : Math.max(6, Math.min(18, colW * 1.4));
+        const dly = Math.min(idx * 45, 500);
         barsSvg += `
-          <rect x="${x}%" y="${120 - sH}" width="${w}" height="${sH}" rx="3" fill="#D97706"></rect>
-          <rect x="${x}%" y="${118 - sH - pH}" width="${w}" height="${pH}" rx="3" fill="#10B981"></rect>
+          <rect class="bar-grow" style="animation-delay:${dly}ms" x="${x}%" y="${120 - sH}" width="${w}" height="${sH}" rx="3" fill="#D97706"></rect>
+          <rect class="bar-grow" style="animation-delay:${dly + 90}ms" x="${x}%" y="${118 - sH - pH}" width="${w}" height="${pH}" rx="3" fill="#10B981"></rect>
           <text x="${x}%" y="135" fill="var(--text-secondary)" font-size="9" font-weight="700">${dt.slice(8)}</text>
         `;
       });
@@ -1497,9 +2653,29 @@
         ${renderPeriodSwitcherHtml()}
       </section>
 
-      <section class="glass-card stat-hero-green">
-        <div style="font-size:13px;color:var(--text-secondary);font-weight:600;">Общий заработок</div>
-        <div class="num" style="font-size:34px;font-weight:800;color:var(--green);margin-top:4px;letter-spacing:-0.03em;">${fmtRub(totalKop)}</div>
+      <section class="glass-card stat-hero-green stats-hero-flex">
+        <div>
+          <div style="font-size:13px;color:var(--text-secondary);font-weight:600;">Общий заработок</div>
+          <div class="num" id="statsHeroMoney" style="font-size:32px;font-weight:800;color:var(--green);margin-top:4px;letter-spacing:-0.03em;">${fmtRub(totalKop)}</div>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;font-weight:600;">Темп: <b style="color:var(--text);">${avgAwDay.toFixed(1).replace('.', ',')} AW/смена</b></div>
+        </div>
+        <div class="cockpit-ring-wrap" title="Индекс выработки AW/день (цель 100 AW)">
+          <svg class="cockpit-ring-svg" viewBox="0 0 80 80">
+            <defs>
+              <linearGradient id="mGaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00A0E3"/>
+                <stop offset="55%" stop-color="#10B981"/>
+                <stop offset="100%" stop-color="#F59E0B"/>
+              </linearGradient>
+            </defs>
+            <circle class="cockpit-ring-bg" cx="40" cy="40" r="33"/>
+            <circle class="cockpit-ring-fg" id="statsGaugeArc" cx="40" cy="40" r="33" stroke-dasharray="207.3" stroke-dashoffset="207.3"/>
+          </svg>
+          <div class="cockpit-ring-center">
+            <span class="num" style="font-size:15px;font-weight:900;line-height:1;">${Math.min(999, Math.round(avgAwDay))}</span>
+            <span style="font-size:8px;font-weight:800;color:var(--text-secondary);letter-spacing:0.06em;margin-top:2px;">AW/ДЕНЬ</span>
+          </div>
+        </div>
       </section>
 
       <div class="kpi-grid-2">
@@ -1561,6 +2737,17 @@
         ` : '<div style="font-size:13px;color:var(--text-secondary);">Нет заказов за выбранный период</div>'}
       </section>
     `;
+    const arc = document.getElementById('statsGaugeArc');
+    if (arc) {
+      const pct = Math.min(1, avgAwDay / 100);
+      requestAnimationFrame(() => {
+        arc.style.strokeDashoffset = String((207.3 * (1 - pct)).toFixed(1));
+      });
+    }
+    container.querySelectorAll('.kpi-card').forEach((card, i) => {
+      card.classList.add('anim-card');
+      card.style.animationDelay = `${i * 35}ms`;
+    });
   }
 
   // 4. HISTORY TAB
@@ -1581,7 +2768,7 @@
           <div style="font-size:17px;font-weight:800;">Архив по месяцам</div>
           <button class="mini-btn" style="color:var(--green);" onclick="exportCsv()">Экспорт CSV</button>
         </div>
-        ${yms.map(ym => {
+        ${yms.length ? yms.map(ym => {
           const it = monthsMap[ym];
           const h = (it.aw100 / 100) / ((state.settings.awPerHour100 || 1200) / 100);
           return `
@@ -1595,13 +2782,14 @@
               </div>
             </div>
           `;
-        }).join('')}
+        }).join('') : '<div style="text-align:center;padding:20px 8px;color:var(--text-secondary);font-size:14px;">Архив пока пуст — добавьте первый заказ-наряд</div>'}
       </section>
     `;
   }
 
   window.jumpToMonth = (ym) => {
-    anchorDate = `${ym}-12`;
+    anchorDate = `${ym}-01`;
+    selectedCalDay = `${ym}-01`;
     periodMode = 'month';
     currentTab = 'orders';
     document.querySelectorAll('.tab-item').forEach(b => b.classList.toggle('active', b.dataset.tab === 'orders'));
@@ -1671,14 +2859,26 @@
             <input type="text" id="setPattern" class="input-field" value="${escapeHtml(s.schedule?.pattern || 'РРВВ')}">
           </div>
         </div>
-        <div style="margin-bottom:12px;">
-          <label class="field-label">Тема оформления</label>
-          <select id="setTheme" class="input-field">
-            <option value="dark" ${s.theme==='dark'?'selected':''}>M-Dark (Тёмная)</option>
-            <option value="light" ${s.theme==='light'?'selected':''}>Silver (Светлая)</option>
-          </select>
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Тема оформления</label>
+            <select id="setTheme" class="input-field">
+              <option value="dark" ${s.theme==='dark'?'selected':''}>M-Dark (Тёмная)</option>
+              <option value="light" ${s.theme==='light'?'selected':''}>Silver (Светлая)</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Заставка BMW</label>
+            <select id="setSplashEnabled" class="input-field">
+              <option value="1" ${s.splashEnabled!==false?'selected':''}>Фары при входе (Вкл)</option>
+              <option value="0" ${s.splashEnabled===false?'selected':''}>Выкл (мгновенно)</option>
+            </select>
+          </div>
         </div>
-        <button class="btn-primary-full" onclick="saveSettingsForm()">Сохранить настройки</button>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+          <button class="btn-primary-full" onclick="saveSettingsForm()">Сохранить настройки</button>
+          <button type="button" class="mini-btn" style="padding:0 14px;border-radius:15px;color:var(--accent);" onclick="playBmwIgnition(true)">Тест фар</button>
+        </div>
       </section>
 
       <section class="glass-card" style="padding:16px;">
@@ -1700,8 +2900,16 @@
     const awH = parseFloat(document.getElementById('setAwPerHour').value) || 12;
     state.settings.awPerHour100 = Math.round(awH * 100);
     state.settings.awRateKop = Math.round(state.settings.hourRateKop / awH);
+    if (!state.settings.schedule) state.settings.schedule = { type: 'custom', startDate: todayIso, pattern: 'РРВВ' };
     state.settings.schedule.pattern = document.getElementById('setPattern').value.trim() || 'РРВВ';
     state.settings.theme = document.getElementById('setTheme').value;
+    const spEl = document.getElementById('setSplashEnabled');
+    if (spEl) state.settings.splashEnabled = spEl.value !== '0';
+    state.orders.forEach(o => {
+      const m = calcOrderMetrics(o.aw100 || 0);
+      o.hours100 = m.hours100;
+      o.earningsKop = m.earningsKop;
+    });
     applyTheme();
     saveState();
     toast('Настройки сохранены');
@@ -1774,17 +2982,23 @@
           <button type="button" class="mini-btn danger del-job-btn">✕</button>
         </div>
       `;
-      row.querySelector('.del-job-btn').onclick = () => { if (list.children.length > 1) { row.remove(); updateLiveCalc(); } };
+      row.querySelector('.del-job-btn').onclick = () => removeJobRowSmooth(row, list);
       row.querySelector('.job-aw-inp').oninput = updateLiveCalc;
       list.appendChild(row);
     });
     updateLiveCalc();
   }
 
+  function removeJobRowSmooth(row, list) {
+    if (list.children.length <= 1) return;
+    row.classList.add('job-row-exit');
+    setTimeout(() => { row.remove(); updateLiveCalc(); }, 210);
+  }
+
   document.getElementById('addJobBtn').onclick = () => {
     const list = document.getElementById('jobsList');
     const row = document.createElement('div');
-    row.className = 'job-item-row';
+    row.className = 'job-item-row job-row-enter';
     row.innerHTML = `
       <div style="display:flex;gap:6px;align-items:center;">
         <input type="text" class="input-field job-title-inp" placeholder="Работа..." style="flex:1;padding:9px 10px;">
@@ -1792,11 +3006,14 @@
         <button type="button" class="mini-btn danger del-job-btn">✕</button>
       </div>
     `;
-    row.querySelector('.del-job-btn').onclick = () => { if (list.children.length > 1) { row.remove(); updateLiveCalc(); } };
+    row.querySelector('.del-job-btn').onclick = () => removeJobRowSmooth(row, list);
     row.querySelector('.job-aw-inp').oninput = updateLiveCalc;
     list.appendChild(row);
+    const titleInp = row.querySelector('.job-title-inp');
+    if (titleInp) titleInp.focus();
   };
 
+  let lastLiveMoneyStr = '';
   function updateLiveCalc() {
     let totalAw100 = 0;
     document.querySelectorAll('.job-aw-inp').forEach(inp => {
@@ -1805,7 +3022,19 @@
     });
     const m = calcOrderMetrics(totalAw100);
     document.getElementById('liveCalcAw').textContent = `${m.aw} AW · ${m.hours.toFixed(2)} н/ч`;
-    document.getElementById('liveCalcMoney').textContent = fmtRubDec(m.earningsKop);
+    const moneyEl = document.getElementById('liveCalcMoney');
+    const nextStr = fmtRubDec(m.earningsKop);
+    moneyEl.textContent = nextStr;
+    if (nextStr !== lastLiveMoneyStr && m.aw > 0) {
+      moneyEl.classList.remove('money-pop');
+      void moneyEl.offsetWidth;
+      moneyEl.classList.add('money-pop');
+    }
+    lastLiveMoneyStr = nextStr;
+    const torque = document.getElementById('liveTorqueFill');
+    if (torque) {
+      torque.style.width = Math.min(100, Math.round((m.aw / 120) * 100)) + '%';
+    }
   }
 
   window.openOrderModal = (presetDate) => {
@@ -1820,6 +3049,8 @@
     document.getElementById('fComment').value = '';
     activePhotoDataUrl = null;
     document.getElementById('photoPreviewBox').classList.add('hidden');
+    const errB = document.getElementById('aiScanError');
+    if (errB) { errB.classList.add('hidden'); errB.textContent = ''; }
     renderJobInputs([{ id: uid(), title: '', aw100: 0 }]);
     sheet.classList.add('open');
   };
@@ -1850,6 +3081,7 @@
     if (!o) return;
     const copy = JSON.parse(JSON.stringify(o));
     copy.id = uid();
+    lastClonedId = copy.id;
     state.orders.unshift(copy);
     saveState();
     toast('Создана копия З/Н');
@@ -1857,12 +3089,21 @@
   };
 
   window.deleteOrder = (id) => {
-    const o = state.orders.find(x => x.id === id);
-    if (o && o.photoId) delete state.photos[o.photoId];
-    state.orders = state.orders.filter(x => x.id !== id);
-    saveState();
-    toast('Заказ-наряд удалён');
-    render();
+    const card = document.querySelector(`.order-card[data-order-id="${id}"]`);
+    const finishDelete = () => {
+      const o = state.orders.find(x => x.id === id);
+      if (o && o.photoId) delete state.photos[o.photoId];
+      state.orders = state.orders.filter(x => x.id !== id);
+      saveState();
+      toast('Заказ-наряд удалён');
+      render();
+    };
+    if (card) {
+      card.classList.add('order-exit');
+      setTimeout(finishDelete, 260);
+    } else {
+      finishDelete();
+    }
   };
 
   window.viewPhoto = (photoId) => {
@@ -1910,11 +3151,15 @@
     const idx = state.orders.findIndex(x => x.id === id);
     if (idx >= 0) state.orders[idx] = record;
     else state.orders.unshift(record);
-    anchorDate = record.date;
+    if (record.date) {
+      anchorDate = record.date;
+      selectedCalDay = record.date;
+    }
     saveState();
     sheet.classList.remove('open');
     toast('Заказ-наряд сохранён');
     render();
+    triggerMSaveCelebration();
   };
 
   // Text Paste Parser
@@ -2192,19 +3437,22 @@
       let parsed = null;
 
       if (provider === 'ocrspace') {
-        if (scanTitle) scanTitle.textContent = 'OCR.space распознаёт бланк...';
+        if (scanTitle) scanTitle.textContent = 'OCR.space · M-Laser скан...';
         banner.classList.remove('hidden');
+        setPhotoScanState('scanning');
         const ocrKey = (state.settings.ocrSpaceKey || '').trim() || 'helloworld';
         parsed = await callOcrSpace(ocrKey, dataUrl);
         banner.classList.add('hidden');
+        setPhotoScanState('ok');
       } else {
         const apiKey = (state.settings.geminiKey || '').trim();
         if (!apiKey) {
           toast('Фото прикреплено (укажите ключ Gemini в Настройках или выберите OCR.space)');
           return;
         }
-        if (scanTitle) scanTitle.textContent = 'Gemini Vision (быстрый режим)...';
+        if (scanTitle) scanTitle.textContent = 'Gemini Vision · M-Laser скан...';
         banner.classList.remove('hidden');
+        setPhotoScanState('scanning');
         const base64Data = dataUrl.split(',')[1];
         const prompt = `Извлеки из заказ-наряда BMW JSON: {"number":"","date":"YYYY-MM-DD","brand":"BMW","model":"","plate":"","jobs":[{"title":"","aw":0}]}. Только выполненные работы (без кодов работ, без запчастей и без цен).`;
 
@@ -2251,6 +3499,7 @@
 
         banner.classList.add('hidden');
         if (!json) throw lastErr || new Error('Не удалось получить ответ от Gemini');
+        setPhotoScanState('ok');
 
         const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
         const cleanedText = rawText.replace(/^```json\s*/i, '').replace(/```$/i, '').trim();
@@ -2270,6 +3519,7 @@
       toast(provider === 'ocrspace' ? 'Распознано через OCR.space' : 'Распознано через Gemini');
     } catch (err) {
       document.getElementById('aiScanStatus').classList.add('hidden');
+      setPhotoScanState('idle');
       const msg = err.message || 'проверьте сеть или ключ';
       if (errBox) {
         errBox.textContent = 'Ошибка OCR: ' + msg;
@@ -2286,7 +3536,199 @@
     return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
+
+  // ===== BMW M-TELEMETRY ANIMATION ENGINE =====
+  let splashTimer = null;
+  let splashHideTimer = null;
+  let telemetryRaf = null;
+  let lastTelemetryKey = '';
+
+  window.closeBmwSplash = () => {
+    const el = document.getElementById('bmwSplash');
+    if (!el || el.classList.contains('gone')) return;
+    clearTimeout(splashTimer);
+    clearTimeout(splashHideTimer);
+    el.classList.add('closing');
+    splashHideTimer = setTimeout(() => {
+      el.classList.add('gone');
+      el.classList.remove('closing', 'igniting');
+    }, 520);
+  };
+
+  window.playBmwIgnition = (force = false) => {
+    if (!force && state.settings.splashEnabled === false) return;
+    const el = document.getElementById('bmwSplash');
+    if (!el) return;
+    clearTimeout(splashTimer);
+    clearTimeout(splashHideTimer);
+    el.classList.remove('gone', 'closing', 'igniting');
+    // Force reflow so SVG/CSS animations restart cleanly
+    void el.offsetWidth;
+    el.classList.add('igniting');
+    const stEl = document.getElementById('splashStatusText');
+    if (stEl) {
+      stEl.textContent = 'IGNITION · HEADLIGHTS CHECK';
+      setTimeout(() => {
+        if (!el.classList.contains('gone')) stEl.textContent = 'M-TELEMETRY · SYSTEM READY';
+      }, 950);
+    }
+    splashTimer = setTimeout(() => window.closeBmwSplash(), 2350);
+  };
+
+  function setPhotoScanState(mode) {
+    const box = document.getElementById('photoPreviewBox');
+    if (!box) return;
+    box.classList.remove('scanning', 'scan-ok');
+    if (mode === 'scanning') {
+      box.classList.add('scanning');
+    } else if (mode === 'ok') {
+      void box.offsetWidth;
+      box.classList.add('scan-ok');
+      setTimeout(() => box.classList.remove('scan-ok'), 800);
+    }
+  }
+
+  window.revAppLogo = () => {
+    const el = document.getElementById('appLogoIcon');
+    if (!el) return;
+    el.classList.remove('torque-spin');
+    void el.offsetWidth;
+    el.classList.add('torque-spin');
+    setTimeout(() => el.classList.remove('torque-spin'), 650);
+  };
+
+  let modeBannerTimer = null;
+  window.cycleDriveMode = () => {
+    const modes = ['comfort', 'sport', 'mcs'];
+    const labels = {
+      comfort: 'COMFORT · ICE BLUE',
+      sport: 'M1 MODE · SPORT+',
+      mcs: 'M CS · RACING YELLOW'
+    };
+    const cur = state.settings.driveMode || 'comfort';
+    const next = modes[(modes.indexOf(cur) + 1) % modes.length];
+    state.settings.driveMode = next;
+    applyTheme();
+    saveState();
+
+    // Flash M-ribbon & HUD banner
+    const bar = document.getElementById('mSaveFlash');
+    if (bar) {
+      bar.classList.remove('fire');
+      void bar.offsetWidth;
+      bar.classList.add('fire');
+      setTimeout(() => bar.classList.remove('fire'), 900);
+    }
+    const hud = document.getElementById('modeHudBanner');
+    const hudTxt = document.getElementById('modeHudText');
+    if (hud && hudTxt) {
+      hudTxt.textContent = labels[next];
+      hud.classList.add('show');
+      clearTimeout(modeBannerTimer);
+      modeBannerTimer = setTimeout(() => hud.classList.remove('show'), 1800);
+    }
+  };
+
+  function spawnMSparks() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const colors = ['#00A0E3', '#1D4ED8', '#E22718', '#F8FAFC', '#10B981'];
+    const cx = window.innerWidth / 2;
+    const cy = Math.min(220, window.innerHeight * 0.28);
+    for (let i = 0; i < 16; i++) {
+      const sp = document.createElement('span');
+      sp.className = 'm-spark';
+      const angle = (Math.PI * 2 * i) / 16 + (Math.random() - 0.5) * 0.35;
+      const dist = 55 + Math.random() * 85;
+      sp.style.left = cx + 'px';
+      sp.style.top = cy + 'px';
+      sp.style.background = colors[i % colors.length];
+      sp.style.boxShadow = `0 0 8px ${colors[i % colors.length]}`;
+      sp.style.setProperty('--dx', Math.round(Math.cos(angle) * dist) + 'px');
+      sp.style.setProperty('--dy', Math.round(Math.sin(angle) * dist) + 'px');
+      document.body.appendChild(sp);
+      setTimeout(() => sp.remove(), 760);
+    }
+  }
+
+  function triggerMSaveCelebration() {
+    const bar = document.getElementById('mSaveFlash');
+    if (bar) {
+      bar.classList.remove('fire');
+      void bar.offsetWidth;
+      bar.classList.add('fire');
+      setTimeout(() => bar.classList.remove('fire'), 900);
+    }
+    const hero = document.getElementById('ordersHeroCard');
+    if (hero) {
+      hero.classList.remove('hero-pulse-ok');
+      void hero.offsetWidth;
+      hero.classList.add('hero-pulse-ok');
+    }
+    spawnMSparks();
+  }
+
+  // Global Tactile BMW Touch Ripple (cards & calendar cells)
+  document.addEventListener('pointerdown', (e) => {
+    const host = e.target.closest('.bmw-ripple-host, .btn-add-main, .btn-primary-full');
+    if (!host || e.target.closest('button.mini-btn')) return;
+    const rect = host.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 0.45;
+    const r = document.createElement('span');
+    r.className = 'bmw-ripple';
+    r.style.width = r.style.height = size + 'px';
+    r.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    r.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    host.appendChild(r);
+    setTimeout(() => r.remove(), 580);
+  }, { passive: true });
+
+  // Subtle Ambient Orb Scroll Parallax
+  let scrollTicking = false;
+  window.addEventListener('scroll', () => {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(() => {
+      const y = window.scrollY || 0;
+      const o1 = document.querySelector('.orb-1');
+      const o2 = document.querySelector('.orb-2');
+      if (o1) o1.style.translate = `0 ${Math.min(60, y * 0.14)}px`;
+      if (o2) o2.style.translate = `0 ${-Math.min(55, y * 0.11)}px`;
+      scrollTicking = false;
+    });
+  }, { passive: true });
+
+  function animateTelemetryNumbers(targetKop, targetAw, targetHours) {
+    const key = `${periodMode}|${anchorDate}|${targetKop}|${targetAw}`;
+    if (key === lastTelemetryKey) return;
+    lastTelemetryKey = key;
+
+    const moneyEl = document.getElementById('heroTotalMoney');
+    const awEl = document.getElementById('heroTotalAw');
+    const hoursEl = document.getElementById('heroTotalHours');
+    if (!moneyEl || !awEl || !hoursEl) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    cancelAnimationFrame(telemetryRaf);
+    const startTs = performance.now();
+    const dur = 420;
+    const step = (now) => {
+      const p = Math.min(1, (now - startTs) / dur);
+      const ease = 1 - Math.pow(1 - p, 3);
+      moneyEl.textContent = fmtRub(Math.round(targetKop * ease));
+      awEl.textContent = Math.round(targetAw * ease).toString();
+      hoursEl.textContent = (targetHours * ease).toFixed(2).replace('.', ',');
+      if (p < 1) telemetryRaf = requestAnimationFrame(step);
+      else {
+        moneyEl.textContent = fmtRub(targetKop);
+        awEl.textContent = targetAw.toFixed(0);
+        hoursEl.textContent = targetHours.toFixed(2).replace('.', ',');
+      }
+    };
+    telemetryRaf = requestAnimationFrame(step);
+  }
+
   render();
+  playBmwIgnition(false);
 })();
 </script>
 </body>
