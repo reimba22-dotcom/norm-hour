@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- M-Telemetry clean build 2026-11-22-ocr-fix -->
+<!-- M-Telemetry clean build 2026-11-22-gemini-3.8 -->
 <html lang="ru" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -1952,15 +1952,17 @@
     return json;
   }
 
-  async function detectAvailableFlashModel(apiKey) {
+  async function detectAvailableFlashModel(apiKey, skipSet) {
     const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
     const json = await resp.json();
     if (!resp.ok || !Array.isArray(json.models)) return null;
     const candidates = json.models
       .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
-      .map(m => m.name.replace(/^models\//, ''));
-    const preferred = candidates.find(n => /gemini-2\.5-flash(?!-lite)/i.test(n))
+      .map(m => m.name.replace(/^models\//, ''))
+      .filter(n => !skipSet.has(n));
+    const preferred = candidates.find(n => /gemini-3\.8-flash/i.test(n))
       || candidates.find(n => /gemini-3.*flash/i.test(n))
+      || candidates.find(n => /gemini-.*flash(?!-lite)/i.test(n))
       || candidates.find(n => /gemini-.*flash/i.test(n))
       || candidates.find(n => /gemini/i.test(n));
     return preferred || null;
@@ -1990,18 +1992,20 @@
 
       let json = null;
       let lastErr = null;
-      const tryModels = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+      const tried = new Set();
+      const tryModels = ['gemini-3.8-flash', 'gemini-3.0-flash', 'gemini-2.5-flash'];
       for (const mName of tryModels) {
+        tried.add(mName);
         try {
           json = await callGeminiVision(apiKey, mName, prompt, base64Data);
           break;
         } catch (err) {
           lastErr = err;
-          if (!/model|not found|deprecated|supported/i.test(err.message || '')) break;
+          if (!/model|not found|deprecated|supported|no longer available/i.test(err.message || '')) break;
         }
       }
-      if (!json && lastErr && /model|not found|deprecated|supported/i.test(lastErr.message || '')) {
-        const autoModel = await detectAvailableFlashModel(apiKey);
+      if (!json && lastErr && /model|not found|deprecated|supported|no longer available/i.test(lastErr.message || '')) {
+        const autoModel = await detectAvailableFlashModel(apiKey, tried);
         if (autoModel) {
           json = await callGeminiVision(apiKey, autoModel, prompt, base64Data);
         }
