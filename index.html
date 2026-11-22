@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- M-Telemetry clean build 2026-11-22-no-codes -->
+<!-- M-Telemetry clean build 2026-11-22-gemini-fast -->
 <html lang="ru" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -1964,18 +1964,42 @@
     });
   }
 
-  async function callGeminiVision(apiKey, modelName, prompt, base64Data) {
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }],
-        generationConfig: { responseMimeType: 'application/json' }
-      })
-    });
-    const json = await resp.json();
+  async function callGeminiVision(apiKey, modelName, prompt, base64Data, useThinkingOff = true) {
+    const genCfg = {
+      responseMimeType: 'application/json',
+      temperature: 0,
+      maxOutputTokens: 1024
+    };
+    if (useThinkingOff) {
+      genCfg.thinkingConfig = { thinkingBudget: 0 };
+    }
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 22000);
+    let resp;
+    try {
+      resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: ctrl.signal,
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }],
+          generationConfig: genCfg
+        })
+      });
+    } catch (e) {
+      if (e && e.name === 'AbortError') throw new Error('Таймаут ответа Gemini (22 сек). Проверьте VPN.');
+      throw e;
+    } finally {
+      clearTimeout(timer);
+    }
+    const rawBody = await resp.text();
+    let json = {};
+    try { json = JSON.parse(rawBody); } catch (e) {}
     if (!resp.ok) {
       const msg = json.error?.message || `HTTP ${resp.status}`;
+      if (useThinkingOff && resp.status === 400 && /thinking/i.test(msg)) {
+        return callGeminiVision(apiKey, modelName, prompt, base64Data, false);
+      }
       const err = new Error(msg);
       err.status = resp.status;
       throw err;
@@ -2048,21 +2072,22 @@
     // 5. Extract ONLY pure descriptions (stripping any leading job codes!) and AW values
     const titles = [];
     const awValues = [];
-    const headerOrAddrRe = /^(код|описание|ед\.?\s*изм|работа|итого|всего|ндс|нетто|скидка|сумма|город|г\.|химки|москва|область|шоссе|улица|ул\.|владен|россия|домашний|рабочий|моб|дата|время|марка|модель|vin|пробег|гос|заказчик|исполнитель|мастер|подпись|комплект расходных|смазки)/i;
-    const partUnitRe = /\b(комп|шт|л)\s+\d+[.,]\d+/i;
+    const headerOrAddrRe = /^(код|описание|ед\.?\s*изм|работа|итого|всего|ндс|нетто|скидка|сумма|город|г\.|химки|москва|область|шоссе|улица|ул\.|владен|россия|домашний|рабочий|моб|дата|время приема|время выдачи|марка|модель|vin|пробег|гос|заказчик|исполнитель|мастер|подпись|комплект расходных|смазки)/i;
+    const skipLineRe = /(?:\+7|8\s*\(\d{3}\)|к-во|ед\.?\s*изм|цена\s+ндс|сумма\s+ндс|всего\s+rub|\b(?:комп|шт|л)\s+\d+[.,]\d+)/i;
 
     lines.forEach(l => {
-      if (partUnitRe.test(l)) return;
+      // Completely skip table headers, phone numbers, totals, and spare parts
+      if (skipLineRe.test(l)) return;
 
-      // Right column AW extraction: "AW 1,00 6" or "AV 1.00 86" or "AW 6"
-      const awM = l.match(/(?:^|\s)[AА][WШV]\s+(?:\d+[.,]\d+\s+)?(\d+(?:[.,]\d+)?)(?=\s|$)/i);
+      // Right column AW extraction: require Qty (1,00) before AW value so headers/prices never match
+      const awM = l.match(/(?:^|\s)[AА][WШV]\s+\d+[.,]\d+\s+(\d+(?:[.,]\d+)?)(?=\s|$)/i);
       if (awM) {
         const v = parseFloat(awM[1].replace(',', '.'));
         if (v > 0 && v <= 300) awValues.push(v);
       }
 
       // Description extraction:
-      // Case A: line has 7-8 digit code or SERVxxx -> take ONLY the description AFTER the code (do NOT include the code!)
+      // Case A: line has 7-8 digit code or SERVxxx -> take ONLY the description AFTER the code
       const codeM = l.match(/(?:^|\s)(?:\d{7,8}|SERV\d{2,4})\s+([А-ЯЁA-Z].*)/i);
       if (codeM) {
         let desc = codeM[1]
@@ -2075,8 +2100,8 @@
         return;
       }
 
-      // Case B: OCR split codes into a separate column, so description sits on its own line (with or without AW)
-      if (/[AА][WШV]\b/i.test(l) || /^(выполнение|замена|диагностика|проверка|снятие|установка|регулировка|программирование|кодирование|мойка|уборка|обслуживание|ремонт|прокачка|сход|развал|балансировка|шиномонтаж|осмотр|чтение|сброс)/i.test(l)) {
+      // Case B: description sits on its own line (with AW or known BMW job start)
+      if (/[AА][WШV]\s+\d+[.,]\d+/i.test(l) || /^(время работы|выполнение|замена|диагностика|проверка|снятие|установка|регулировка|программирование|кодирование|[мm][оo0]йка|уборка|обслуживание|ремонт|прокачка|сход|развал|балансировка|шиномонтаж|осмотр|чтение|сброс)/i.test(l)) {
         let desc = l
           .replace(/^(?:\d{5,8}|SERV\d{2,4})\s+/i, '')
           .replace(/\s+[AА][WШV]\b.*$/i, '')
@@ -2152,12 +2177,15 @@
     const errBox = document.getElementById('aiScanError');
     if (errBox) { errBox.classList.add('hidden'); errBox.textContent = ''; }
     try {
-      const dataUrl = await compressImage(file, 1280, 0.76);
+      const provider = state.settings.ocrProvider || 'ocrspace';
+      const dataUrl = provider === 'gemini'
+        ? await compressImage(file, 960, 0.68)
+        : await compressImage(file, 1280, 0.76);
+
       activePhotoDataUrl = dataUrl;
       document.getElementById('photoPreviewImg').src = dataUrl;
       document.getElementById('photoPreviewBox').classList.remove('hidden');
 
-      const provider = state.settings.ocrProvider || 'ocrspace';
       const banner = document.getElementById('aiScanStatus');
       const scanTitle = document.getElementById('aiScanTitle');
 
@@ -2175,36 +2203,39 @@
           toast('Фото прикреплено (укажите ключ Gemini в Настройках или выберите OCR.space)');
           return;
         }
-        if (scanTitle) scanTitle.textContent = 'Gemini Vision анализирует бланк...';
+        if (scanTitle) scanTitle.textContent = 'Gemini Vision (быстрый режим)...';
         banner.classList.remove('hidden');
         const base64Data = dataUrl.split(',')[1];
-        const prompt = `Ты парсер заказ-нарядов BMW. Верни ТОЛЬКО JSON: {"number":"","date":"YYYY-MM-DD","brand":"BMW","model":"","plate":"","jobs":[{"title":"","aw":0}]}. Включай ТОЛЬКО выполненные работы (игнорируй запчасти и суммы в рублях).`;
+        const prompt = `Извлеки из заказ-наряда BMW JSON: {"number":"","date":"YYYY-MM-DD","brand":"BMW","model":"","plate":"","jobs":[{"title":"","aw":0}]}. Только выполненные работы (без кодов работ, без запчастей и без цен).`;
 
         let json = null;
         let lastErr = null;
         const retryRe = /model|not found|deprecated|supported|no longer available|modality|not enabled|image/i;
         const tried = new Set();
-        const initialModels = [];
-        if (state.settings.workingModel) initialModels.push(state.settings.workingModel);
-        initialModels.push('gemini-3.8-flash', 'gemini-3.0-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash');
 
-        for (const mName of initialModels) {
-          if (!mName || tried.has(mName)) continue;
-          tried.add(mName);
+        // Fast path: use cached working model immediately (1 request, 0 extra roundtrips)
+        if (state.settings.workingModel) {
+          const cached = state.settings.workingModel;
+          tried.add(cached);
           try {
-            json = await callGeminiVision(apiKey, mName, prompt, base64Data);
-            state.settings.workingModel = mName;
-            saveState();
-            break;
+            json = await callGeminiVision(apiKey, cached, prompt, base64Data);
           } catch (err) {
             lastErr = err;
-            if (!retryRe.test(err.message || '')) break;
+            if (retryRe.test(err.message || '')) {
+              state.settings.workingModel = '';
+              saveState();
+            }
           }
         }
 
-        if (!json && lastErr && retryRe.test(lastErr.message || '')) {
+        // Discovery path (only runs once when no working model is cached)
+        if (!json && (!lastErr || retryRe.test(lastErr.message || ''))) {
           const autoModels = await getAvailableVisionModels(apiKey, tried);
-          for (const mName of autoModels.slice(0, 6)) {
+          const fallbackList = autoModels.length
+            ? autoModels.slice(0, 3)
+            : ['gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+          for (const mName of fallbackList) {
+            if (!mName || tried.has(mName)) continue;
             tried.add(mName);
             try {
               json = await callGeminiVision(apiKey, mName, prompt, base64Data);
