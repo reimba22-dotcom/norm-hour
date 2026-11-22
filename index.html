@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- M-Telemetry clean build 2026-11-22-ocrspace-bmw-table -->
+<!-- M-Telemetry clean build 2026-11-22-audited -->
 <html lang="ru" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -985,17 +985,24 @@
 
   function saveState() {
     memoryFallback = state;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      if (e && (e.name === 'QuotaExceededError' || e.code === 22)) {
+        toast('Память Safari переполнена — удалите старые фото');
+      }
+    }
   }
 
   let state = loadState();
   let currentTab = 'orders';
   let periodMode = 'month'; // day | week | month | custom
-  let anchorDate = '2026-11-12';
-  let customFrom = '2026-11-01';
-  let customTo = '2026-11-30';
+  const todayIso = new Date().toISOString().slice(0, 10);
+  let anchorDate = todayIso;
+  let customFrom = todayIso.slice(0, 7) + '-01';
+  let customTo = todayIso;
   let calSubView = 'month'; // month | week | day
-  let selectedCalDay = '2026-11-21';
+  let selectedCalDay = todayIso;
   let searchQuery = '';
   let statusFilter = 'all';
   let activePhotoDataUrl = null;
@@ -1721,11 +1728,21 @@
         const parsed = JSON.parse(reader.result);
         const snap = parsed.snapshot || parsed;
         if (!Array.isArray(snap.orders)) throw new Error();
-        const keepKey = state.settings.geminiKey || '';
+        const keepGemini = state.settings.geminiKey || '';
+        const keepOcrKey = state.settings.ocrSpaceKey || '';
+        const keepProvider = state.settings.ocrProvider || 'ocrspace';
+        const keepModel = state.settings.workingModel || '';
         state = {
           orders: snap.orders || [],
           days: snap.days || {},
-          settings: { ...SEED_SNAPSHOT.settings, ...(snap.settings || {}), geminiKey: snap.settings?.geminiKey || keepKey },
+          settings: {
+            ...SEED_SNAPSHOT.settings,
+            ...(snap.settings || {}),
+            geminiKey: snap.settings?.geminiKey || keepGemini,
+            ocrSpaceKey: snap.settings?.ocrSpaceKey || keepOcrKey,
+            ocrProvider: snap.settings?.ocrProvider || keepProvider,
+            workingModel: snap.settings?.workingModel || keepModel
+          },
           adjustments: snap.adjustments || [],
           photos: snap.photos || {}
         };
@@ -1905,20 +1922,16 @@
     const txt = document.getElementById('pasteRawArea').value || '';
     document.getElementById('textPasteSheet').classList.remove('open');
     openOrderModal();
-    const numM = txt.match(/(?:З\/Н|Заказ-наряд|№)\s*[:#]?\s*(\d{5,10})/i);
-    if (numM) document.getElementById('fNumber').value = numM[1];
-    const plateM = txt.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s*\d{2,3}/i);
-    if (plateM) document.getElementById('fPlate').value = plateM[0].replace(/\s+/g, '').toUpperCase();
-    const lines = txt.split('\n').map(l => l.trim()).filter(Boolean);
-    const parsedJobs = [];
-    lines.forEach(l => {
-      const m = l.match(/(.+?)\s+(\d+(?:[.,]\d+)?)\s*(?:AW|н\/ч)?$/i);
-      if (m && m[1].length > 5 && parseFloat(m[2]) > 0 && parseFloat(m[2]) < 500) {
-        parsedJobs.push({ id: uid(), title: m[1].trim(), aw100: Math.round(parseFloat(m[2].replace(',', '.')) * 100) });
-      }
-    });
-    if (parsedJobs.length) renderJobInputs(parsedJobs);
-    toast('Текст разобран');
+    const parsed = parseBmwOrderText(txt);
+    if (parsed.number) document.getElementById('fNumber').value = parsed.number;
+    if (parsed.date) document.getElementById('fDate').value = parsed.date;
+    if (parsed.brand) document.getElementById('fBrand').value = parsed.brand;
+    if (parsed.model) document.getElementById('fModel').value = parsed.model;
+    if (parsed.plate) document.getElementById('fPlate').value = parsed.plate;
+    if (parsed.jobs && parsed.jobs.length) {
+      renderJobInputs(parsed.jobs.map(j => ({ id: uid(), title: j.title || '', aw100: Math.round((parseFloat(j.aw) || 0) * 100) })));
+    }
+    toast(parsed.jobs.length ? `Разобрано работ: ${parsed.jobs.length}` : 'Текст разобран');
   };
 
   // Camera & Gemini Vision OCR
@@ -1939,7 +1952,9 @@
           canvas.width = Math.round(img.width * scale);
           canvas.height = Math.round(img.height * scale);
           canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', quality));
+          let out = canvas.toDataURL('image/jpeg', quality);
+          if (out.length > 1250000) out = canvas.toDataURL('image/jpeg', 0.55);
+          resolve(out);
         };
         img.onerror = reject;
         img.src = reader.result;
@@ -1996,81 +2011,109 @@
     if (!txt) return res;
     const norm = txt.replace(/\r/g, '');
 
+    // Order number
     const numM = norm.match(/(?:Заказ-наряд|З\/Н|№)\s*[:#№]?\s*(\d{6,10})/i) || norm.match(/\b(78\d{6})\b/);
     if (numM) res.number = numM[1];
 
-    const date4M = norm.match(/(\d{2})\.(\d{2})\.(20\d{2})/);
-    const date2M = norm.match(/(\d{2})\.(\d{2})\.(\d{2})(?!\d)/);
-    if (date4M) {
-      res.date = `${date4M[3]}-${date4M[2]}-${date4M[1]}`;
-    } else if (date2M) {
-      const yy = parseInt(date2M[3], 10);
-      if (yy >= 20 && yy <= 35) res.date = `20${date2M[3]}-${date2M[2]}-${date2M[1]}`;
+    // Date: collect all dates and prefer current year (2026) or earlier reception date over future year (2027)
+    const curYear = new Date().getFullYear();
+    const foundDates = [];
+    for (const m of norm.matchAll(/(\d{2})\.(\d{2})\.(20\d{2}|\d{2})(?!\d)/g)) {
+      const dd = parseInt(m[1], 10), mm = parseInt(m[2], 10);
+      let yy = parseInt(m[3], 10);
+      if (yy < 100) yy += 2000;
+      if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 2020 && yy <= curYear + 2) {
+        foundDates.push({ iso: `${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`, yy });
+      }
+    }
+    if (foundDates.length) {
+      const bestDate = foundDates.find(d => d.yy === curYear) || foundDates.find(d => d.yy <= curYear) || foundDates[0];
+      res.date = bestDate.iso;
     }
 
+    // License plate
     const plateM = norm.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s*\d{2,3}/i);
     if (plateM) res.plate = plateM[0].replace(/\s+/g, '').toUpperCase();
 
+    // BMW Model
     const modelM = norm.match(/\bBMW\s+([XZM]\d(?:\s*M)?|[1-8]\s*серии|[1-8]\d{2}[idxe]?)/i)
       || norm.match(/\b(X[1-7]|Z4|M[2-8]|[1-8]\s*серии)\b/i);
     if (modelM) res.model = modelM[1].trim();
 
-    const ignoreRe = /итого|всего|к оплате|нетто|ндс|скидк|запчаст|материал|детал|артикул|руб|₽|заказчик|исполнитель|мастер|пробег|vin|шоссе|улица|владен|москва|телефон|ед\.?\s*изм|подпись|дата приема|время приема/i;
     const lines = norm.split('\n').map(l => l.replace(/\t+/g, ' ').replace(/\s{2,}/g, ' ').trim()).filter(Boolean);
 
-    // 1. Primary BMW dealer table format: [Code] [Description] AW [Qty 1,00] [AW_num] [Price] ...
+    // Column-decoupled extraction for tilted BMW dealer tables:
+    // Left column: [BMW code 6-7 digits or SERVxxx] [Job description]
+    // Right column: AW [Qty 1,00] [AW value]
+    const titles = [];
+    const awValues = [];
+    const headerNoiseRe = /^(код|описание|ед\.?\s*изм|работа|итого|всего|ндс|нетто|скидка|сумма)/i;
+
     lines.forEach(l => {
-      if (ignoreRe.test(l)) return;
-      const bmwRow = l.match(/^(?:(?:\d{5,8}|[A-ZА-Я]{2,6}\d{2,5})\s+)?(.{4,}?)\s+[AА][WШ]\s+\d+[.,]\d+\s+(\d+(?:[.,]\d+)?)/i);
-      if (bmwRow) {
-        const title = bmwRow[1].replace(/^\d+[.)]\s*/, '').trim();
-        const val = parseFloat(bmwRow[2].replace(',', '.'));
-        if (title.length >= 4 && val > 0 && val <= 300) {
-          res.jobs.push({ title, aw: val });
-        }
-        return;
+      // Extract AW value from right side: "AW 1,00 86"
+      const awM = l.match(/\b[AА][WШ]\s+\d+[.,]\d+\s+(\d+(?:[.,]\d+)?)\b/i);
+      if (awM) {
+        const v = parseFloat(awM[1].replace(',', '.'));
+        if (v > 0 && v <= 300) awValues.push(v);
       }
-      // 2. Fallback: [Code] [Description] AW [AW_num] (if Qty was merged or skipped)
-      const bmwShort = l.match(/^(?:\d{5,8}|[A-ZА-Я]{2,6}\d{2,5})\s+(.{4,}?)\s+[AА][WШ]\s+(\d+(?:[.,]\d+)?)/i);
-      if (bmwShort) {
-        const title = bmwShort[1].trim();
-        const val = parseFloat(bmwShort[2].replace(',', '.'));
-        if (title.length >= 4 && val > 0 && val <= 300) {
-          res.jobs.push({ title, aw: val });
+
+      // Extract job title anchored by BMW job code (e.g., 1199000, 6100731, SERV002)
+      const codeM = l.match(/(?:^|\s)((?:\d{6,8}|SERV\d{2,4}|[A-Z]{2,5}\d{3,4}))\s+([А-ЯЁA-Z].*)/i);
+      if (codeM) {
+        let t = codeM[2];
+        // Cut off right-side table columns starting from AW or numeric columns
+        t = t.replace(/\s+[AА][WШ]\b.*$/i, '').replace(/\s+\d+[.,]\d+.*$/, '').trim();
+        if (t.length >= 4 && !headerNoiseRe.test(t)) {
+          titles.push(t);
         }
       }
     });
 
-    // 3. Generic fallback ONLY if no BMW table rows were found
-    if (!res.jobs.length) {
-      lines.forEach(l => {
-        if (ignoreRe.test(l)) return;
-        if (/^\d+[\s.,\d]*$/.test(l)) return;
-        const m = l.match(/^([А-ЯЁA-Z].{5,}?)\s+(\d+(?:[.,]\d+)?)\s*(?:AW|н\/ч)$/i);
-        if (m) {
-          const val = parseFloat(m[2].replace(',', '.'));
-          if (val > 0 && val <= 300) {
-            res.jobs.push({ title: m[1].replace(/^\d+[.)]\s*/, '').trim(), aw: val });
-          }
-        }
-      });
+    // Zip titles and AW values 1-to-1 in top-to-bottom order (immune to tilted-row shift)
+    if (titles.length && awValues.length) {
+      const count = Math.max(titles.length, awValues.length);
+      for (let i = 0; i < count; i++) {
+        res.jobs.push({
+          title: titles[i] || `Работа ${i + 1}`,
+          aw: awValues[i] || 0
+        });
+      }
+      return res;
     }
+
+    // Fallback if codes were not recognized, but AW values were
+    if (awValues.length) {
+      awValues.forEach((v, i) => res.jobs.push({ title: `Работа ${i + 1}`, aw: v }));
+      return res;
+    }
+
     return res;
   }
 
   async function callOcrSpace(apiKey, dataUrl) {
+    const isDemo = !apiKey || apiKey === 'helloworld';
     const form = new FormData();
     form.append('base64Image', dataUrl);
     form.append('language', 'rus');
     form.append('OCREngine', '2');
     form.append('isTable', 'true');
     form.append('scale', 'true');
+    form.append('detectOrientation', 'true');
     const resp = await fetch('https://api.ocr.space/parse/image', {
       method: 'POST',
       headers: { 'apikey': apiKey || 'helloworld' },
       body: form
     });
-    const json = await resp.json();
+    if (resp.status === 429) {
+      throw new Error(isDemo
+        ? 'Лимит тестового ключа исчерпан (HTTP 429). Получите бесплатный личный ключ на ocr.space/ocrapi/freekey (25 000 фото/мес) и вставьте в Настройках.'
+        : 'Превышен лимит запросов OCR.space (HTTP 429). Подождите 1 минуту и повторите.');
+    }
+    const rawBody = await resp.text();
+    let json = null;
+    try { json = JSON.parse(rawBody); } catch (e) {
+      throw new Error(`Сервер OCR.space вернул некорректный ответ (HTTP ${resp.status})`);
+    }
     if (!resp.ok || json.IsErroredOnProcessing) {
       const msg = Array.isArray(json.ErrorMessage) ? json.ErrorMessage.join('; ') : (json.ErrorMessage || `HTTP ${resp.status}`);
       throw new Error(msg);
