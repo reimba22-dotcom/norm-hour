@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- M-Telemetry clean build 2026-11-22-audited -->
+<!-- M-Telemetry clean build 2026-11-22-no-codes -->
 <html lang="ru" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -2011,11 +2011,13 @@
     if (!txt) return res;
     const norm = txt.replace(/\r/g, '');
 
-    // Order number
-    const numM = norm.match(/(?:Заказ-наряд|З\/Н|№)\s*[:#№]?\s*(\d{6,10})/i) || norm.match(/\b(78\d{6})\b/);
+    // 1. Order number (7-8 digits starting with 78, or after Заказ-наряд / З/Н / №)
+    const numM = norm.match(/(?:Заказ-наряд|З\/Н|Заказ\s*наряд)\s*(?:№|#|:)?\s*(\d{6,10})/i)
+      || norm.match(/\b(78\d{5,7})\b/)
+      || norm.match(/№\s*(\d{6,10})/);
     if (numM) res.number = numM[1];
 
-    // Date: collect all dates and prefer current year (2026) or earlier reception date over future year (2027)
+    // 2. Date: prefer Дата Приема / Дата открытия or current year (2026) over future year (2027)
     const curYear = new Date().getFullYear();
     const foundDates = [];
     for (const m of norm.matchAll(/(\d{2})\.(\d{2})\.(20\d{2}|\d{2})(?!\d)/g)) {
@@ -2031,45 +2033,61 @@
       res.date = bestDate.iso;
     }
 
-    // License plate
+    // 3. License plate
     const plateM = norm.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s*\d{2,3}/i);
     if (plateM) res.plate = plateM[0].replace(/\s+/g, '').toUpperCase();
 
-    // BMW Model
-    const modelM = norm.match(/\bBMW\s+([XZM]\d(?:\s*M)?|[1-8]\s*серии|[1-8]\d{2}[idxe]?)/i)
-      || norm.match(/\b(X[1-7]|Z4|M[2-8]|[1-8]\s*серии)\b/i);
-    if (modelM) res.model = modelM[1].trim();
+    // 4. Brand & Model (handles Latin X and Cyrillic Х, plus series like 320d, 530i, X5, X3, etc.)
+    const modelM = norm.match(/\bBMW\s+([XХZM]\d(?:\s*M)?|[1-8]\s*серии|[1-8]\d{2}[idxe]?)/i)
+      || norm.match(/(?:Модель[^\n]*\n[^\n]*?\b|Марка[^\n]*\n[^\n]*?\b)([XХZM]\d|[1-8]\s*серии|[1-8]\d{2}[idxe]?)/i)
+      || norm.match(/(?:^|\s)([XХ][1-7]|Z4|M[2-8]|[1-8]\s*серии|[1-8]\d{2}[idxe])(?=\s|$)/i);
+    if (modelM) res.model = modelM[1].replace(/Х/g, 'X').trim();
 
     const lines = norm.split('\n').map(l => l.replace(/\t+/g, ' ').replace(/\s{2,}/g, ' ').trim()).filter(Boolean);
 
-    // Column-decoupled extraction for tilted BMW dealer tables:
-    // Left column: [BMW code 6-7 digits or SERVxxx] [Job description]
-    // Right column: AW [Qty 1,00] [AW value]
+    // 5. Extract ONLY pure descriptions (stripping any leading job codes!) and AW values
     const titles = [];
     const awValues = [];
-    const headerNoiseRe = /^(код|описание|ед\.?\s*изм|работа|итого|всего|ндс|нетто|скидка|сумма)/i;
+    const headerOrAddrRe = /^(код|описание|ед\.?\s*изм|работа|итого|всего|ндс|нетто|скидка|сумма|город|г\.|химки|москва|область|шоссе|улица|ул\.|владен|россия|домашний|рабочий|моб|дата|время|марка|модель|vin|пробег|гос|заказчик|исполнитель|мастер|подпись|комплект расходных|смазки)/i;
+    const partUnitRe = /\b(комп|шт|л)\s+\d+[.,]\d+/i;
 
     lines.forEach(l => {
-      // Extract AW value from right side: "AW 1,00 86"
-      const awM = l.match(/\b[AА][WШ]\s+\d+[.,]\d+\s+(\d+(?:[.,]\d+)?)\b/i);
+      if (partUnitRe.test(l)) return;
+
+      // Right column AW extraction: "AW 1,00 6" or "AV 1.00 86" or "AW 6"
+      const awM = l.match(/(?:^|\s)[AА][WШV]\s+(?:\d+[.,]\d+\s+)?(\d+(?:[.,]\d+)?)(?=\s|$)/i);
       if (awM) {
         const v = parseFloat(awM[1].replace(',', '.'));
         if (v > 0 && v <= 300) awValues.push(v);
       }
 
-      // Extract job title anchored by BMW job code (e.g., 1199000, 6100731, SERV002)
-      const codeM = l.match(/(?:^|\s)((?:\d{6,8}|SERV\d{2,4}|[A-Z]{2,5}\d{3,4}))\s+([А-ЯЁA-Z].*)/i);
+      // Description extraction:
+      // Case A: line has 7-8 digit code or SERVxxx -> take ONLY the description AFTER the code (do NOT include the code!)
+      const codeM = l.match(/(?:^|\s)(?:\d{7,8}|SERV\d{2,4})\s+([А-ЯЁA-Z].*)/i);
       if (codeM) {
-        let t = codeM[2];
-        // Cut off right-side table columns starting from AW or numeric columns
-        t = t.replace(/\s+[AА][WШ]\b.*$/i, '').replace(/\s+\d+[.,]\d+.*$/, '').trim();
-        if (t.length >= 4 && !headerNoiseRe.test(t)) {
-          titles.push(t);
+        let desc = codeM[1]
+          .replace(/\s+[AА][WШV]\b.*$/i, '')
+          .replace(/\s+\d+[.,]\d+.*$/, '')
+          .trim();
+        if (desc.length >= 4 && !headerOrAddrRe.test(desc)) {
+          titles.push(desc);
+        }
+        return;
+      }
+
+      // Case B: OCR split codes into a separate column, so description sits on its own line (with or without AW)
+      if (/[AА][WШV]\b/i.test(l) || /^(выполнение|замена|диагностика|проверка|снятие|установка|регулировка|программирование|кодирование|мойка|уборка|обслуживание|ремонт|прокачка|сход|развал|балансировка|шиномонтаж|осмотр|чтение|сброс)/i.test(l)) {
+        let desc = l
+          .replace(/^(?:\d{5,8}|SERV\d{2,4})\s+/i, '')
+          .replace(/\s+[AА][WШV]\b.*$/i, '')
+          .replace(/\s+\d+[.,]\d+.*$/, '')
+          .trim();
+        if (desc.length >= 5 && !headerOrAddrRe.test(desc) && !/^\d+$/.test(desc)) {
+          titles.push(desc);
         }
       }
     });
 
-    // Zip titles and AW values 1-to-1 in top-to-bottom order (immune to tilted-row shift)
     if (titles.length && awValues.length) {
       const count = Math.max(titles.length, awValues.length);
       for (let i = 0; i < count; i++) {
@@ -2081,7 +2099,11 @@
       return res;
     }
 
-    // Fallback if codes were not recognized, but AW values were
+    if (titles.length) {
+      titles.forEach(t => res.jobs.push({ title: t, aw: 0 }));
+      return res;
+    }
+
     if (awValues.length) {
       awValues.forEach((v, i) => res.jobs.push({ title: `Работа ${i + 1}`, aw: v }));
       return res;
