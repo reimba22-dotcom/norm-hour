@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- M-Telemetry clean build 2026-11-22-ocrspace -->
+<!-- M-Telemetry clean build 2026-11-22-ocrspace-bmw-table -->
 <html lang="ru" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -1999,8 +1999,14 @@
     const numM = norm.match(/(?:Заказ-наряд|З\/Н|№)\s*[:#№]?\s*(\d{6,10})/i) || norm.match(/\b(78\d{6})\b/);
     if (numM) res.number = numM[1];
 
-    const dateM = norm.match(/(\d{2})\.(\d{2})\.(20\d{2})/);
-    if (dateM) res.date = `${dateM[3]}-${dateM[2]}-${dateM[1]}`;
+    const date4M = norm.match(/(\d{2})\.(\d{2})\.(20\d{2})/);
+    const date2M = norm.match(/(\d{2})\.(\d{2})\.(\d{2})(?!\d)/);
+    if (date4M) {
+      res.date = `${date4M[3]}-${date4M[2]}-${date4M[1]}`;
+    } else if (date2M) {
+      const yy = parseInt(date2M[3], 10);
+      if (yy >= 20 && yy <= 35) res.date = `20${date2M[3]}-${date2M[2]}-${date2M[1]}`;
+    }
 
     const plateM = norm.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s*\d{2,3}/i);
     if (plateM) res.plate = plateM[0].replace(/\s+/g, '').toUpperCase();
@@ -2009,18 +2015,46 @@
       || norm.match(/\b(X[1-7]|Z4|M[2-8]|[1-8]\s*серии)\b/i);
     if (modelM) res.model = modelM[1].trim();
 
-    const ignoreRe = /итого|всего|к оплате|ндс|скидк|запчаст|материал|детал|артикул|руб|₽|заказчик|исполнитель|мастер|пробег|vin/i;
+    const ignoreRe = /итого|всего|к оплате|нетто|ндс|скидк|запчаст|материал|детал|артикул|руб|₽|заказчик|исполнитель|мастер|пробег|vin|шоссе|улица|владен|москва|телефон|ед\.?\s*изм|подпись|дата приема|время приема/i;
     const lines = norm.split('\n').map(l => l.replace(/\t+/g, ' ').replace(/\s{2,}/g, ' ').trim()).filter(Boolean);
+
+    // 1. Primary BMW dealer table format: [Code] [Description] AW [Qty 1,00] [AW_num] [Price] ...
     lines.forEach(l => {
       if (ignoreRe.test(l)) return;
-      const m = l.match(/^(.{6,}?)\s+(\d+(?:[.,]\d+)?)\s*(?:AW|н\/ч)?$/i);
-      if (m) {
-        const val = parseFloat(m[2].replace(',', '.'));
-        if (val > 0 && val <= 300) {
-          res.jobs.push({ title: m[1].replace(/^\d+[.)]\s*/, '').trim(), aw: val });
+      const bmwRow = l.match(/^(?:(?:\d{5,8}|[A-ZА-Я]{2,6}\d{2,5})\s+)?(.{4,}?)\s+[AА][WШ]\s+\d+[.,]\d+\s+(\d+(?:[.,]\d+)?)/i);
+      if (bmwRow) {
+        const title = bmwRow[1].replace(/^\d+[.)]\s*/, '').trim();
+        const val = parseFloat(bmwRow[2].replace(',', '.'));
+        if (title.length >= 4 && val > 0 && val <= 300) {
+          res.jobs.push({ title, aw: val });
+        }
+        return;
+      }
+      // 2. Fallback: [Code] [Description] AW [AW_num] (if Qty was merged or skipped)
+      const bmwShort = l.match(/^(?:\d{5,8}|[A-ZА-Я]{2,6}\d{2,5})\s+(.{4,}?)\s+[AА][WШ]\s+(\d+(?:[.,]\d+)?)/i);
+      if (bmwShort) {
+        const title = bmwShort[1].trim();
+        const val = parseFloat(bmwShort[2].replace(',', '.'));
+        if (title.length >= 4 && val > 0 && val <= 300) {
+          res.jobs.push({ title, aw: val });
         }
       }
     });
+
+    // 3. Generic fallback ONLY if no BMW table rows were found
+    if (!res.jobs.length) {
+      lines.forEach(l => {
+        if (ignoreRe.test(l)) return;
+        if (/^\d+[\s.,\d]*$/.test(l)) return;
+        const m = l.match(/^([А-ЯЁA-Z].{5,}?)\s+(\d+(?:[.,]\d+)?)\s*(?:AW|н\/ч)$/i);
+        if (m) {
+          const val = parseFloat(m[2].replace(',', '.'));
+          if (val > 0 && val <= 300) {
+            res.jobs.push({ title: m[1].replace(/^\d+[.)]\s*/, '').trim(), aw: val });
+          }
+        }
+      });
+    }
     return res;
   }
 
