@@ -119,6 +119,15 @@ html, body {
 }
 
 .hidden { display: none !important; }
+.visually-hidden-input {
+  position: fixed;
+  top: -200px;
+  left: -200px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
 
 /* Ambient Orbs */
 .ambient-orb {
@@ -208,10 +217,11 @@ html, body {
   }
   .bento-split {
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     gap: 18px;
     align-items: start;
   }
+  .bento-split > * { min-width: 0; }
   .bento-sticky-col {
     position: sticky;
     top: 20px;
@@ -277,8 +287,10 @@ html, body {
 /* Top Status & Header */
 .status-strip {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 4px 10px;
   margin-bottom: 10px;
 }
 .status-badge {
@@ -302,12 +314,14 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   margin-bottom: 14px;
 }
 .header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 11px;
+  min-width: 0;
 }
 .app-icon-box {
   width: 42px;
@@ -341,7 +355,7 @@ html, body {
   text-transform: uppercase;
 }
 .header-title {
-  font-size: 24px;
+  font-size: clamp(20px, 5.6vw, 24px);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.15;
@@ -392,14 +406,15 @@ html, body {
 /* Segmented Controls */
 .seg-bar {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 4px;
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 3px;
+  min-width: 0;
 }
-.seg-bar.three { grid-template-columns: repeat(3, 1fr); }
+.seg-bar.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 [data-theme="light"] .seg-bar { background: rgba(15, 23, 42, 0.06); }
 .seg-btn {
   border: none;
@@ -411,7 +426,11 @@ html, body {
   border-radius: 9px;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.2s var(--ease-spring);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.2s var(--ease-spring), color 0.2s ease, box-shadow 0.2s ease;
 }
 .seg-btn.active {
   background: var(--surface-elevated);
@@ -470,7 +489,7 @@ html, body {
   text-transform: uppercase;
 }
 .hero-money {
-  font-size: 34px;
+  font-size: clamp(25px, 7.2vw, 34px);
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1.08;
@@ -523,7 +542,7 @@ html, body {
 /* 3 Metric Tiles */
 .tiles-3 {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 12px;
 }
@@ -531,7 +550,8 @@ html, body {
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid var(--border);
   border-radius: 13px;
-  padding: 9px 10px;
+  padding: 9px 8px;
+  min-width: 0;
 }
 [data-theme="light"] .sub-tile { background: rgba(15, 23, 42, 0.03); }
 .sub-tile.accent {
@@ -541,15 +561,19 @@ html, body {
 .sub-tile-k {
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--text-secondary);
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .sub-tile.accent .sub-tile-k { color: var(--accent); }
 .sub-tile-v {
-  font-size: 16px;
+  font-size: clamp(13px, 3.8vw, 16px);
   font-weight: 800;
   margin-top: 2px;
+  overflow-wrap: anywhere;
 }
 
 /* M-Shift LEDs */
@@ -582,31 +606,32 @@ html, body {
 .shift-led.lit.c-gold { background: #F59E0B; box-shadow: 0 0 8px rgba(245, 158, 11, 0.8); }
 .shift-led.lit.c-red  { background: #E22718; box-shadow: 0 0 9px rgba(226, 39, 24, 0.85); }
 
-/* Action Strip (+ New Order, Mic, Camera, Paste) */
+/* Action Strip (+ New Order, Mic, Camera, Media Library, Paste) */
 .action-strip {
   display: grid;
-  grid-template-columns: 1fr 48px 48px 48px;
-  gap: 8px;
+  grid-template-columns: minmax(112px, 1fr) repeat(4, 44px);
+  gap: 6px;
   margin-bottom: 12px;
 }
 .btn-primary-cta {
   height: 48px;
-  padding: 0 12px;
+  padding: 0 10px;
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: linear-gradient(135deg, var(--accent-blue) 0%, #0055B3 100%);
   color: #fff;
-  font-size: 14px;
+  font-size: clamp(13px, 3.5vw, 14px);
   font-weight: 800;
   white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   cursor: pointer;
   box-shadow: 0 10px 24px -6px var(--accent-glow);
   transition: transform 0.16s var(--ease-bounce);
   font-family: inherit;
+  min-width: 0;
 }
 [data-drive="sport"] .btn-primary-cta { background: linear-gradient(135deg, #E22718 0%, #991B1B 100%); }
 [data-drive="mcs"] .btn-primary-cta { background: linear-gradient(135deg, #CA8A04 0%, #854D0E 100%); }
@@ -614,7 +639,7 @@ html, body {
 
 .icon-sq-btn {
   height: 48px;
-  width: 48px;
+  width: 100%;
   border-radius: 15px;
   border: 1px solid var(--border-strong);
   background: var(--surface);
@@ -653,6 +678,8 @@ html, body {
 }
 .input-field {
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   background: var(--surface-input);
   border: 1px solid var(--border-strong);
   border-radius: 13px;
@@ -675,6 +702,9 @@ html, body {
 @media (max-width: 768px) {
   .input-field, select.input-field, textarea.input-field {
     font-size: 16px !important;
+  }
+  input[type="date"].input-field {
+    padding: 10px 8px;
   }
 }
 
@@ -830,6 +860,9 @@ html, body {
   padding-bottom: 4px;
 }
 .cal-cell {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   height: 62px;
   border-radius: 13px;
   border: 1px solid var(--border);
@@ -868,7 +901,7 @@ html, body {
   border-radius: 22px;
   padding: 5px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 4px;
   box-shadow: var(--shadow-float);
   overflow: hidden;
@@ -879,14 +912,15 @@ html, body {
   position: absolute;
   top: 5px;
   bottom: 5px;
-  left: 5px;
-  width: calc((100% - 10px - 16px) / 5);
+  left: 0;
+  width: 64px;
   border-radius: 16px;
   background: rgba(10, 132, 255, 0.18);
-  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.34), 0 4px 16px -4px var(--accent-glow);
-  transition: transform 0.38s cubic-bezier(0.32, 1.28, 0.56, 1), background 0.3s ease;
+  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.34), 0 4px 14px -4px var(--accent-glow);
+  transition: transform 0.32s var(--ease-spring), width 0.32s var(--ease-spring), background 0.25s ease;
   pointer-events: none;
   z-index: 0;
+  will-change: transform, width;
 }
 [data-drive="sport"] .tab-pill-slider {
   background: rgba(226, 39, 24, 0.20);
@@ -941,10 +975,11 @@ html, body {
   align-items: flex-end;
   justify-content: center;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.24s ease, visibility 0.24s ease;
 }
-.sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+.sheet-backdrop.open { opacity: 1; visibility: visible; pointer-events: auto; }
 .sheet-panel {
   width: 100%;
   max-width: 580px;
@@ -975,10 +1010,11 @@ html, body {
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 10px;
   margin-bottom: 12px;
 }
+.form-grid > * { min-width: 0; }
 .field-label {
   display: block;
   font-size: 10.5px;
@@ -1325,14 +1361,9 @@ html, body {
   .no-print { display: none !important; }
 }
 
-/* ===== BMW M-TELEMETRY MOTION & TRANSITION SUITE ===== */
+/* ===== BMW M-TELEMETRY MOTION & TRANSITION SUITE (Mobile-Tuned 60fps) ===== */
 .ambient-orb {
-  animation: orbDrift 16s ease-in-out infinite alternate;
-}
-.orb-2 { animation-delay: -6s; }
-@keyframes orbDrift {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(24px, 32px) scale(1.12); }
+  will-change: opacity;
 }
 
 /* Luxury Sheen on Primary CTA */
@@ -1354,34 +1385,34 @@ html, body {
   100% { transform: translateX(340%); }
 }
 
-/* Tab Cross-Fade + Spring Lift */
+/* Tab Cross-Fade + Clean Spring Lift (uses backwards+none so backdrop-filter stays crisp on iOS) */
 .view-enter {
-  animation: viewLiftIn 0.34s var(--ease-spring) both;
+  animation: viewLiftIn 0.24s var(--ease-spring) backwards;
 }
 @keyframes viewLiftIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.988); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
 }
 
 /* Directional Period & Date Slide */
-.slide-from-right { animation: slideFromRight 0.32s var(--ease-spring) both; }
-.slide-from-left { animation: slideFromLeft 0.32s var(--ease-spring) both; }
+.slide-from-right { animation: slideFromRight 0.26s var(--ease-spring) backwards; }
+.slide-from-left { animation: slideFromLeft 0.26s var(--ease-spring) backwards; }
 @keyframes slideFromRight {
-  from { opacity: 0; transform: translateX(22px); }
-  to { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: none; }
 }
 @keyframes slideFromLeft {
-  from { opacity: 0; transform: translateX(-22px); }
-  to { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: none; }
 }
 
 /* Staggered Card Entrance */
 .anim-card {
-  animation: cardGlideIn 0.38s var(--ease-spring) both;
+  animation: cardGlideIn 0.28s var(--ease-spring) backwards;
 }
 @keyframes cardGlideIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.982); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
 }
 
 /* M-Power Save Tricolor Flash Ribbon + Sparks + Hero Pulse */
@@ -1432,9 +1463,9 @@ html, body {
   position: fixed;
   top: calc(var(--safe-top) + 52px);
   left: 50%;
-  transform: translate(-50%, -24px) scale(0.9);
+  transform: translate(-50%, -20px) scale(0.94);
   z-index: 230;
-  padding: 9px 18px;
+  padding: 9px 16px;
   border-radius: 14px;
   background: rgba(8, 12, 22, 0.94);
   backdrop-filter: blur(20px);
@@ -1443,12 +1474,14 @@ html, body {
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
   font-size: 11px;
   font-weight: 900;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  white-space: nowrap;
+  max-width: calc(100vw - 24px);
   color: #F8FAFC;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.34s var(--ease-bounce);
+  transition: opacity 0.26s ease, transform 0.3s var(--ease-spring);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1458,18 +1491,18 @@ html, body {
   transform: translate(-50%, 0) scale(1);
 }
 
-/* Tactile Touch Ripple */
-.bmw-ripple-host { position: relative; overflow: hidden; }
+/* Tactile CTA Touch Ripple */
+.btn-primary-cta, .btn-primary-full { position: relative; overflow: hidden; }
 .bmw-ripple {
   position: absolute;
   border-radius: 50%;
   transform: scale(0);
   background: radial-gradient(circle, rgba(255,255,255,0.34) 0%, rgba(56,189,248,0.18) 50%, transparent 72%);
   pointer-events: none;
-  animation: bmwRippleOut 0.55s ease-out forwards;
+  animation: bmwRippleOut 0.48s ease-out forwards;
   z-index: 4;
 }
-@keyframes bmwRippleOut { to { transform: scale(3.4); opacity: 0; } }
+@keyframes bmwRippleOut { to { transform: scale(3.2); opacity: 0; } }
 
 /* Russian License Plate Metallic Glint */
 .ru-plate-real { position: relative; cursor: pointer; }
@@ -1486,66 +1519,106 @@ html, body {
 
 /* Order Card Exit & Clone Flash */
 .order-card.order-exit {
-  transform: translateX(74px) scale(0.94);
+  transform: translateX(64px);
   opacity: 0;
   border-color: rgba(244, 63, 94, 0.6);
-  box-shadow: -12px 0 28px rgba(244, 63, 94, 0.35);
   pointer-events: none;
+  transition: transform 0.24s ease, opacity 0.24s ease;
 }
 .order-card.order-clone-in {
-  animation: cloneFlash 0.65s var(--ease-spring) both;
+  animation: cloneFlash 0.55s var(--ease-spring) backwards;
 }
 @keyframes cloneFlash {
-  0% { opacity: 0; transform: translateY(-14px) scale(0.95); box-shadow: 0 0 0 2px var(--accent), 0 0 28px var(--accent-glow); }
-  55% { opacity: 1; transform: translateY(0) scale(1.01); box-shadow: 0 0 0 1.5px var(--accent), 0 0 20px var(--accent-glow); }
-  100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: var(--shadow-card); }
+  0% { opacity: 0; transform: translateY(-10px); box-shadow: 0 0 0 2px var(--accent), 0 0 24px var(--accent-glow); }
+  100% { opacity: 1; transform: none; box-shadow: var(--shadow-card); }
 }
 
 /* Job Row Enter / Exit */
-.job-row-enter { animation: jobRowIn 0.28s var(--ease-spring) both; }
-.job-row-exit { animation: jobRowOut 0.22s ease forwards; overflow: hidden; }
+.job-row-enter { animation: jobRowIn 0.26s var(--ease-spring) backwards; }
+.job-row-exit { animation: jobRowOut 0.2s ease forwards; overflow: hidden; }
 @keyframes jobRowIn {
-  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
 }
 @keyframes jobRowOut {
-  to { opacity: 0; transform: translateX(28px) scale(0.95); max-height: 0; margin-bottom: 0; padding: 0; border-width: 0; }
+  to { opacity: 0; transform: translateX(24px); max-height: 0; margin-bottom: 0; padding: 0; border-width: 0; }
 }
 
-/* Calendar Domino Wave & Status Pulse */
-.cal-cell-wave { animation: calPopIn 0.34s var(--ease-spring) both; }
+/* Calendar Wave & Status Pulse */
+.cal-cell-wave { animation: calPopIn 0.24s var(--ease-spring) backwards; }
 @keyframes calPopIn {
-  from { opacity: 0; transform: scale(0.84) translateY(6px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: none; }
 }
-.cal-cell.status-flash { animation: calStatusLock 0.56s var(--ease-bounce); }
+.cal-cell.status-flash { animation: calStatusLock 0.45s var(--ease-spring); }
 @keyframes calStatusLock {
-  0% { transform: scale(0.86); }
-  50% { transform: scale(1.1); box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.45); }
+  0% { transform: scale(0.92); }
+  50% { transform: scale(1.06); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.42); }
   100% { transform: scale(1); }
 }
 
-/* Rising Telemetry Bars & Shift LEDs Pop */
-.bar-grow {
-  transform-box: fill-box;
+/* Crisp Cross-Browser Telemetry Flex Bar Chart */
+.chart-bars-wrap {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 142px;
+  padding: 12px 4px 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-top: 1px dashed var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.chart-bars-wrap::-webkit-scrollbar { display: none; }
+.chart-col {
+  flex: 1 0 24px;
+  max-width: 44px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+}
+.chart-bar-stack {
+  width: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+}
+.chart-seg {
+  width: 100%;
+  border-radius: 4px;
   transform-origin: bottom center;
-  animation: barRise 0.58s var(--ease-spring) both;
+  animation: barRise 0.48s var(--ease-spring) backwards;
+}
+.chart-seg.piece { background: var(--green); }
+.chart-seg.salary { background: var(--gold); }
+.chart-day-lbl {
+  position: absolute;
+  bottom: -20px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
 }
 @keyframes barRise {
-  from { transform: scaleY(0); opacity: 0.25; }
+  from { transform: scaleY(0); opacity: 0.35; }
   to { transform: scaleY(1); opacity: 1; }
 }
 .shift-led.lit {
-  animation: ledPop 0.4s var(--ease-bounce) both;
+  animation: ledPop 0.32s var(--ease-spring) backwards;
 }
 @keyframes ledPop {
   0% { opacity: 0.2; transform: scaleY(0.4); }
-  60% { opacity: 1; transform: scaleY(1.35); }
+  60% { opacity: 1; transform: scaleY(1.22); }
   100% { opacity: 1; transform: scaleY(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bmw-splash, .m-stripe::after, .btn-primary-cta::after, .ambient-orb, .anim-card, .view-enter {
+  .bmw-splash, .m-stripe::after, .btn-primary-cta::after, .ambient-orb, .anim-card, .view-enter, .cal-cell-wave, .chart-seg, .shift-led.lit {
     animation: none !important;
     transition: none !important;
   }

@@ -326,7 +326,8 @@
 
       const cleanSettings = Object.assign({}, settings);
       cleanSettings.geminiKey = '';
-      cleanSettings.ocrSpaceKey = '';
+      delete cleanSettings.ocrSpaceKey;
+      delete cleanSettings.ocrProvider;
 
       return {
         app: 'normo-hours',
@@ -373,9 +374,10 @@
         const curSettings = (await MDB.getSettings()) || {};
         const merged = Object.assign({}, snapshot.settings, {
           geminiKey: snapshot.settings.geminiKey || curSettings.geminiKey || '',
-          ocrSpaceKey: snapshot.settings.ocrSpaceKey || curSettings.ocrSpaceKey || '',
           workingModel: snapshot.settings.workingModel || curSettings.workingModel || ''
         });
+        delete merged.ocrSpaceKey;
+        delete merged.ocrProvider;
         await MDB.saveSettings(merged);
       }
       return true;

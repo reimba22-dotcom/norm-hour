@@ -25,8 +25,6 @@
     theme: 'dark',
     splashEnabled: true,
     driveMode: 'comfort',
-    ocrProvider: 'ocrspace',
-    ocrSpaceKey: '',
     geminiKey: '',
     workingModel: ''
   };
@@ -49,6 +47,7 @@
   let searchQuery = '';
   let statusFilter = 'all';
   let activePhotoDataUrl = null;
+  let lastOcrRawText = '';
   let lastDeletedOrder = null;
   let lastDeletedPhoto = null;
   let navSlideDir = 0; // -1 left, +1 right
@@ -302,9 +301,27 @@
 
   function updateDockPill() {
     const slider = document.getElementById('tabPillSlider');
-    if (!slider) return;
-    const idx = Math.max(0, TAB_ORDER.indexOf(currentTab));
-    slider.style.transform = `translateX(calc(${idx * 100}% + ${idx * 4}px))`;
+    const dock = slider ? slider.parentElement : null;
+    const activeBtn = dock ? dock.querySelector(`.tab-item[data-tab="${currentTab}"]`) : null;
+    if (!slider || !activeBtn || dock.offsetWidth === 0) return;
+
+    const x = activeBtn.offsetLeft;
+    const w = activeBtn.offsetWidth;
+    if (!slider.dataset.ready) {
+      slider.style.transition = 'none';
+      slider.style.width = `${w}px`;
+      slider.style.transform = `translate3d(${x}px, 0, 0)`;
+      void slider.offsetWidth;
+      slider.dataset.ready = '1';
+      requestAnimationFrame(() => { slider.style.transition = ''; });
+    } else {
+      slider.style.width = `${w}px`;
+      slider.style.transform = `translate3d(${x}px, 0, 0)`;
+    }
+  }
+  window.addEventListener('resize', () => requestAnimationFrame(updateDockPill));
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => requestAnimationFrame(updateDockPill));
   }
 
   function switchTab(next) {
@@ -395,18 +412,23 @@
     const dashOffset = (circumference * (1 - goalPct / 100)).toFixed(1);
 
     const litCount = Math.min(12, Math.round(((totalAw100 / 100) / targetAwPeriod) * 12));
+    const animHero = !searchQuery.trim();
     let ledsHtml = '';
     for (let i = 0; i < 12; i++) {
       const col = i < 4 ? 'c-cyan' : i < 7 ? 'c-blue' : i < 10 ? 'c-gold' : 'c-red';
-      ledsHtml += `<span class="shift-led ${i < litCount ? 'lit ' + col : ''}" style="animation-delay:${i * 36}ms"></span>`;
+      const litCls = i < litCount ? (animHero ? 'lit ' + col : 'lit ' + col) : '';
+      const ledDelay = animHero ? `style="animation-delay:${i * 22}ms"` : 'style="animation:none"';
+      ledsHtml += `<span class="shift-led ${litCls}" ${ledDelay}></span>`;
     }
+
+    const startOffset = animHero ? circumference : dashOffset;
 
     return `
       <section class="glass-card hero-cockpit" id="ordersHeroCard">
         ${renderPeriodSwitcherHtml()}
 
         <div class="hero-main-flex">
-          <div>
+          <div style="min-width:0;flex:1;">
             <div class="hero-eyebrow">ЗАРАБОТОК · ${confirmed.length} З/Н</div>
             <div class="hero-money num" id="heroTotalMoney">${fmtRub(totalKop)}</div>
             <div class="hero-formula num">
@@ -424,7 +446,7 @@
                 </linearGradient>
               </defs>
               <circle class="ring-bg" cx="37" cy="37" r="31"/>
-              <circle class="ring-fg" id="heroGoalArc" cx="37" cy="37" r="31" stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" data-target-offset="${dashOffset}"/>
+              <circle class="ring-fg" id="heroGoalArc" cx="37" cy="37" r="31" stroke-dasharray="${circumference}" stroke-dashoffset="${startOffset}" data-target-offset="${dashOffset}"/>
             </svg>
             <div class="ring-center">
               <span class="ring-val num">${goalPct}%</span>
@@ -498,6 +520,9 @@
         <button class="icon-sq-btn" onclick="triggerPhoto('camera')" title="Камера (OCR)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         </button>
+        <button class="icon-sq-btn" onclick="triggerPhoto('gallery')" title="Добавить из медиатеки (OCR)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </button>
         <button class="icon-sq-btn" onclick="document.getElementById('textPasteSheet').classList.add('open')" title="Вставить текст З/Н">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </button>
@@ -536,6 +561,7 @@
           </div>
           <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;">
             <button class="mini-btn photo" onclick="openOrderModal()">+ Создать вручную</button>
+            <button class="mini-btn photo" onclick="triggerPhoto('gallery')">Из медиатеки (OCR)</button>
             <button class="mini-btn" onclick="document.getElementById('jsonFileInput').click()">Импорт JSON</button>
             <button class="mini-btn" onclick="loadSampleShift()" style="color:var(--text-secondary);">Загрузить пример</button>
           </div>
@@ -562,11 +588,11 @@
           const isCloned = lastClonedId && lastClonedId === o.id;
           const slideCls = navSlideDir > 0 ? 'slide-from-right' : navSlideDir < 0 ? 'slide-from-left' : '';
           const cardAnim = isCloned ? 'order-clone-in' : (slideCls || (!searchQuery.trim() ? 'anim-card' : ''));
-          const staggerStyle = !searchQuery.trim() && !isCloned && oIdx < 10 ? `style="animation-delay:${oIdx * 38}ms"` : '';
+          const staggerStyle = !searchQuery.trim() && !isCloned && oIdx < 6 ? `style="animation-delay:${oIdx * 28}ms"` : '';
           feedHtml += `
-            <article class="order-card bmw-ripple-host ${o.status==='draft'?'draft':''} ${cardAnim}" data-order-id="${o.id}" ${staggerStyle}>
+            <article class="order-card ${o.status==='draft'?'draft':''} ${cardAnim}" data-order-id="${o.id}" ${staggerStyle}>
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-                <div>
+                <div style="min-width:0;flex:1;">
                   <div style="font-size:15.5px;font-weight:800;display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
                     <span>${escapeHtml(car)}</span>
                     ${o.status==='draft'?'<span style="font-size:10px;font-weight:800;color:var(--gold);background:rgba(245,158,11,0.12);padding:2px 6px;border-radius:5px;">ЧЕРНОВИК</span>':''}
@@ -582,9 +608,9 @@
                   <div class="num" style="font-size:11px;font-weight:700;color:var(--text-secondary);">${(o.aw100||0)/100} AW · ${((o.hours100||0)/100).toFixed(2)} н/ч</div>
                 </div>
               </div>
-              ${jobsStr ? `<div style="margin-top:8px;font-size:12.5px;color:var(--text-secondary);line-height:1.4;">${escapeHtml(jobsStr)}</div>` : ''}
-              ${o.comment ? `<div style="margin-top:4px;font-size:11.5px;color:var(--text-muted);font-style:italic;">${escapeHtml(o.comment)}</div>` : ''}
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+              ${jobsStr ? `<div style="margin-top:8px;font-size:12.5px;color:var(--text-secondary);line-height:1.4;overflow-wrap:anywhere;">${escapeHtml(jobsStr)}</div>` : ''}
+              ${o.comment ? `<div style="margin-top:4px;font-size:11.5px;color:var(--text-muted);font-style:italic;overflow-wrap:anywhere;">${escapeHtml(o.comment)}</div>` : ''}
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
                 <div>
                   ${o.photoId ? `<button class="mini-btn photo" onclick="viewPhoto('${o.photoId}')">Фото бланка</button>` : ''}
                 </div>
@@ -719,10 +745,10 @@
         const daySumKop = dayOrdersKop + dayBaseKop;
         const tag = st === 'work' ? 'Р' : st === 'vacation' ? 'О' : st === 'unpaid' ? 'Б' : '';
         const isPulse = lastStatusPulseIso === iso;
-        const waveDelay = dominoCalFill ? (d * 18) : (navSlideDir ? ((d % 7) * 20 + Math.floor(d / 7) * 16) : 0);
+        const waveDelay = dominoCalFill ? Math.min(d * 8, 220) : (navSlideDir ? ((d % 7) * 14 + Math.floor(d / 7) * 12) : 0);
         const waveCls = (dominoCalFill || navSlideDir) ? 'cal-cell-wave' : '';
         cellsHtml += `
-          <div class="cal-cell bmw-ripple-host ${st} ${selectedCalDay===iso?'selected':''} ${waveCls} ${isPulse?'status-flash':''}" style="${waveDelay ? 'animation-delay:'+waveDelay+'ms' : ''}" onclick="openDaySheet('${iso}')">
+          <div class="cal-cell ${st} ${selectedCalDay===iso?'selected':''} ${waveCls} ${isPulse?'status-flash':''}" style="${waveDelay ? 'animation-delay:'+waveDelay+'ms' : ''}" onclick="openDaySheet('${iso}')">
             <span class="cal-day-num num">${d}</span>
             <span class="cal-day-money num">${daySumKop > 0 ? fmtShortK(daySumKop) : ''}</span>
             <span class="cal-day-tag">${tag}</span>
@@ -794,8 +820,8 @@
     container.innerHTML = `
       <div class="bento-split">
         <section class="glass-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
-            <div class="seg-bar three" style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+            <div class="seg-bar three" style="flex:1 1 190px;">
               <button class="seg-btn ${calSubView==='month'?'active':''}" onclick="setCalSubView('month')">Месяц</button>
               <button class="seg-btn ${calSubView==='week'?'active':''}" onclick="setCalSubView('week')">Неделя</button>
               <button class="seg-btn ${calSubView==='day'?'active':''}" onclick="setCalSubView('day')">День</button>
@@ -936,37 +962,35 @@
     const bestOrder = [...orders].sort((a, b) => (b.earningsKop || 0) - (a.earningsKop || 0))[0];
     const topModels = Object.entries(modelTotals).sort((a, b) => b[1] - a[1]).slice(0, 4);
 
-    // Stacked SVG Bar Chart
+    // Stacked Responsive Telemetry Bar Chart (Mobile WebKit-safe)
     const chartDays = Object.keys(dayTotals).sort();
     const dayBaseKop = workDaysInRange > 0 ? Math.round((state.settings.monthlySalaryKop || 0) / Math.max(1, workDaysInRange)) : 0;
     const maxStack = Math.max(...chartDays.map(d => (dayTotals[d] || 0) + dayBaseKop), 500000);
-    let barsSvg = '';
+    let barsHtml = '';
     if (chartDays.length) {
-      const colW = 100 / chartDays.length;
-      chartDays.forEach((dt, idx) => {
-        const pH = Math.round(((dayTotals[dt] || 0) / maxStack) * 105);
-        const sH = Math.round((dayBaseKop / maxStack) * 105);
-        const x = idx * colW + colW * 0.25;
-        const w = chartDays.length === 1 ? 24 : Math.max(8, Math.min(20, colW * 1.5));
-        const dly = Math.min(idx * 45, 450);
-        barsSvg += `
-          <g>
-            <title>${fmtDateRu(dt)}: Выработка ${fmtRub(dayTotals[dt])}${dayBaseKop ? ' + Оклад ' + fmtRub(dayBaseKop) : ''}</title>
-            <rect class="bar-grow" style="animation-delay:${dly}ms" x="${x}%" y="${115 - sH}" width="${w}" height="${sH}" rx="3" fill="#F59E0B"></rect>
-            <rect class="bar-grow" style="animation-delay:${dly + 80}ms" x="${x}%" y="${113 - sH - pH}" width="${w}" height="${pH}" rx="3" fill="#10B981"></rect>
-            <text x="${x}%" y="132" fill="var(--text-secondary)" font-size="9" font-weight="700">${dt.slice(8)}</text>
-          </g>
+      barsHtml = chartDays.map((dt, idx) => {
+        const pH = Math.max(dayTotals[dt] > 0 ? 4 : 0, Math.round(((dayTotals[dt] || 0) / maxStack) * 94));
+        const sH = Math.max(dayBaseKop > 0 ? 3 : 0, Math.round((dayBaseKop / maxStack) * 94));
+        const dly = Math.min(idx * 35, 320);
+        return `
+          <div class="chart-col" title="${fmtDateRu(dt)}: Выработка ${fmtRub(dayTotals[dt])}${dayBaseKop ? ' + Оклад ' + fmtRub(dayBaseKop) : ''}">
+            <div class="chart-bar-stack">
+              ${pH ? `<div class="chart-seg piece" style="height:${pH}px;animation-delay:${dly + 50}ms;"></div>` : ''}
+              ${sH ? `<div class="chart-seg salary" style="height:${sH}px;animation-delay:${dly}ms;"></div>` : ''}
+            </div>
+            <span class="chart-day-lbl num">${dt.slice(8)}</span>
+          </div>
         `;
-      });
+      }).join('');
     }
 
     container.innerHTML = `
       <div class="bento-split">
-        <div>
+        <div style="min-width:0;">
           <section class="glass-card">${renderPeriodSwitcherHtml()}</section>
 
           <section class="glass-card" style="border-color:rgba(16,185,129,0.28);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
               <span style="font-size:12px;font-weight:800;color:var(--green);letter-spacing:0.06em;">ЦЕЛЬ МЕСЯЦА: ${fmtRub(goalKop)}</span>
               <button class="mini-btn" onclick="openGoalModal()">Изменить цель</button>
             </div>
@@ -986,12 +1010,8 @@
           <section class="glass-card">
             <div style="font-size:15px;font-weight:800;margin-bottom:10px;">Выработка по дням</div>
             ${chartDays.length ? `
-              <svg width="100%" height="142">
-                <line x1="0" y1="10" x2="100%" y2="10" stroke="var(--border)" stroke-dasharray="3"/>
-                <line x1="0" y1="65" x2="100%" y2="65" stroke="var(--border)" stroke-dasharray="3"/>
-                ${barsSvg}
-              </svg>
-              <div style="display:flex;gap:14px;font-size:11px;color:var(--text-secondary);margin-top:6px;">
+              <div class="chart-bars-wrap">${barsHtml}</div>
+              <div style="display:flex;gap:14px;font-size:11px;color:var(--text-secondary);margin-top:8px;">
                 <span><b style="color:#10B981;">■</b> Нормо-часы</span>
                 <span><b style="color:#F59E0B;">■</b> Оклад</span>
               </div>
@@ -999,33 +1019,33 @@
           </section>
         </div>
 
-        <div class="bento-sticky-col">
+        <div class="bento-sticky-col" style="min-width:0;">
           <div class="form-grid">
-            <div class="glass-card" style="margin:0;">
+            <div class="glass-card" style="margin:0;min-width:0;">
               <div class="field-label">По нормо-часам</div>
-              <div class="num" style="font-size:20px;font-weight:900;color:var(--green);">${fmtRub(pieceKop)}</div>
+              <div class="num" style="font-size:clamp(16px,4.5vw,20px);font-weight:900;color:var(--green);overflow-wrap:anywhere;">${fmtRub(pieceKop)}</div>
             </div>
-            <div class="glass-card" style="margin:0;">
+            <div class="glass-card" style="margin:0;min-width:0;">
               <div class="field-label">Оклад за период</div>
-              <div class="num" style="font-size:20px;font-weight:900;">${fmtRub(salaryKop)}</div>
+              <div class="num" style="font-size:clamp(16px,4.5vw,20px);font-weight:900;overflow-wrap:anywhere;">${fmtRub(salaryKop)}</div>
             </div>
-            <div class="glass-card" style="margin:0;">
+            <div class="glass-card" style="margin:0;min-width:0;">
               <div class="field-label">Всего AW / н/ч</div>
-              <div class="num" style="font-size:19px;font-weight:900;color:var(--accent);">${Math.round(totalAw)} AW · ${totalHours.toFixed(1)}</div>
+              <div class="num" style="font-size:clamp(15px,4.2vw,19px);font-weight:900;color:var(--accent);overflow-wrap:anywhere;">${Math.round(totalAw)} AW · ${totalHours.toFixed(1)}</div>
             </div>
-            <div class="glass-card" style="margin:0;">
+            <div class="glass-card" style="margin:0;min-width:0;">
               <div class="field-label">Среднее за смену</div>
-              <div class="num" style="font-size:19px;font-weight:900;">${fmtRub(avgEarnDayKop)}</div>
+              <div class="num" style="font-size:clamp(15px,4.2vw,19px);font-weight:900;overflow-wrap:anywhere;">${fmtRub(avgEarnDayKop)}</div>
               <div class="num" style="font-size:11px;color:var(--text-secondary);">${avgAwDay.toFixed(1)} AW/смена</div>
             </div>
-            <div class="glass-card" style="margin:0;">
+            <div class="glass-card" style="margin:0;min-width:0;">
               <div class="field-label">Лучший день</div>
-              <div class="num" style="font-size:17px;font-weight:900;">${bestDayEntry ? fmtRub(bestDayEntry[1]) : '0 ₽'}</div>
+              <div class="num" style="font-size:clamp(15px,4vw,17px);font-weight:900;overflow-wrap:anywhere;">${bestDayEntry ? fmtRub(bestDayEntry[1]) : '0 ₽'}</div>
               <div style="font-size:11px;color:var(--text-secondary);">${bestDayEntry ? fmtDateRu(bestDayEntry[0]) : '—'}</div>
             </div>
-            <div class="glass-card" style="margin:0;">
+            <div class="glass-card" style="margin:0;min-width:0;">
               <div class="field-label">Лучший заказ</div>
-              <div class="num" style="font-size:17px;font-weight:900;">${bestOrder ? fmtRub(bestOrder.earningsKop) : '0 ₽'}</div>
+              <div class="num" style="font-size:clamp(15px,4vw,17px);font-weight:900;overflow-wrap:anywhere;">${bestOrder ? fmtRub(bestOrder.earningsKop) : '0 ₽'}</div>
               <div style="font-size:11px;color:var(--text-secondary);">${bestOrder ? escapeHtml([bestOrder.brand, bestOrder.model].filter(Boolean).join(' ')) : '—'}</div>
             </div>
           </div>
@@ -1084,12 +1104,12 @@
           const pct = Math.round((it.kop / maxKop) * 100);
           return `
             <div class="order-card" style="cursor:pointer;" onclick="jumpToMonth('${ym}')">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;">
+                <div style="min-width:0;flex:1;">
                   <div style="font-size:16px;font-weight:800;">${fmtMonthTitle(ym)}</div>
                   <div style="font-size:12px;color:var(--text-secondary);">${it.count} З/Н · ${h.toFixed(1)} н/ч (${Math.round(it.aw100/100)} AW)</div>
                 </div>
-                <div class="num" style="font-size:17px;font-weight:900;color:var(--green);">${fmtRub(it.kop)} ›</div>
+                <div class="num" style="font-size:17px;font-weight:900;color:var(--green);flex-shrink:0;">${fmtRub(it.kop)} ›</div>
               </div>
               <div style="height:4px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden;">
                 <div style="height:100%;width:${pct}%;background:var(--green);border-radius:99px;"></div>
@@ -1136,7 +1156,8 @@
         <div style="font-size:12px;color:var(--text-secondary);">Период: ${r.label} (${r.start} — ${r.end}) · Ставка: ${fmtRub(state.settings.hourRateKop)}/нч (${(state.settings.awPerHour100||1200)/100} AW/ч)</div>
       </div>
 
-      <table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px;">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:14px;">
+      <table style="width:100%;min-width:420px;border-collapse:collapse;font-size:12px;">
         <thead>
           <tr style="border-bottom:1px solid var(--border-strong);text-align:left;">
             <th style="padding:6px 4px;">Дата</th>
@@ -1149,15 +1170,16 @@
         <tbody>
           ${ords.map(o => `
             <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:6px 4px;" class="num">${o.date.split('-').reverse().join('.')}</td>
-              <td style="padding:6px 4px;" class="num">${escapeHtml(o.number || '—')}</td>
+              <td style="padding:6px 4px;white-space:nowrap;" class="num">${o.date.split('-').reverse().join('.')}</td>
+              <td style="padding:6px 4px;white-space:nowrap;" class="num">${escapeHtml(o.number || '—')}</td>
               <td style="padding:6px 4px;">${escapeHtml([o.brand, o.model].filter(Boolean).join(' '))} ${o.plate ? '('+escapeHtml(o.plate)+')' : ''}</td>
               <td style="padding:6px 4px;text-align:right;" class="num">${((o.aw100||0)/100).toFixed(1)}</td>
-              <td style="padding:6px 4px;text-align:right;font-weight:700;" class="num">${fmtRubDec(o.earningsKop)}</td>
+              <td style="padding:6px 4px;text-align:right;font-weight:700;white-space:nowrap;" class="num">${fmtRubDec(o.earningsKop)}</td>
             </tr>
           `).join('')}
         </tbody>
       </table>
+      </div>
 
       <div style="display:flex;flex-direction:column;gap:4px;border-top:2px solid var(--border-strong);padding-top:10px;">
         <div style="display:flex;justify-content:space-between;"><span>Всего заказ-нарядов:</span><b class="num">${ords.length}</b></div>
@@ -1214,29 +1236,18 @@
           </section>
         </div>
 
-        <div>
+        <div class="bento-sticky-col">
           <section class="glass-card">
-            <h3 style="font-size:16px;font-weight:800;margin-bottom:6px;">Распознавание фото (OCR)</h3>
+            <h3 style="font-size:16px;font-weight:800;margin-bottom:6px;">Распознавание фото (Gemini Vision AI)</h3>
             <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">
-              <b>OCR.space</b> работает бесплатно и без VPN. <b>Gemini Vision</b> идеально разбирает сложные бланки 1С.
-            </div>
-            <div style="margin-bottom:10px;">
-              <label class="field-label">Провайдер OCR</label>
-              <select id="setOcrProvider" class="input-field">
-                <option value="ocrspace" ${(s.ocrProvider||'ocrspace')==='ocrspace'?'selected':''}>OCR.space (без VPN)</option>
-                <option value="gemini" ${s.ocrProvider==='gemini'?'selected':''}>Gemini Vision AI</option>
-              </select>
-            </div>
-            <label class="field-label">OCR.space API Key</label>
-            <div style="display:flex;gap:8px;margin-bottom:10px;">
-              <input type="password" id="setOcrSpaceKey" class="input-field" placeholder="Оставьте пустым для демо-ключа" value="${escapeHtml(s.ocrSpaceKey || '')}">
-              <button class="mini-btn" onclick="const i=document.getElementById('setOcrSpaceKey');i.type=i.type==='password'?'text':'password'">Показать</button>
+              Для автоматического считывания фото заказ-нарядов с камеры и из медиатеки используется <b>Gemini Vision</b> (получите ключ на <b>aistudio.google.com</b>).
             </div>
             <label class="field-label">Gemini API Key</label>
-            <div style="display:flex;gap:8px;">
+            <div style="display:flex;gap:8px;margin-bottom:${s.workingModel ? '8px' : '0'};">
               <input type="password" id="setGeminiKey" class="input-field" placeholder="AIzaSy..." value="${escapeHtml(s.geminiKey || '')}">
-              <button class="mini-btn" onclick="const i=document.getElementById('setGeminiKey');i.type=i.type==='password'?'text':'password'">Показать</button>
+              <button type="button" class="mini-btn" onclick="const i=document.getElementById('setGeminiKey');i.type=i.type==='password'?'text':'password'">Показать</button>
             </div>
+            ${s.workingModel ? `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Активная модель: <b>${escapeHtml(s.workingModel)}</b></div>` : ''}
           </section>
 
           <section class="glass-card">
@@ -1260,9 +1271,11 @@
 
   window.saveSettingsForm = async () => {
     haptic(14);
-    state.settings.ocrProvider = document.getElementById('setOcrProvider').value || 'ocrspace';
-    state.settings.ocrSpaceKey = document.getElementById('setOcrSpaceKey').value.trim();
-    state.settings.geminiKey = document.getElementById('setGeminiKey').value.trim();
+    const nextKey = document.getElementById('setGeminiKey').value.trim();
+    if (nextKey !== (state.settings.geminiKey || '')) {
+      state.settings.workingModel = '';
+    }
+    state.settings.geminiKey = nextKey;
     state.settings.monthlySalaryKop = Math.round((parseFloat(document.getElementById('setSalary').value) || 0) * 100);
     state.settings.hourRateKop = Math.round((parseFloat(document.getElementById('setHourRate').value) || 0) * 100);
     const awH = parseFloat(document.getElementById('setAwPerHour').value) || 12;
@@ -1443,8 +1456,13 @@
     document.getElementById('fStatus').value = 'confirmed';
     document.getElementById('fComment').value = '';
     activePhotoDataUrl = null;
+    lastOcrRawText = '';
     document.getElementById('photoPreviewBox').classList.add('hidden');
+    document.getElementById('photoPreviewBox').classList.remove('scanning');
+    document.getElementById('aiScanStatus').classList.add('hidden');
     document.getElementById('aiScanError').classList.add('hidden');
+    document.getElementById('ocrRawBtn')?.classList.add('hidden');
+    document.getElementById('ocrRetryLocalBtn')?.classList.add('hidden');
     renderPresetsChips();
     renderJobInputs([{ id: uid(), title: '', aw100: 0 }]);
     sheet.classList.add('open');
@@ -1465,11 +1483,17 @@
     document.getElementById('fStatus').value = o.status || 'confirmed';
     document.getElementById('fComment').value = o.comment || '';
     activePhotoDataUrl = o.photoId ? await window.MDB.getPhoto(o.photoId) : null;
+    lastOcrRawText = '';
+    document.getElementById('aiScanStatus').classList.add('hidden');
+    document.getElementById('aiScanError').classList.add('hidden');
+    document.getElementById('ocrRawBtn')?.classList.add('hidden');
     if (activePhotoDataUrl) {
       document.getElementById('photoPreviewImg').src = activePhotoDataUrl;
       document.getElementById('photoPreviewBox').classList.remove('hidden');
+      document.getElementById('ocrRetryLocalBtn')?.classList.remove('hidden');
     } else {
       document.getElementById('photoPreviewBox').classList.add('hidden');
+      document.getElementById('ocrRetryLocalBtn')?.classList.add('hidden');
     }
     renderPresetsChips();
     renderJobInputs(o.jobs);
@@ -1539,7 +1563,13 @@
   document.getElementById('removePhotoBtn').onclick = () => {
     haptic(8);
     activePhotoDataUrl = null;
+    lastOcrRawText = '';
     document.getElementById('photoPreviewBox').classList.add('hidden');
+    document.getElementById('photoPreviewBox').classList.remove('scanning');
+    document.getElementById('aiScanStatus').classList.add('hidden');
+    document.getElementById('aiScanError').classList.add('hidden');
+    document.getElementById('ocrRawBtn')?.classList.add('hidden');
+    document.getElementById('ocrRetryLocalBtn')?.classList.add('hidden');
   };
 
   document.getElementById('orderForm').onsubmit = async (e) => {
@@ -1678,35 +1708,70 @@
     toast(jobs.length ? `Распознано работ: ${jobs.length}` : 'Речь добавлена в комментарий');
   }
 
-  // ===== TEXT PASTE & OCR PARSING (Preserved from v16) =====
-  window.parsePastedText = () => {
-    const txt = document.getElementById('pasteRawArea').value || '';
-    document.getElementById('textPasteSheet').classList.remove('open');
-    openOrderModal();
-    const parsed = parseBmwOrderText(txt);
-    if (parsed.number) document.getElementById('fNumber').value = parsed.number;
-    if (parsed.date) document.getElementById('fDate').value = parsed.date;
-    if (parsed.brand) document.getElementById('fBrand').value = parsed.brand;
-    if (parsed.model) document.getElementById('fModel').value = parsed.model;
-    if (parsed.plate) document.getElementById('fPlate').value = parsed.plate;
-    if (parsed.jobs && parsed.jobs.length) {
-      renderJobInputs(parsed.jobs.map(j => ({ id: uid(), title: j.title || '', aw100: Math.round((parseFloat(j.aw) || 0) * 100) })));
+  // ===== TEXT PASTE & OCR PARSING =====
+  window.openLastOcrText = () => {
+    haptic(8);
+    if (!lastOcrRawText) {
+      toast('Распознанный текст пока отсутствует');
+      return;
     }
-    toast(parsed.jobs.length ? `Разобрано работ: ${parsed.jobs.length}` : 'Текст разобран');
+    document.getElementById('pasteRawArea').value = lastOcrRawText;
+    document.getElementById('textPasteSheet').classList.add('open');
   };
+
+  window.parsePastedText = () => {
+    const txt = (document.getElementById('pasteRawArea').value || '').trim();
+    document.getElementById('textPasteSheet').classList.remove('open');
+    if (!sheet.classList.contains('open')) openOrderModal();
+    let parsed = null;
+    if (txt.startsWith('{')) {
+      try {
+        const obj = JSON.parse(txt);
+        if (obj && typeof obj === 'object' && ('jobs' in obj || 'number' in obj || 'model' in obj)) parsed = obj;
+      } catch (e) {}
+    }
+    if (!parsed) parsed = parseBmwOrderText(txt);
+    applyParsedOrderFields(parsed);
+    toast(parsed.jobs && parsed.jobs.length ? `Разобрано работ: ${parsed.jobs.length}` : 'Текст разобран');
+  };
+
+  function applyParsedOrderFields(parsed) {
+    if (!parsed) return;
+    if (parsed.number) document.getElementById('fNumber').value = String(parsed.number).trim();
+    if (parsed.date && /^\d{4}-\d{2}-\d{2}$/.test(parsed.date)) document.getElementById('fDate').value = parsed.date;
+    if (parsed.brand) document.getElementById('fBrand').value = String(parsed.brand).trim();
+    if (parsed.model) document.getElementById('fModel').value = String(parsed.model).trim();
+    if (parsed.plate) document.getElementById('fPlate').value = String(parsed.plate).replace(/[\s-]+/g, '').toUpperCase();
+    if (Array.isArray(parsed.jobs) && parsed.jobs.length) {
+      renderJobInputs(parsed.jobs.map(j => ({
+        id: uid(),
+        title: j.title || '',
+        aw100: Math.round((parseFloat(String(j.aw || 0).replace(',', '.')) || 0) * 100)
+      })));
+    }
+  }
 
   function parseBmwOrderText(txt) {
     const res = { number: '', date: '', brand: 'BMW', model: '', plate: '', jobs: [] };
     if (!txt) return res;
-    const norm = txt.replace(/\r/g, '');
+    const norm = txt
+      .replace(/\r/g, '')
+      .replace(/[|¦]+/g, ' ')
+      .replace(/\u00A0/g, ' ');
 
-    const numM = norm.match(/(?:Заказ-наряд|З\/Н|Заказ\s*наряд)\s*(?:№|#|:)?\s*(\d{6,10})/i)
-      || norm.match(/\b(78\d{5,7})\b/) || norm.match(/№\s*(\d{6,10})/);
-    if (numM) res.number = numM[1];
+    // 1. Order number (supports 78xxxxx, 5-10 digits, or alphanumeric Z/N ids with digits)
+    const explicitNumM = norm.match(/(?:Заказ[-\s]*наряд|З\/Н|Наряд|Заявка)\s*(?:№|N|#|:)?\s*([A-ZА-ЯЁ0-9/-]{4,14})/i);
+    if (explicitNumM && /\d{4,}/.test(explicitNumM[1])) {
+      res.number = explicitNumM[1].replace(/^[№#:\s]+/, '');
+    } else {
+      const numFallbackM = norm.match(/\b(78\d{5,7})\b/) || norm.match(/(?:№|N)\s*(\d{5,10})/);
+      if (numFallbackM) res.number = numFallbackM[1];
+    }
 
+    // 2. Date (supports dd.mm.yyyy, dd/mm/yyyy, dd-mm-yyyy, dd.mm.yy)
     const curYear = new Date().getFullYear();
     const foundDates = [];
-    for (const m of norm.matchAll(/(\d{2})\.(\d{2})\.(20\d{2}|\d{2})(?!\d)/g)) {
+    for (const m of norm.matchAll(/(\d{2})[./,-](\d{2})[./,-](20\d{2}|\d{2})(?!\d)/g)) {
       const dd = parseInt(m[1], 10), mm = parseInt(m[2], 10);
       let yy = parseInt(m[3], 10);
       if (yy < 100) yy += 2000;
@@ -1719,159 +1784,366 @@
       res.date = best.iso;
     }
 
-    const plateM = norm.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s*\d{2,3}/i);
-    if (plateM) res.plate = plateM[0].replace(/\s+/g, '').toUpperCase();
+    // 3. License plate (tolerant of hyphens/spaces and explicit "Госномер:" label)
+    const plateM = norm.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}[-\s]*\d{2,3}/i);
+    if (plateM) {
+      res.plate = plateM[0].replace(/[\s-]+/g, '').toUpperCase();
+    } else {
+      const labelPlateM = norm.match(/(?:Гос\.?\s*номер|Госномер|Г\/Н|Рег\.?\s*знак)\s*[:=-]?\s*([А-ЯЁA-Z0-9]{1}[А-ЯЁA-Z0-9\s-]{5,10})/i);
+      if (labelPlateM) {
+        const cand = labelPlateM[1].trim().split(/\s+/)[0].replace(/[^А-ЯЁA-Z0-9]/gi, '').toUpperCase();
+        if (/\d{2,}/.test(cand) && cand.length >= 7 && cand.length <= 10) res.plate = cand;
+      }
+    }
 
-    const modelM = norm.match(/\bBMW\s+([XХZM]\d(?:\s*M)?|[1-8]\s*серии|[1-8]\d{2}[idxe]?)/i)
-      || norm.match(/(?:^|\s)([XХ][1-7]|Z4|M[2-8]|[1-8]\s*серии|[1-8]\d{2}[idxe])(?=\s|$)/i);
-    if (modelM) res.model = modelM[1].replace(/Х/g, 'X').trim();
+    // 4. Brand & Model (tolerant of mixed Cyrillic/Latin in BMW)
+    if (/\b(?:mercedes|мерседес)\b/i.test(norm)) res.brand = 'Mercedes-Benz';
+    else if (/\b(?:audi|ауди)\b/i.test(norm)) res.brand = 'Audi';
+    else if (/\b(?:porsche|порше)\b/i.test(norm)) res.brand = 'Porsche';
+    else if (/\b(?:mini|мини)\b/i.test(norm) && !/\bмини[а-я]+/i.test(norm)) res.brand = 'MINI';
 
+    const modelM = norm.match(/\b(?:[BВ][MМ][WШ]|БМВ)\s+([XХZM]\d(?:\s*[A-Z]?\d{2})?(?:\s*M)?|[1-8]\s*серии|[1-8]\d{2}[idxe]?)/i)
+      || norm.match(/(?:Модель[^\n]*\n[^\n]*?\b|Марка[^\n]*\n[^\n]*?\b)([XХZM]\d|[1-8]\s*серии|[1-8]\d{2}[idxe]?)/i)
+      || norm.match(/(?:^|\s)([XХ][1-7](?:\s*[EFGU]\d{2})?|Z4|M[2-8]|[1-8]\s*серии|[1-8]\d{2}[idxe])(?=\s|$)/i);
+    if (modelM) res.model = modelM[1].replace(/Х/g, 'X').replace(/\s+/g, ' ').trim();
+
+    // 5. Work rows & AW extraction (supports both inline and detached multi-column blocks)
+    const awPerHour = (state.settings.awPerHour100 || 1200) / 100;
     const lines = norm.split('\n').map(l => l.replace(/\t+/g, ' ').replace(/\s{2,}/g, ' ').trim()).filter(Boolean);
-    const titles = [], awValues = [];
-    const headerOrAddrRe = /^(код|описание|ед\.?\s*изм|работа|итого|всего|ндс|нетто|скидка|сумма|город|г\.|химки|москва|область|шоссе|улица|ул\.|владен|россия|домашний|рабочий|моб|дата|время приема|время выдачи|марка|модель|vin|пробег|гос|заказчик|исполнитель|мастер|подпись|комплект расходных|смазки)/i;
-    const skipLineRe = /(?:\+7|8\s*\(\d{3}\)|к-во|ед\.?\s*изм|цена\s+ндс|сумма\s+ндс|всего\s+rub|\b(?:комп|шт|л)\s+\d+[.,]\d+)/i;
+    const inlineJobs = [];
+    const orphanTitles = [];
+    const orphanAws = [];
+
+    const headerOrAddrRe = /^(код|описание|ед\.?\s*изм|работа|услуга|итого|всего|ндс|нетто|скидка|сумма|к\s*оплате|город|г\.|химки|москва|область|шоссе|улица|ул\.|владен|россия|домашний|рабочий|моб|дата|время приема|время выдачи|марка|модель|vin|пробег|гос|заказчик|исполнитель|мастер|подпись|комплект расходных|смазки)/i;
+    const skipLineRe = /(?:\+7|8\s*\(\d{3}\)|к-во|ед\.?\s*изм|цена\s+ндс|сумма\s+ндс|всего\s+rub|итого\s+по|\b(?:комп|шт|л|кг)\s+\d+[.,]\d+)/i;
+    const jobVerbRe = /^(время работы|выполнение|замена|диагностика|проверка|снятие|установка|регулировка|программирование|кодирование|[мm][оo0]йка|уборка|обслуживание|ремонт|прокачка|сход|развал|балансировка|шиномонтаж|осмотр|чтение|сброс|обновление|чистка|смазка|долив)/i;
+
+    function extractAwVal(l) {
+      if (headerOrAddrRe.test(l)) return null;
+      const dealerAwM = l.match(/(?:^|\s)[AА][WШV]\s+\d+[.,]\d+\s+(\d+(?:[.,]\d+)?)(?=\s|$)/i);
+      if (dealerAwM) {
+        const v = parseFloat(dealerAwM[1].replace(',', '.'));
+        if (v > 0 && v <= 300) return v;
+      }
+      const qtyBeforeAwM = l.match(/(?:^|\s)\d+[.,]\d+\s+[AА][WШV]\s+(\d+(?:[.,]\d+)?)(?=\s|$)/i);
+      if (qtyBeforeAwM) {
+        const v = parseFloat(qtyBeforeAwM[1].replace(',', '.'));
+        if (v > 0 && v <= 300) return v;
+      }
+      const directAwM = l.match(/(\d+(?:[.,]\d+)?)\s*(?:AW|АW|A\s*W|АШ)\b/i)
+        || l.match(/\b(?:AW|АW|АШ)\s*[:=-]?\s*(\d+(?:[.,]\d+)?)\b(?!\s+\d)/i);
+      if (directAwM) {
+        const v = parseFloat(directAwM[1].replace(',', '.'));
+        if (v > 0 && v <= 300) return v;
+      }
+      const nchM = l.match(/(\d+(?:[.,]\d+)?)\s*(?:н\s*\/\s*ч|н\.?\s*ч\.?|нормо[-\s]*час)/i);
+      if (nchM) {
+        const h = parseFloat(nchM[1].replace(',', '.'));
+        if (h > 0 && h <= 40) return Math.round(h * awPerHour * 10) / 10;
+      }
+      return null;
+    }
+
+    function cleanJobTitle(raw) {
+      return raw
+        .replace(/^(?:\d{5,8}|SERV\d{2,4})\s+/i, '')
+        .replace(/^[\s—–\-•|:.]+/, '')
+        .replace(/\s+[AА][WШV]\b.*$/i, '')
+        .replace(/\s*\d+(?:[.,]\d+)?\s*(?:AW|АW|A\s*W|АШ|н\s*\/\s*ч|н\.?\s*ч\.?).*$/i, '')
+        .replace(/\s+\d+[.,]\d+.*$/, '')
+        .replace(/[—–\-:;,\s]+$/, '')
+        .trim();
+    }
 
     lines.forEach(l => {
       if (skipLineRe.test(l)) return;
-      const awM = l.match(/(?:^|\s)[AА][WШV]\s+\d+[.,]\d+\s+(\d+(?:[.,]\d+)?)(?=\s|$)/i);
-      if (awM) {
-        const v = parseFloat(awM[1].replace(',', '.'));
-        if (v > 0 && v <= 300) awValues.push(v);
-      }
-      const codeM = l.match(/(?:^|\s)(?:\d{7,8}|SERV\d{2,4})\s+([А-ЯЁA-Z].*)/i);
+
+      const awVal = extractAwVal(l);
+      const codeM = l.match(/(?:^|\s)(?:\d{6,8}|SERV\d{2,4})\s+([А-ЯЁA-Z].*)/i);
+      let desc = '';
+
       if (codeM) {
-        const desc = codeM[1].replace(/\s+[AА][WШV]\b.*$/i, '').replace(/\s+\d+[.,]\d+.*$/, '').trim();
-        if (desc.length >= 4 && !headerOrAddrRe.test(desc)) titles.push(desc);
-        return;
+        const candidate = cleanJobTitle(codeM[1]);
+        if (candidate.length >= 4 && !headerOrAddrRe.test(candidate)) desc = candidate;
+      } else if (awVal !== null || jobVerbRe.test(l)) {
+        const candidate = cleanJobTitle(l);
+        if (candidate.length >= 5 && !headerOrAddrRe.test(candidate) && !/^\d+(?:[.,]\d+)?$/.test(candidate)) {
+          desc = candidate;
+        }
       }
-      if (/[AА][WШV]\s+\d+[.,]\d+/i.test(l) || /^(время работы|выполнение|замена|диагностика|проверка|снятие|установка|регулировка|программирование|кодирование|[мm][оo0]йка|уборка|обслуживание|ремонт|прокачка|сход|развал|балансировка|шиномонтаж|осмотр|чтение|сброс)/i.test(l)) {
-        const desc = l.replace(/^(?:\d{5,8}|SERV\d{2,4})\s+/i, '').replace(/\s+[AА][WШV]\b.*$/i, '').replace(/\s+\d+[.,]\d+.*$/, '').trim();
-        if (desc.length >= 5 && !headerOrAddrRe.test(desc) && !/^\d+$/.test(desc)) titles.push(desc);
+
+      if (desc && awVal !== null) {
+        inlineJobs.push({ title: desc, aw: awVal });
+      } else if (desc) {
+        orphanTitles.push(desc);
+      } else if (awVal !== null) {
+        orphanAws.push(awVal);
       }
     });
 
-    const count = Math.max(titles.length, awValues.length);
-    for (let i = 0; i < count; i++) {
-      res.jobs.push({ title: titles[i] || `Работа ${i + 1}`, aw: awValues[i] || 0 });
+    res.jobs = inlineJobs.slice();
+    const orphanCount = Math.max(orphanTitles.length, orphanAws.length);
+    for (let i = 0; i < orphanCount; i++) {
+      res.jobs.push({
+        title: orphanTitles[i] || `Работа ${res.jobs.length + 1}`,
+        aw: orphanAws[i] || 0
+      });
     }
     return res;
   }
 
-  // ===== CAMERA / GALLERY OCR =====
+  // ===== CAMERA / MEDIA LIBRARY OCR (Gemini Vision AI Only) =====
   window.triggerPhoto = (source) => {
     haptic(8);
-    if (!sheet.classList.contains('open')) openOrderModal();
-    if (source === 'camera') document.getElementById('cameraInput').click();
-    else document.getElementById('galleryInput').click();
+    // Click file input FIRST synchronously inside user gesture for reliable iOS Safari / PWA picker opening
+    const input = document.getElementById(source === 'camera' ? 'cameraInput' : 'galleryInput');
+    if (input) input.click();
   };
 
-  function compressImage(file, maxW = 1280, quality = 0.8) {
+  function compressImage(file, maxW = 1280, quality = 0.78) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
         const img = new Image();
         img.onload = () => {
-          const scale = Math.min(1, maxW / Math.max(img.width, img.height));
+          const scale = Math.min(1, maxW / Math.max(img.width, img.height, 1));
           const canvas = document.createElement('canvas');
-          canvas.width = Math.round(img.width * scale);
-          canvas.height = Math.round(img.height * scale);
-          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', quality));
+          canvas.width = Math.max(1, Math.round(img.width * scale));
+          canvas.height = Math.max(1, Math.round(img.height * scale));
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          let out = canvas.toDataURL('image/jpeg', quality);
+          for (const q of [0.66, 0.54]) {
+            if (out.length <= 1350000) break;
+            out = canvas.toDataURL('image/jpeg', q);
+          }
+          resolve(out);
         };
-        img.onerror = reject;
+        img.onerror = () => reject(new Error('Не удалось прочитать фото (используйте JPG или PNG)'));
         img.src = reader.result;
       };
-      reader.onerror = reject;
+      reader.onerror = () => reject(new Error('Ошибка чтения файла с устройства'));
       reader.readAsDataURL(file);
     });
   }
 
-  async function callOcrSpace(apiKey, dataUrl) {
-    const form = new FormData();
-    form.append('base64Image', dataUrl);
-    form.append('language', 'rus');
-    form.append('OCREngine', '2');
-    form.append('isTable', 'true');
-    form.append('scale', 'true');
-    const resp = await fetch('https://api.ocr.space/parse/image', {
-      method: 'POST', headers: { 'apikey': apiKey || 'helloworld' }, body: form
-    });
-    const json = await resp.json();
-    if (!resp.ok || json.IsErroredOnProcessing) throw new Error(json.ErrorMessage || `HTTP ${resp.status}`);
-    const text = (json.ParsedResults || []).map(r => r.ParsedText || '').join('\n').trim();
-    if (!text) throw new Error('Текст на фото не найден');
-    return parseBmwOrderText(text);
-  }
+  async function callGeminiVision(apiKey, modelName, prompt, base64Data, useThinkingOff = true) {
+    const genCfg = {
+      responseMimeType: 'application/json',
+      temperature: 0,
+      maxOutputTokens: 1536
+    };
+    if (useThinkingOff) genCfg.thinkingConfig = { thinkingBudget: 0 };
 
-  async function callGeminiVision(apiKey, modelName, prompt, base64Data) {
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }],
-        generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens: 1024 }
-      })
-    });
-    const json = await resp.json();
-    if (!resp.ok) throw new Error(json.error?.message || `HTTP ${resp.status}`);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 22000);
+    let resp;
+    try {
+      resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: ctrl.signal,
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }],
+          generationConfig: genCfg
+        })
+      });
+    } catch (e) {
+      if (e && e.name === 'AbortError') throw new Error('Таймаут Gemini (22 сек). Проверьте VPN и интернет.');
+      throw e;
+    } finally {
+      clearTimeout(timer);
+    }
+    const rawBody = await resp.text();
+    let json = {};
+    try { json = JSON.parse(rawBody); } catch (e) {}
+    if (!resp.ok) {
+      const msg = json.error?.message || `HTTP ${resp.status}`;
+      if (useThinkingOff && resp.status === 400 && /thinking/i.test(msg)) {
+        return callGeminiVision(apiKey, modelName, prompt, base64Data, false);
+      }
+      throw new Error(msg);
+    }
     return json;
   }
+
+  async function getAvailableVisionModels(apiKey, skipSet) {
+    try {
+      const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
+      const json = await resp.json();
+      if (!resp.ok || !Array.isArray(json.models)) return [];
+      const badRe = /embedding|tts|audio|imagen|veo|aqa|robotics|computer-use|gemma|bison|gecko|learnlm|text-only/i;
+      const score = (n) => {
+        if (/^gemini-3\..*flash(?!-lite)/i.test(n)) return 100;
+        if (/^gemini-3\..*flash/i.test(n)) return 95;
+        if (/^gemini-2\.5-flash(?!-lite)/i.test(n)) return 85;
+        if (/^gemini-2\.5-flash/i.test(n)) return 80;
+        if (/^gemini-2\.0-flash/i.test(n)) return 70;
+        return 50;
+      };
+      return json.models
+        .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+        .map(m => m.name.replace(/^models\//, ''))
+        .filter(n => /gemini/i.test(n) && !badRe.test(n) && !skipSet.has(n))
+        .sort((a, b) => score(b) - score(a));
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async function runGeminiOcr(apiKey, dataUrl) {
+    const base64Data = dataUrl.split(',')[1];
+    const prompt = 'Распознай заказ-наряд автосервиса (1С/BMW/ДИЛЕР) и верни строго JSON: {"number":"номер З/Н","date":"YYYY-MM-DD","brand":"BMW","model":"модель и кузов","plate":"госномер слитно","jobs":[{"title":"наименование работы без кода","aw":0}]}. Включай только выполненные работы и их AW (нормо-единицы), без запчастей, расходников и сумм в рублях.';
+    const retryRe = /model|not found|deprecated|supported|no longer available|modality|not enabled|image/i;
+    const tried = new Set();
+    let json = null;
+    let lastErr = null;
+    let usedModel = state.settings.workingModel || '';
+
+    if (state.settings.workingModel) {
+      const cached = state.settings.workingModel;
+      tried.add(cached);
+      try {
+        json = await callGeminiVision(apiKey, cached, prompt, base64Data);
+        usedModel = cached;
+      } catch (err) {
+        lastErr = err;
+        if (retryRe.test(err.message || '')) {
+          state.settings.workingModel = '';
+          persistSettings();
+        }
+      }
+    }
+
+    if (!json && (!lastErr || retryRe.test(lastErr.message || ''))) {
+      const autoModels = await getAvailableVisionModels(apiKey, tried);
+      const list = autoModels.length ? autoModels.slice(0, 3) : ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+      for (const mName of list) {
+        if (!mName || tried.has(mName)) continue;
+        tried.add(mName);
+        try {
+          json = await callGeminiVision(apiKey, mName, prompt, base64Data);
+          usedModel = mName;
+          state.settings.workingModel = mName;
+          persistSettings();
+          break;
+        } catch (err) {
+          lastErr = err;
+          if (!retryRe.test(err.message || '')) break;
+        }
+      }
+    }
+
+    if (!json) throw lastErr || new Error('Нет ответа от Gemini Vision');
+    const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const cleaned = rawText.replace(/^```json\s*/i, '').replace(/```$/i, '').trim();
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : cleaned);
+    return { parsed, rawText: JSON.stringify(parsed, null, 2), model: usedModel };
+  }
+
+  window.goToGeminiSettings = () => {
+    sheet.classList.remove('open');
+    switchTab('settings');
+    setTimeout(() => {
+      const inp = document.getElementById('setGeminiKey');
+      if (inp) { inp.scrollIntoView({ behavior: 'smooth', block: 'center' }); inp.focus(); }
+    }, 260);
+  };
+
+  function setGeminiErrorUi(msg, noKey = false, showRaw = false) {
+    const errBox = document.getElementById('aiScanError');
+    errBox.innerHTML = `
+      <div style="margin-bottom:8px;">${escapeHtml(msg)}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        ${noKey
+          ? `<button type="button" class="mini-btn photo" onclick="goToGeminiSettings()">Вставить ключ в Настройках</button>`
+          : `<button type="button" class="mini-btn photo" onclick="rescanAttachedPhoto()">Повторить (Gemini)</button>`
+        }
+        ${showRaw ? `<button type="button" class="mini-btn" onclick="openLastOcrText()">Ответ Gemini</button>` : ''}
+      </div>
+    `;
+    errBox.classList.remove('hidden');
+  }
+
+  async function runGeminiOcrPipeline() {
+    if (!activePhotoDataUrl) return;
+    const errBox = document.getElementById('aiScanError');
+    const banner = document.getElementById('aiScanStatus');
+    const scanTitle = document.getElementById('aiScanTitle');
+    const previewBox = document.getElementById('photoPreviewBox');
+    const apiKey = (state.settings.geminiKey || '').trim();
+
+    errBox.classList.add('hidden');
+    document.getElementById('ocrRetryLocalBtn')?.classList.remove('hidden');
+
+    if (!apiKey) {
+      banner.classList.add('hidden');
+      previewBox.classList.remove('scanning');
+      setGeminiErrorUi('Фото прикреплено. Чтобы Gemini считывал заказ-наряды, добавьте Gemini API Key в Настройках.', true, false);
+      toast('Фото прикреплено (добавьте ключ Gemini)');
+      return;
+    }
+
+    previewBox.classList.add('scanning');
+    scanTitle.textContent = 'Gemini Vision · M-Laser скан...';
+    banner.classList.remove('hidden');
+
+    try {
+      const result = await runGeminiOcr(apiKey, activePhotoDataUrl);
+      banner.classList.add('hidden');
+      previewBox.classList.remove('scanning');
+
+      if (result) {
+        lastOcrRawText = result.rawText || '';
+        if (lastOcrRawText) document.getElementById('ocrRawBtn')?.classList.remove('hidden');
+        applyParsedOrderFields(result.parsed);
+        const cnt = result.parsed && Array.isArray(result.parsed.jobs) ? result.parsed.jobs.length : 0;
+        toast(cnt ? `Gemini распознал работ: ${cnt}` : 'Бланк обработан Gemini Vision');
+      }
+    } catch (err) {
+      banner.classList.add('hidden');
+      previewBox.classList.remove('scanning');
+      setGeminiErrorUi('Ошибка Gemini Vision: ' + (err.message || 'проверьте ключ и VPN'), false, Boolean(lastOcrRawText));
+      toast('Фото прикреплено, ошибка Gemini');
+    }
+  }
+
+  window.rescanAttachedPhoto = () => {
+    haptic(10);
+    runGeminiOcrPipeline();
+  };
 
   async function handlePhotoSelected(e) {
     const file = e.target.files[0];
     e.target.value = '';
     if (!file) return;
+
+    if (!sheet.classList.contains('open')) openOrderModal();
+
     const errBox = document.getElementById('aiScanError');
     const banner = document.getElementById('aiScanStatus');
+    const scanTitle = document.getElementById('aiScanTitle');
     const previewBox = document.getElementById('photoPreviewBox');
+
     errBox.classList.add('hidden');
+    scanTitle.textContent = 'Сжатие фото для Gemini...';
+    banner.classList.remove('hidden');
 
     try {
-      const provider = state.settings.ocrProvider || 'ocrspace';
-      const dataUrl = await compressImage(file, 1280, 0.8);
+      const dataUrl = await compressImage(file, 1280, 0.78);
       activePhotoDataUrl = dataUrl;
       document.getElementById('photoPreviewImg').src = dataUrl;
       previewBox.classList.remove('hidden');
-      previewBox.classList.add('scanning');
-      banner.classList.remove('hidden');
-
-      let parsed = null;
-      if (provider === 'ocrspace') {
-        parsed = await callOcrSpace((state.settings.ocrSpaceKey || '').trim() || 'helloworld', dataUrl);
-      } else {
-        const apiKey = (state.settings.geminiKey || '').trim();
-        if (!apiKey) {
-          banner.classList.add('hidden');
-          previewBox.classList.remove('scanning');
-          toast('Фото прикреплено (добавьте ключ Gemini в Настройках)');
-          return;
-        }
-        const prompt = 'Извлеки из заказ-наряда JSON: {"number":"","date":"YYYY-MM-DD","brand":"BMW","model":"","plate":"","jobs":[{"title":"","aw":0}]}. Только выполненные работы без кодов и цен запчастей.';
-        const mName = state.settings.workingModel || 'gemini-2.5-flash';
-        const json = await callGeminiVision(apiKey, mName, prompt, dataUrl.split(',')[1]);
-        const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-        parsed = JSON.parse(rawText.replace(/^```json\s*/i, '').replace(/```$/i, '').trim());
-      }
-
-      banner.classList.add('hidden');
-      previewBox.classList.remove('scanning');
-      if (parsed) {
-        if (parsed.number) document.getElementById('fNumber').value = parsed.number;
-        if (parsed.date && /^\d{4}-\d{2}-\d{2}$/.test(parsed.date)) document.getElementById('fDate').value = parsed.date;
-        if (parsed.brand) document.getElementById('fBrand').value = parsed.brand;
-        if (parsed.model) document.getElementById('fModel').value = parsed.model;
-        if (parsed.plate) document.getElementById('fPlate').value = parsed.plate;
-        if (Array.isArray(parsed.jobs) && parsed.jobs.length) {
-          renderJobInputs(parsed.jobs.map(j => ({ id: uid(), title: j.title || '', aw100: Math.round((parseFloat(j.aw) || 0) * 100) })));
-        }
-        toast('Бланк распознан');
-      }
+      await runGeminiOcrPipeline();
     } catch (err) {
       banner.classList.add('hidden');
       previewBox.classList.remove('scanning');
-      errBox.textContent = 'Ошибка OCR: ' + (err.message || 'проверьте сеть/ключ');
-      errBox.classList.remove('hidden');
-      toast('Фото прикреплено, ошибка OCR');
+      setGeminiErrorUi('Ошибка фото: ' + (err.message || 'неизвестный формат'), false, false);
+      toast('Не удалось открыть фото');
     }
   }
 
@@ -2076,10 +2348,10 @@
     telemetryRaf = requestAnimationFrame(step);
   }
 
-  // Global Tactile Touch Ripple
+  // Global Tactile Touch Ripple (CTA buttons only so scrolling cards never flash)
   document.addEventListener('pointerdown', (e) => {
-    const host = e.target.closest('.bmw-ripple-host, .btn-primary-cta, .btn-primary-full');
-    if (!host || e.target.closest('button.mini-btn')) return;
+    const host = e.target.closest('.btn-primary-cta, .btn-primary-full');
+    if (!host) return;
     const rect = host.getBoundingClientRect();
     const size = Math.max(rect.width, rect.height) * 0.45;
     const r = document.createElement('span');
@@ -2088,22 +2360,7 @@
     r.style.left = (e.clientX - rect.left - size / 2) + 'px';
     r.style.top = (e.clientY - rect.top - size / 2) + 'px';
     host.appendChild(r);
-    setTimeout(() => r.remove(), 580);
-  }, { passive: true });
-
-  // Subtle Ambient Orb Scroll Parallax
-  let scrollTicking = false;
-  window.addEventListener('scroll', () => {
-    if (scrollTicking) return;
-    scrollTicking = true;
-    requestAnimationFrame(() => {
-      const y = window.scrollY || 0;
-      const o1 = document.querySelector('.orb-1');
-      const o2 = document.querySelector('.orb-2');
-      if (o1) o1.style.translate = `0 ${Math.min(55, y * 0.14)}px`;
-      if (o2) o2.style.translate = `0 ${-Math.min(50, y * 0.11)}px`;
-      scrollTicking = false;
-    });
+    setTimeout(() => r.remove(), 500);
   }, { passive: true });
 
   window.toggleThemeQuick = async () => {
