@@ -1,42 +1,47 @@
 <!DOCTYPE html>
-<!-- M-Telemetry BMW-Cockpit Motion Edition v16 -->
-<html lang="ru" data-theme="dark">
+<!-- M-Telemetry 2.0 (Figma Design System Edition) -->
+<html lang="ru" data-theme="dark" data-drive="sport">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Нормо-часы">
+<meta name="apple-mobile-web-app-title" content="M-Telemetry">
 <meta name="theme-color" content="#07090F">
-<title>Нормо-часы — M-Telemetry</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Нормо-часы — M-Telemetry 2.0</title>
 <style>
   :root {
     --bg: #07090F;
-    --bg-gradient: radial-gradient(circle at 12% -10%, rgba(56, 189, 248, 0.16) 0%, transparent 45%),
-                   radial-gradient(circle at 88% 8%, rgba(245, 158, 11, 0.12) 0%, transparent 42%),
-                   radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
-    --surface: rgba(15, 20, 32, 0.80);
-    --surface-solid: #0F1420;
-    --surface-elevated: rgba(24, 32, 48, 0.90);
-    --surface-hover: rgba(34, 44, 66, 0.94);
+    --bg-mesh: radial-gradient(at 10% 0%, rgba(10, 132, 255, 0.16) 0px, transparent 50%),
+               radial-gradient(at 90% 10%, rgba(226, 39, 24, 0.12) 0px, transparent 45%),
+               radial-gradient(at 50% 95%, rgba(16, 185, 129, 0.10) 0px, transparent 55%);
+    --surface: rgba(15, 21, 35, 0.85);
+    --surface-elevated: #101624;
+    --surface-card: #101624;
+    --surface-input: rgba(0, 0, 0, 0.35);
     --border: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.15);
+    --border-strong: rgba(255, 255, 255, 0.14);
     --text: #F8FAFC;
     --text-secondary: #94A3B8;
     --text-muted: #64748B;
+    
+    /* BMW M Heritage Palette */
+    --m-blue: #00A0E3;
+    --m-dark-blue: #1D4ED8;
+    --m-red: #E22718;
     --accent: #38BDF8;
     --accent-blue: #0A84FF;
-    --accent-glow: rgba(56, 189, 248, 0.35);
     --gold: #F59E0B;
-    --gold-glow: rgba(245, 158, 11, 0.32);
     --green: #10B981;
-    --green-glow: rgba(16, 185, 129, 0.30);
     --red: #F43F5E;
-    --shadow-card: 0 14px 34px -10px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.09);
-    --shadow-float: 0 22px 48px -12px rgba(0, 0, 0, 0.82), 0 0 0 1px rgba(255, 255, 255, 0.08);
-    --radius-xl: 24px;
+    
+    --shadow-card: 0 16px 36px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    --shadow-float: 0 24px 52px -12px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    --radius-2xl: 28px;
+    --radius-xl: 22px;
     --radius-lg: 18px;
-    --radius-md: 14px;
+    --radius-md: 12px;
     --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     --safe-top: env(safe-area-inset-top, 14px);
@@ -44,43 +49,29 @@
   }
 
   [data-theme="light"] {
-    --bg: #EEF2F7;
-    --bg-gradient: radial-gradient(circle at 12% -10%, rgba(2, 132, 199, 0.14) 0%, transparent 48%),
-                   radial-gradient(circle at 88% 8%, rgba(217, 119, 6, 0.11) 0%, transparent 45%);
-    --surface: rgba(255, 255, 255, 0.85);
-    --surface-solid: #FFFFFF;
-    --surface-elevated: rgba(248, 250, 252, 0.96);
-    --surface-hover: #F1F5F9;
+    --bg: #F1F5F9;
+    --bg-mesh: radial-gradient(at 10% 0%, rgba(2, 132, 199, 0.12) 0px, transparent 50%),
+               radial-gradient(at 90% 10%, rgba(226, 39, 24, 0.08) 0px, transparent 45%);
+    --surface: rgba(255, 255, 255, 0.90);
+    --surface-elevated: #FFFFFF;
+    --surface-card: #FFFFFF;
+    --surface-input: rgba(15, 23, 42, 0.05);
     --border: rgba(15, 23, 42, 0.08);
     --border-strong: rgba(15, 23, 42, 0.14);
     --text: #0F172A;
     --text-secondary: #475569;
     --text-muted: #94A3B8;
-    --accent: #0284C7;
-    --accent-blue: #007AFF;
-    --accent-glow: rgba(2, 132, 199, 0.24);
-    --gold: #D97706;
-    --gold-glow: rgba(217, 119, 6, 0.22);
-    --green: #059669;
-    --green-glow: rgba(5, 150, 105, 0.22);
-    --red: #E11D48;
-    --shadow-card: 0 12px 30px -10px rgba(15, 23, 42, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    --shadow-float: 0 20px 44px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.06);
+    --shadow-card: 0 12px 30px -8px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   }
 
-  * {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    margin: 0;
-    padding: 0;
-  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
   html, body {
     background-color: var(--bg);
-    background-image: var(--bg-gradient);
+    background-image: var(--bg-mesh);
     background-attachment: fixed;
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Display", Roboto, sans-serif;
     font-size: 15px;
     line-height: 1.4;
     min-height: 100vh;
@@ -88,1795 +79,739 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .num {
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum";
-  }
+  .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
 
-  /* Ambient Orbs */
-  .ambient-orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(75px);
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.42;
-    animation: orbFloat 14s ease-in-out infinite alternate;
-  }
-  .orb-1 { width: 250px; height: 250px; top: -60px; left: -60px; background: var(--accent); }
-  .orb-2 { width: 210px; height: 210px; top: 140px; right: -70px; background: var(--gold); animation-delay: -5s; }
-  @keyframes orbFloat {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(20px, 28px) scale(1.1); }
-  }
-
-  /* M-Stripe */
+  /* M-Stripe Ribbon */
   .m-stripe {
     display: inline-block;
-    height: 3px;
-    width: 42px;
-    border-radius: 99px;
-    background: linear-gradient(90deg, #00A0E3 0%, #00A0E3 33.3%, #334155 33.3%, #334155 66.6%, #E22718 66.6%, #E22718 100%);
+    height: 4px;
+    width: 36px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #00A0E3 0%, #00A0E3 33.3%, #1D4ED8 33.3%, #1D4ED8 66.6%, #E22718 66.6%, #E22718 100%);
     vertical-align: middle;
   }
 
+  /* App Shell */
   .app-shell {
     position: relative;
     z-index: 1;
-    max-width: 600px;
+    max-width: 480px;
     margin: 0 auto;
-    padding: calc(var(--safe-top) + 10px) 14px calc(var(--safe-bottom) + 124px);
+    padding: calc(var(--safe-top) + 10px) 16px calc(var(--safe-bottom) + 100px);
   }
 
-  /* Top Header matching screenshot structure */
-  .top-header {
+  @media (min-width: 860px) {
+    .app-shell { max-width: 600px; padding-top: 24px; }
+  }
+
+  /* Top Status / Drive Mode Bar */
+  .status-row {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 14px;
-    animation: fadeSlideDown 0.45s var(--ease-spring) both;
+    font-size: 13px;
+    font-weight: 600;
   }
-  .header-left {
+  .m-drive-pill {
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    background: rgba(10, 132, 255, 0.16);
+    border: 1px solid rgba(10, 132, 255, 0.4);
+    color: var(--accent);
+    cursor: pointer;
+    transition: transform 0.16s var(--ease-spring);
+  }
+  .m-drive-pill:active { transform: scale(0.92); }
+
+  /* Header */
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+  .header-title-box {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    margin-top: 2px;
   }
-  .app-icon-box {
+  .header-title {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .icon-circle-btn {
     width: 42px;
     height: 42px;
-    border-radius: 13px;
-    background: linear-gradient(145deg, #0A84FF, #005BB5);
+    border-radius: 14px;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    box-shadow: 0 8px 20px -4px rgba(10, 132, 255, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
-    flex-shrink: 0;
+    color: var(--text);
+    cursor: pointer;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.16s var(--ease-spring);
   }
-  .header-eyebrow {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .header-page-title {
-    font-size: 24px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-  }
+  .icon-circle-btn:active { transform: scale(0.92); }
 
-  /* Glass Card */
-  .glass-card {
-    background: var(--surface);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+  /* Hero Telemetry Card */
+  .hero-card {
+    background: var(--surface-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
+    padding: 18px;
+    margin-bottom: 14px;
     box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-card::after {
+    content: '';
+    position: absolute;
+    right: -40px; bottom: -40px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(10, 132, 255, 0.25) 0%, transparent 70%);
+    pointer-events: none;
   }
 
-  /* Segmented Control (День / Неделя / Месяц / Период) */
+  /* Segmented Period Tabs */
   .seg-bar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 4px;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.35);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 4px;
+    border-radius: 12px;
+    padding: 3px;
+    margin-bottom: 14px;
   }
-  .seg-bar.three {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  .seg-bar.three { grid-template-columns: repeat(3, 1fr); }
   [data-theme="light"] .seg-bar { background: rgba(15, 23, 42, 0.06); }
   .seg-btn {
     border: none;
     background: transparent;
     color: var(--text-secondary);
-    font-size: 13px;
-    font-weight: 700;
-    padding: 7px 4px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.22s var(--ease-spring);
-  }
-  .seg-btn.active {
-    background: var(--surface-elevated);
-    color: var(--text);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255,255,255,0.12);
-  }
-
-  /* Date Navigator Row */
-  .date-nav-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 4px 6px;
-  }
-  .nav-arrow {
-    width: 34px;
-    height: 34px;
-    border-radius: 11px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.16s var(--ease-bounce), background 0.16s;
-  }
-  .nav-arrow:active {
-    transform: scale(0.86);
-    background: var(--surface-hover);
-  }
-  .nav-date-label {
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    text-transform: capitalize;
-  }
-
-  /* Orders Hero Card (Screenshot 3) */
-  .earnings-box {
-    padding: 14px 16px 16px;
-    margin-bottom: 12px;
-    animation: fadeSlideUp 0.45s var(--ease-spring) both;
-  }
-  .earn-caption-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-top: 6px;
-  }
-  .earn-eyebrow {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.07em;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-  }
-  .earn-big-num {
-    font-size: 36px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--green);
-    text-shadow: 0 0 28px var(--green-glow);
-    margin: 2px 0 12px;
-  }
-  .earn-sub-tiles {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .sub-tile {
-    border-radius: 16px;
-    padding: 12px 14px;
-    border: 1px solid var(--border-strong);
-    background: rgba(255, 255, 255, 0.03);
-  }
-  .sub-tile.blue {
-    background: linear-gradient(145deg, rgba(10, 132, 255, 0.16), rgba(15, 20, 32, 0.6));
-    border-color: rgba(56, 189, 248, 0.28);
-  }
-  .sub-tile-k {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-  }
-  .sub-tile.blue .sub-tile-k { color: var(--accent); }
-  .sub-tile-v {
-    font-size: 24px;
-    font-weight: 800;
-    margin-top: 2px;
-    letter-spacing: -0.02em;
-  }
-  .earn-formula {
-    font-size: 13px;
-    color: var(--text-secondary);
-    font-weight: 600;
-  }
-  .earn-formula b { color: var(--text); font-weight: 700; }
-
-  /* Action Row (+ Добавить + 3 icon buttons) */
-  .action-strip {
-    display: grid;
-    grid-template-columns: 1fr 48px 48px 48px;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .btn-add-main {
-    height: 48px;
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: linear-gradient(135deg, #0A84FF 0%, #0066CC 100%);
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    cursor: pointer;
-    box-shadow: 0 10px 24px -6px rgba(10, 132, 255, 0.55);
-    transition: transform 0.18s var(--ease-bounce);
-  }
-  .btn-add-main:active { transform: scale(0.96); }
-  .icon-sq-btn {
-    height: 48px;
-    width: 48px;
-    border-radius: 15px;
-    border: 1px solid var(--border-strong);
-    background: var(--surface);
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: var(--shadow-card);
-    transition: transform 0.18s var(--ease-bounce), border-color 0.2s;
-  }
-  .icon-sq-btn:active { transform: scale(0.9); }
-
-  /* Search Row */
-  .search-strip {
-    display: grid;
-    grid-template-columns: 1fr 46px;
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-  .search-box {
-    position: relative;
-  }
-  .search-box svg {
-    position: absolute;
-    left: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    pointer-events: none;
-  }
-  .input-field {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 14px;
-    padding: 11px 14px;
-    color: var(--text);
-    font-size: 15px;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .search-box .input-field { padding-left: 38px; height: 46px; }
-  .input-field:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow);
-  }
-
-  /* Order Cards */
-  .day-group-hdr {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     font-size: 12px;
     font-weight: 700;
-    color: var(--text-secondary);
-    padding: 4px 4px 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .order-card {
-    position: relative;
-    padding: 14px 15px;
-    margin-bottom: 10px;
-    border-radius: var(--radius-lg);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-card);
-    overflow: hidden;
-  }
-  .order-card::before {
-    content: "";
-    position: absolute;
-    left: 0; top: 12px; bottom: 12px;
-    width: 3.5px;
-    border-radius: 0 4px 4px 0;
-    background: var(--accent-blue);
-  }
-  .order-card.draft::before { background: var(--gold); }
-  .ru-plate {
-    display: inline-flex;
-    align-items: center;
-    background: #F8FAFC;
-    color: #0F172A;
-    border: 1.5px solid #334155;
-    border-radius: 5px;
-    padding: 1px 6px;
-    font-size: 11px;
-    font-weight: 800;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  }
-  .mini-btn {
-    border: 1px solid var(--border-strong);
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text);
+    padding: 6px 2px;
     border-radius: 9px;
-    padding: 5px 10px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  .mini-btn:active { transform: scale(0.92); }
-  .mini-btn.danger { color: var(--red); border-color: rgba(244, 63, 94, 0.3); }
-  .mini-btn.photo { color: var(--gold); border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.1); }
-
-  /* Calendar (Screenshots 1 & 2) */
-  .cal-grid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 5px;
-    margin-top: 8px;
-  }
-  .cal-dow {
-    text-align: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-secondary);
-    padding-bottom: 4px;
-  }
-  .cal-cell {
-    height: 62px;
-    min-width: 0;
-    border-radius: 13px;
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.035);
-    padding: 5px 2px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    overflow: hidden;
-    transition: transform 0.16s var(--ease-bounce), border-color 0.18s;
-  }
-  .cal-cell:active { transform: scale(0.92); }
-  .cal-cell.work {
-    background: rgba(16, 185, 129, 0.16);
-    border-color: rgba(16, 185, 129, 0.38);
-  }
-  .cal-cell.off {
-    background: rgba(148, 163, 184, 0.06);
-  }
-  .cal-cell.vacation {
-    background: rgba(245, 158, 11, 0.18);
-    border-color: rgba(245, 158, 11, 0.42);
-  }
-  .cal-cell.unpaid {
-    background: rgba(244, 63, 94, 0.18);
-    border-color: rgba(244, 63, 94, 0.42);
-  }
-  .cal-cell.selected {
-    box-shadow: 0 0 0 2px var(--accent-blue);
-    border-color: var(--accent-blue);
-  }
-  .cal-day-num {
-    font-size: 14px;
-    font-weight: 800;
-    line-height: 1.1;
-  }
-  .cal-day-money {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--green);
-    line-height: 1.1;
-    white-space: nowrap;
-  }
-  .cal-cell.off .cal-day-money { color: var(--text-secondary); }
-  .cal-day-tag {
-    font-size: 9px;
-    font-weight: 800;
-    color: var(--text-secondary);
-    line-height: 1;
-  }
-  .cal-cell.work .cal-day-tag { color: var(--green); }
-
-  .legend-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 16px;
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-secondary);
-  }
-  .legend-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .leg-dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 4px;
-  }
-
-  /* Summary Table (Screenshot 2: Итоги месяца) */
-  .summary-list {
-    margin-top: 8px;
-  }
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 11px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
-  .summary-row:last-child {
-    border-bottom: none;
-    padding-top: 14px;
-    padding-bottom: 2px;
-  }
-  .summary-k { color: var(--text-secondary); font-weight: 500; }
-  .summary-v { font-weight: 700; color: var(--text); }
-
-  /* Stats KPI Grid (Screenshots 4 & 5) */
-  .stat-hero-green {
-    padding: 18px;
-    margin-bottom: 12px;
-    background: linear-gradient(145deg, rgba(16, 185, 129, 0.18), rgba(15, 20, 32, 0.85));
-    border: 1px solid rgba(16, 185, 129, 0.32);
-  }
-  .kpi-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .kpi-card {
-    padding: 15px;
-    border-radius: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-card);
-  }
-  .kpi-card.blue-tint {
-    background: linear-gradient(145deg, rgba(10, 132, 255, 0.14), var(--surface));
-    border-color: rgba(10, 132, 255, 0.28);
-  }
-  .kpi-k {
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: 600;
-    line-height: 1.3;
-  }
-  .kpi-v {
-    font-size: 22px;
-    font-weight: 800;
-    margin-top: 6px;
-    letter-spacing: -0.02em;
-  }
-
-  /* Bottom Tab Bar */
-  .tabbar-dock {
-    position: fixed;
-    left: 10px;
-    right: 10px;
-    bottom: calc(var(--safe-bottom) + 8px);
-    max-width: 540px;
-    margin: 0 auto;
-    z-index: 40;
-    background: rgba(15, 20, 32, 0.88);
-    backdrop-filter: blur(28px) saturate(180%);
-    -webkit-backdrop-filter: blur(28px) saturate(180%);
-    border: 1px solid var(--border-strong);
-    border-radius: 24px;
-    padding: 6px;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 4px;
-    box-shadow: var(--shadow-float);
-  }
-  [data-theme="light"] .tabbar-dock { background: rgba(255, 255, 255, 0.92); }
-  .tab-item {
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    border-radius: 18px;
-    padding: 7px 2px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
     cursor: pointer;
     font-family: inherit;
     transition: all 0.2s var(--ease-spring);
   }
-  .tab-item .lbl { font-size: 10px; font-weight: 700; }
-  .tab-item.active {
-    background: rgba(10, 132, 255, 0.18);
-    color: var(--accent-blue);
-    box-shadow: inset 0 0 0 1px rgba(10, 132, 255, 0.32);
+  .seg-btn.active {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+  [data-theme="light"] .seg-btn.active {
+    background: #FFFFFF;
+    color: #0F172A;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
   }
 
-  /* Bottom Sheet Modal */
+  .nav-date-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 18px;
+    width: 32px; height: 32px;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  .nav-btn:active { background: rgba(255,255,255,0.06); }
+
+  .hero-top-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .hero-big-money {
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .hero-sub-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+
+  /* Sub Tiles */
+  .hero-tiles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .hero-tile {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 8px 10px;
+  }
+  .hero-tile.active-blue {
+    background: rgba(10, 132, 255, 0.14);
+    border-color: rgba(10, 132, 255, 0.35);
+  }
+  .hero-tile-label { font-size: 9px; font-weight: 800; color: var(--text-secondary); letter-spacing: 0.06em; }
+  .hero-tile-val { font-size: 16px; font-weight: 800; margin-top: 2px; color: var(--text); }
+  .hero-tile.active-blue .hero-tile-val { color: var(--accent); }
+
+  /* M-Shift Lights */
+  .shift-box {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 12px;
+  }
+  .shift-hdr {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .shift-leds {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 4px;
+    height: 7px;
+  }
+  .shift-led {
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .shift-led.lit-cyan { background: #00A0E3; box-shadow: 0 0 6px #00A0E3; }
+  .shift-led.lit-blue { background: #1D4ED8; box-shadow: 0 0 6px #1D4ED8; }
+  .shift-led.lit-gold { background: #F59E0B; box-shadow: 0 0 6px #F59E0B; }
+  .shift-led.lit-red  { background: #E22718; box-shadow: 0 0 8px #E22718; }
+
+  /* Main Action Bar */
+  .action-bar {
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .btn-primary-action {
+    background: linear-gradient(135deg, #0A84FF 0%, #0060DF 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px -4px rgba(10, 132, 255, 0.5);
+    transition: transform 0.16s var(--ease-spring);
+  }
+  .btn-primary-action:active { transform: scale(0.97); }
+  .btn-icon-sq {
+    height: 50px;
+    border-radius: var(--radius-lg);
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.16s var(--ease-spring);
+  }
+  .btn-icon-sq:active { transform: scale(0.92); }
+
+  /* Feed Header */
+  .feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 16px 2px 8px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .feed-title { color: var(--text-secondary); letter-spacing: 0.05em; }
+  .feed-total { color: var(--green); }
+
+  /* Order Card */
+  .order-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.16s var(--ease-spring);
+  }
+  .order-card:active { transform: scale(0.985); }
+  .order-card.draft { border-left: 3px solid var(--gold); }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .car-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .car-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .ru-plate {
+    background: #FFFFFF;
+    color: #111;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: -apple-system, monospace;
+    letter-spacing: 0.05em;
+  }
+  .order-num-pill {
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+  .card-price-block {
+    text-align: right;
+  }
+  .card-price {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--green);
+  }
+  .card-aw-sub {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+  }
+  .card-jobs-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin-top: 4px;
+  }
+  .card-bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+  .card-btn {
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .card-btn:active { transform: scale(0.92); }
+  .card-btn.danger { color: var(--red); border-color: rgba(244, 63, 94, 0.3); }
+
+  /* Floating Bottom Nav Dock */
+  .bottom-dock {
+    position: fixed;
+    bottom: calc(var(--safe-bottom) + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 28px);
+    max-width: 440px;
+    height: 64px;
+    border-radius: 24px;
+    background: rgba(12, 16, 28, 0.94);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.8);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    padding: 0 4px;
+    z-index: 100;
+  }
+  [data-theme="light"] .bottom-dock {
+    background: rgba(255, 255, 255, 0.94);
+    border-color: rgba(15, 23, 42, 0.12);
+  }
+  .dock-item {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 3px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.18s, transform 0.14s;
+  }
+  .dock-item:active { transform: scale(0.88); }
+  .dock-item.active { color: var(--accent); }
+  [data-theme="light"] .dock-item.active { color: #0A84FF; }
+  .dock-item-lbl { font-size: 10px; font-weight: 800; }
+
+  /* Sheet Modal */
   .sheet-backdrop {
     position: fixed;
-    inset: 0;
-    background: rgba(3, 6, 14, 0.74);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 90;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    z-index: 200;
     display: flex;
     align-items: flex-end;
-    justify-content: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.28s var(--ease-spring);
   }
   .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
   .sheet-panel {
     width: 100%;
-    max-width: 600px;
-    max-height: 92vh;
-    overflow-y: auto;
-    background: var(--surface-solid);
-    border-top: 1px solid var(--border-strong);
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--surface-card);
+    border: 1px solid var(--border-strong);
+    border-bottom: none;
     border-radius: 28px 28px 0 0;
-    padding: 12px 16px calc(var(--safe-bottom) + 24px);
-    box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.7);
+    padding: 14px 18px calc(var(--safe-bottom) + 20px);
+    max-height: 90vh;
+    overflow-y: auto;
     transform: translateY(100%);
-    transition: transform 0.35s var(--ease-spring);
+    transition: transform 0.32s var(--ease-spring);
   }
   .sheet-backdrop.open .sheet-panel { transform: translateY(0); }
   .sheet-grabber {
-    width: 38px; height: 5px;
+    width: 38px;
+    height: 4px;
     border-radius: 99px;
-    background: var(--border-strong);
+    background: rgba(255, 255, 255, 0.25);
     margin: 0 auto 12px;
   }
 
-  .form-grid {
+  .preset-scroll {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+  .preset-chip {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .preset-chip:active { transform: scale(0.92); border-color: var(--accent); }
+
+  /* Form Elements */
+  .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 12px;
   }
-  .field-label {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-secondary);
-    margin-bottom: 5px;
-  }
-  .job-item-row {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 8px;
-    margin-bottom: 8px;
-  }
-  .btn-primary-full {
-    width: 100%;
-    border: none;
-    border-radius: 15px;
-    padding: 14px;
-    font-size: 15px;
-    font-weight: 800;
-    color: #fff;
-    background: linear-gradient(135deg, #0A84FF 0%, #0066CC 100%);
-    box-shadow: 0 10px 26px -6px rgba(10, 132, 255, 0.5);
-    cursor: pointer;
-  }
-  .btn-primary-full:active { transform: scale(0.97); }
-
-  /* Toast */
-  .island-toast {
-    position: fixed;
-    top: calc(var(--safe-top) + 8px);
-    left: 50%;
-    transform: translate(-50%, -150%);
-    z-index: 120;
-    background: #090D16;
-    color: #F8FAFC;
-    border: 1px solid rgba(56, 189, 248, 0.45);
-    border-radius: 999px;
-    padding: 10px 18px;
-    font-size: 13px;
-    font-weight: 700;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
-    transition: transform 0.38s var(--ease-bounce);
-    max-width: 92vw;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .island-toast.show { transform: translate(-50%, 0); }
-
-  .scan-banner {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border-radius: 14px;
-    background: rgba(10, 132, 255, 0.14);
-    border: 1px solid rgba(10, 132, 255, 0.35);
-    margin-bottom: 12px;
-  }
-  .spinner {
-    width: 20px; height: 20px;
-    border: 2.5px solid rgba(56, 189, 248, 0.25);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.75s linear infinite;
-    flex-shrink: 0;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes fadeSlideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .hidden { display: none !important; }
-
-  /* ===== BMW M-TELEMETRY ANIMATIONS SUITE ===== */
-  .m-stripe {
-    position: relative;
-    overflow: hidden;
-  }
-  .m-stripe::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.75) 50%, transparent 80%);
-    transform: translateX(-120%);
-    animation: mStripeSheen 4.2s ease-in-out infinite;
-  }
-  @keyframes mStripeSheen {
-    0%, 62% { transform: translateX(-120%); }
-    100% { transform: translateX(140%); }
-  }
-
-  .btn-add-main {
-    position: relative;
-    overflow: hidden;
-  }
-  .btn-add-main::after {
-    content: "";
-    position: absolute;
-    top: 0; bottom: 0; width: 45%;
-    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.28), transparent);
-    transform: translateX(-220%);
-    animation: btnSheen 5.5s ease-in-out infinite;
-    pointer-events: none;
-  }
-  @keyframes btnSheen {
-    0%, 72% { transform: translateX(-220%); }
-    100% { transform: translateX(320%); }
-  }
-
-  /* Header BMW Ignition Button */
-  .ignition-pill-btn {
-    height: 38px;
-    padding: 0 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(56, 189, 248, 0.32);
-    background: linear-gradient(145deg, rgba(15, 23, 42, 0.85), rgba(10, 132, 255, 0.16));
-    color: var(--text);
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    box-shadow: 0 6px 18px -6px rgba(10, 132, 255, 0.45), inset 0 1px 0 rgba(255,255,255,0.14);
-    transition: transform 0.18s var(--ease-bounce), border-color 0.2s, box-shadow 0.2s;
-  }
-  [data-theme="light"] .ignition-pill-btn {
-    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(2, 132, 199, 0.12));
-    color: #0F172A;
-  }
-  .ignition-pill-btn:active {
-    transform: scale(0.92);
-    border-color: var(--accent);
-    box-shadow: 0 0 18px var(--accent-glow);
-  }
-  .ignition-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #38BDF8;
-    box-shadow: 0 0 8px #38BDF8;
-    animation: igDotPulse 2.4s ease-in-out infinite;
-  }
-  @keyframes igDotPulse {
-    0%, 100% { opacity: 0.55; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.18); }
-  }
-
-  /* BMW Welcome Splash Screen (Headlights Ignition + Iconic Glow + Live Cockpit) */
-  .bmw-splash {
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    background: radial-gradient(ellipse at 50% 44%, #0B1324 0%, #050811 54%, #020307 100%);
+  .field-box {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    opacity: 1;
-    transition: opacity 0.52s var(--ease-spring), transform 0.52s var(--ease-spring), filter 0.52s ease;
-    user-select: none;
-    -webkit-user-select: none;
-    overflow: hidden;
-  }
-  .bmw-splash.closing {
-    opacity: 0;
-    transform: scale(1.06);
-    filter: blur(8px);
-    pointer-events: none;
-  }
-  .bmw-splash.gone {
-    display: none !important;
-  }
-  .splash-stage {
-    position: relative;
-    width: 100%;
-    max-width: 440px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .splash-beam-left, .splash-beam-right {
-    position: absolute;
-    top: 22px;
-    width: 180px;
-    height: 150px;
-    border-radius: 50%;
-    filter: blur(36px);
-    opacity: 0;
-    pointer-events: none;
-    background: radial-gradient(circle, rgba(224, 242, 254, 0.85) 0%, rgba(56, 189, 248, 0.42) 45%, transparent 75%);
-  }
-  .splash-beam-left { left: 4%; }
-  .splash-beam-right { right: 4%; }
-  .bmw-splash.igniting .splash-beam-left,
-  .bmw-splash.igniting .splash-beam-right {
-    animation: beamBloom 2.1s var(--ease-spring) forwards;
-  }
-  @keyframes beamBloom {
-    0% { opacity: 0; transform: scale(0.45); }
-    18% { opacity: 0.08; transform: scale(0.65); }
-    32% { opacity: 0.92; transform: scale(1.12); }
-    44% { opacity: 0.52; transform: scale(0.95); }
-    72% { opacity: 0.68; transform: scale(1.04); }
-    84% { opacity: 1; transform: scale(1.25); }
-    100% { opacity: 0.62; transform: scale(1.05); }
-  }
-
-  /* Anamorphic horizontal lens flare */
-  .splash-flare {
-    position: absolute;
-    top: 93px;
-    left: 50%;
-    width: 96%;
-    height: 2px;
-    transform: translateX(-50%) scaleX(0);
-    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.25) 18%, rgba(255, 255, 255, 0.95) 50%, rgba(56, 189, 248, 0.25) 82%, transparent 100%);
-    box-shadow: 0 0 18px 2px rgba(56, 189, 248, 0.75);
-    opacity: 0;
-    pointer-events: none;
-  }
-  .bmw-splash.igniting .splash-flare {
-    animation: lensFlareSweep 1.85s var(--ease-spring) 0.32s forwards;
-  }
-  @keyframes lensFlareSweep {
-    0% { opacity: 0; transform: translateX(-50%) scaleX(0.05); }
-    24% { opacity: 1; transform: translateX(-50%) scaleX(1.06); }
-    58% { opacity: 0.25; transform: translateX(-50%) scaleX(0.75); }
-    82% { opacity: 0.85; transform: translateX(-50%) scaleX(1.12); }
-    100% { opacity: 0; transform: translateX(-50%) scaleX(1.3); }
-  }
-
-  .bmw-front-svg {
-    width: 100%;
-    max-width: 390px;
-    height: auto;
-    position: relative;
-    z-index: 2;
-    overflow: visible;
-  }
-  .bmw-hood-line {
-    fill: none;
-    stroke: rgba(148, 163, 184, 0.16);
-    stroke-width: 1.4;
-    stroke-linecap: round;
-    opacity: 0;
-  }
-  .bmw-splash.igniting .bmw-hood-line {
-    animation: fadeInSoft 0.8s ease 0.45s forwards;
-  }
-  .bmw-kidney {
-    fill: rgba(4, 8, 18, 0.85);
-    stroke: #E0F2FE;
-    stroke-width: 2.3;
-    stroke-linejoin: round;
-    stroke-dasharray: 220;
-    stroke-dashoffset: 220;
-    filter: drop-shadow(0 0 6px rgba(186, 230, 253, 0.75));
-  }
-  .bmw-splash.igniting .bmw-kidney {
-    animation: kidneyTrace 0.85s var(--ease-spring) 0.08s forwards;
-  }
-  @keyframes kidneyTrace {
-    0% { stroke-dashoffset: 220; opacity: 0.2; }
-    100% { stroke-dashoffset: 0; opacity: 1; }
-  }
-  .bmw-slat {
-    stroke: rgba(148, 163, 184, 0.22);
-    stroke-width: 1.2;
-    stroke-linecap: round;
-    opacity: 0;
-  }
-  .bmw-splash.igniting .bmw-slat {
-    animation: fadeInSoft 0.6s ease 0.45s forwards;
-  }
-
-  /* Angel Eyes / L-Shaped DRLs */
-  .bmw-drl {
-    fill: none;
-    stroke: #F8FAFC;
-    stroke-width: 3.4;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    opacity: 0;
-    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 14px rgba(56, 189, 248, 0.85));
-  }
-  .bmw-splash.igniting .bmw-drl {
-    animation: drlIgnite 1.95s ease-out 0.18s forwards;
-  }
-  @keyframes drlIgnite {
-    0% { opacity: 0; stroke: #F59E0B; filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.9)); }
-    10% { opacity: 0.95; stroke: #F59E0B; filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.95)); }
-    18% { opacity: 0.15; stroke: #F59E0B; }
-    26% { opacity: 1; stroke: #FFFFFF; filter: drop-shadow(0 0 14px #FFFFFF) drop-shadow(0 0 26px rgba(56, 189, 248, 0.95)); }
-    38% { opacity: 0.85; stroke: #F0F9FF; filter: drop-shadow(0 0 8px #FFFFFF) drop-shadow(0 0 16px rgba(56, 189, 248, 0.8)); }
-    78% { opacity: 0.92; stroke: #F8FAFC; }
-    88% { opacity: 1; stroke: #FFFFFF; filter: drop-shadow(0 0 18px #FFFFFF) drop-shadow(0 0 30px rgba(56, 189, 248, 1)); }
-    100% { opacity: 0.95; stroke: #F8FAFC; filter: drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 18px rgba(56, 189, 248, 0.85)); }
-  }
-
-  .bmw-brow {
-    fill: none;
-    stroke: rgba(224, 242, 254, 0.88);
-    stroke-width: 1.8;
-    stroke-linecap: round;
-    opacity: 0;
-    filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.8));
-  }
-  .bmw-splash.igniting .bmw-brow {
-    animation: fadeInSoft 0.55s ease 0.52s forwards;
-  }
-
-  /* BMW Laserlight Signature Blue Accents */
-  .bmw-laser-core {
-    fill: none;
-    stroke: #00B4FF;
-    stroke-width: 2.6;
-    stroke-linecap: round;
-    opacity: 0;
-    filter: drop-shadow(0 0 8px #00A0E3) drop-shadow(0 0 16px #0A84FF);
-  }
-  .bmw-splash.igniting .bmw-laser-core {
-    animation: laserCoreGlow 0.9s ease 0.56s forwards;
-  }
-  @keyframes laserCoreGlow {
-    0% { opacity: 0; }
-    45% { opacity: 1; }
-    100% { opacity: 0.92; }
-  }
-
-  /* M-Tricolor Horizon Slash */
-  .splash-m-bar {
-    width: 220px;
-    height: 4px;
-    border-radius: 99px;
-    margin-top: 10px;
-    background: linear-gradient(90deg, #00A0E3 0%, #00A0E3 33.3%, #1E40AF 33.3%, #1E40AF 66.6%, #E22718 66.6%, #E22718 100%);
-    box-shadow: 0 0 18px rgba(0, 160, 227, 0.45), 0 0 18px rgba(226, 39, 24, 0.35);
-    transform: scaleX(0);
-    opacity: 0;
-  }
-  .bmw-splash.igniting .splash-m-bar {
-    animation: mBarReveal 0.65s var(--ease-spring) 0.68s forwards;
-  }
-  @keyframes mBarReveal {
-    0% { transform: scaleX(0); opacity: 0; }
-    100% { transform: scaleX(1); opacity: 1; }
-  }
-
-  /* Live Cockpit RPM Sweep */
-  .splash-rpm-wrap {
-    width: 220px;
-    margin-top: 18px;
-    opacity: 0;
-  }
-  .bmw-splash.igniting .splash-rpm-wrap {
-    animation: fadeInSoft 0.4s ease 0.72s forwards;
-  }
-  .splash-rpm-track {
-    height: 6px;
-    border-radius: 99px;
-    background: rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-  .splash-rpm-fill {
-    height: 100%;
-    width: 100%;
-    transform-origin: left center;
-    transform: scaleX(0);
-    background: linear-gradient(90deg, #00A0E3 0%, #38BDF8 55%, #F59E0B 80%, #E22718 100%);
-    box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
-  }
-  .bmw-splash.igniting .splash-rpm-fill {
-    animation: rpmSweep 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.78s forwards;
-  }
-  @keyframes rpmSweep {
-    0% { transform: scaleX(0); }
-    58% { transform: scaleX(1); }
-    100% { transform: scaleX(0.28); }
-  }
-
-  .splash-title {
-    margin-top: 14px;
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    color: #F8FAFC;
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  .bmw-splash.igniting .splash-title {
-    animation: titleUp 0.55s var(--ease-spring) 0.8s forwards;
-  }
-  .splash-sub {
-    margin-top: 4px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: #38BDF8;
-    opacity: 0;
-  }
-  .bmw-splash.igniting .splash-sub {
-    animation: fadeInSoft 0.5s ease 1.05s forwards;
-  }
-  .splash-skip-hint {
-    position: absolute;
-    bottom: calc(var(--safe-bottom) + 24px);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    color: rgba(148, 163, 184, 0.55);
-  }
-  @keyframes titleUp {
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeInSoft {
-    to { opacity: 1; }
-  }
-
-  /* BMW M-Laser OCR Scanner Overlay on Photo Preview */
-  #photoPreviewBox {
-    overflow: hidden;
-    border-radius: 14px;
-  }
-  .ocr-laser-overlay {
-    position: absolute;
-    inset: 0;
-    border-radius: 14px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    background: linear-gradient(180deg, rgba(10, 132, 255, 0.12), rgba(56, 189, 248, 0.04));
-    box-shadow: inset 0 0 0 1.5px rgba(56, 189, 248, 0.65);
-  }
-  #photoPreviewBox.scanning .ocr-laser-overlay {
-    opacity: 1;
-  }
-  .ocr-laser-beam {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 3px;
-    top: 0;
-    background: linear-gradient(90deg, transparent 0%, #00A0E3 15%, #FFFFFF 50%, #00A0E3 85%, transparent 100%);
-    box-shadow: 0 0 14px 3px rgba(56, 189, 248, 0.95), 0 -16px 26px rgba(10, 132, 255, 0.45);
-  }
-  #photoPreviewBox.scanning .ocr-laser-beam {
-    animation: laserScanSweep 1.35s ease-in-out infinite alternate;
-  }
-  @keyframes laserScanSweep {
-    0% { top: 4%; }
-    100% { top: 94%; }
-  }
-  .ocr-hud-corner {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border-color: #38BDF8;
-    border-style: solid;
-    border-width: 0;
-  }
-  .ocr-hud-corner.tl { top: 6px; left: 6px; border-top-width: 2.5px; border-left-width: 2.5px; border-top-left-radius: 4px; }
-  .ocr-hud-corner.tr { top: 6px; right: 6px; border-top-width: 2.5px; border-right-width: 2.5px; border-top-right-radius: 4px; }
-  .ocr-hud-corner.bl { bottom: 6px; left: 6px; border-bottom-width: 2.5px; border-left-width: 2.5px; border-bottom-left-radius: 4px; }
-  .ocr-hud-corner.br { bottom: 6px; right: 6px; border-bottom-width: 2.5px; border-right-width: 2.5px; border-bottom-right-radius: 4px; }
-
-  #photoPreviewBox.scan-ok .ocr-laser-overlay {
-    opacity: 1;
-    background: rgba(16, 185, 129, 0.18);
-    box-shadow: inset 0 0 0 2px #10B981;
-    animation: scanOkPulse 0.75s ease forwards;
-  }
-  #photoPreviewBox.scan-ok .ocr-laser-beam { display: none; }
-  #photoPreviewBox.scan-ok .ocr-hud-corner { border-color: #10B981; }
-  @keyframes scanOkPulse {
-    0% { opacity: 1; }
-    100% { opacity: 0; }
-  }
-
-  /* M-Performance Order Save Ribbon Flash */
-  .m-save-flash {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    z-index: 150;
-    background: linear-gradient(90deg, #00A0E3 0%, #00A0E3 33.3%, #1D4ED8 33.3%, #1D4ED8 66.6%, #E22718 66.6%, #E22718 100%);
-    box-shadow: 0 2px 20px rgba(56, 189, 248, 0.8), 0 2px 20px rgba(226, 39, 24, 0.65);
-    transform: scaleX(0);
-    opacity: 0;
-    pointer-events: none;
-  }
-  .m-save-flash.fire {
-    animation: mSaveRibbon 0.85s var(--ease-spring) forwards;
-  }
-  @keyframes mSaveRibbon {
-    0% { transform: scaleX(0); opacity: 1; transform-origin: left; }
-    48% { transform: scaleX(1); opacity: 1; transform-origin: left; }
-    52% { transform: scaleX(1); opacity: 1; transform-origin: right; }
-    100% { transform: scaleX(0); opacity: 0; transform-origin: right; }
-  }
-
-  .hero-pulse-ok {
-    animation: heroGreenGlow 0.9s var(--ease-spring);
-  }
-  @keyframes heroGreenGlow {
-    0% { box-shadow: var(--shadow-card); }
-    35% { box-shadow: 0 0 0 1.5px rgba(16, 185, 129, 0.75), 0 0 36px rgba(16, 185, 129, 0.38); }
-    100% { box-shadow: var(--shadow-card); }
-  }
-
-  /* Smooth staggered entrance for cards */
-  .anim-card {
-    animation: cardGlideIn 0.36s var(--ease-spring) both;
-  }
-  @keyframes cardGlideIn {
-    from { opacity: 0; transform: translateY(10px) scale(0.985); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .bmw-splash, .m-stripe::after, .btn-add-main::after, .ambient-orb, .anim-card {
-      animation: none !important;
-      transition: none !important;
-    }
-  }
-
-
-  /* ===== BMW M-COCKPIT INTERNAL ANIMATIONS v16 ===== */
-
-  /* Drive Modes (Comfort / M1 Sport+ / M CS) */
-  [data-drive="sport"] {
-    --accent: #FB7185;
-    --accent-blue: #E22718;
-    --accent-glow: rgba(226, 39, 24, 0.38);
-    --bg-gradient: radial-gradient(circle at 12% -10%, rgba(226, 39, 24, 0.20) 0%, transparent 48%),
-                   radial-gradient(circle at 88% 8%, rgba(245, 158, 11, 0.16) 0%, transparent 45%),
-                   radial-gradient(circle at 50% 100%, rgba(244, 63, 94, 0.10) 0%, transparent 50%);
-  }
-  [data-drive="mcs"] {
-    --accent: #FACC15;
-    --accent-blue: #EAB308;
-    --accent-glow: rgba(250, 204, 21, 0.34);
-    --bg-gradient: radial-gradient(circle at 12% -10%, rgba(250, 204, 21, 0.17) 0%, transparent 48%),
-                   radial-gradient(circle at 88% 8%, rgba(16, 185, 129, 0.15) 0%, transparent 45%),
-                   radial-gradient(circle at 50% 100%, rgba(245, 158, 11, 0.10) 0%, transparent 50%);
-  }
-  [data-drive="sport"] .orb-1 { background: #E22718; }
-  [data-drive="sport"] .orb-2 { background: #F59E0B; }
-  [data-drive="mcs"] .orb-1 { background: #FACC15; }
-  [data-drive="mcs"] .orb-2 { background: #10B981; }
-  [data-drive="sport"] .btn-add-main,
-  [data-drive="sport"] .btn-primary-full {
-    background: linear-gradient(135deg, #E22718 0%, #991B1B 100%);
-    box-shadow: 0 10px 26px -6px rgba(226, 39, 24, 0.55);
-  }
-  [data-drive="mcs"] .btn-add-main,
-  [data-drive="mcs"] .btn-primary-full {
-    background: linear-gradient(135deg, #CA8A04 0%, #854D0E 100%);
-    box-shadow: 0 10px 26px -6px rgba(234, 179, 8, 0.45);
-  }
-  [data-drive="mcs"] .bmw-drl {
-    stroke: #FDE047;
-    filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.95)) drop-shadow(0 0 18px rgba(234, 179, 8, 0.85));
-  }
-
-  /* Header Controls Cluster */
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .m-mode-btn {
-    height: 38px;
-    padding: 0 11px;
-    border-radius: 999px;
-    border: 1px solid rgba(226, 39, 24, 0.45);
-    background: linear-gradient(145deg, rgba(226, 39, 24, 0.22), rgba(15, 20, 32, 0.88));
-    color: #FCA5A5;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    box-shadow: 0 6px 16px -6px rgba(226, 39, 24, 0.5), inset 0 1px 0 rgba(255,255,255,0.18);
-    transition: transform 0.18s var(--ease-bounce), all 0.25s ease;
-  }
-  .m-mode-btn:active { transform: scale(0.88); }
-  [data-drive="sport"] .m-mode-btn {
-    background: linear-gradient(135deg, #E22718, #B91C1C);
-    color: #FFF;
-    border-color: rgba(255,255,255,0.35);
-    box-shadow: 0 0 18px rgba(226, 39, 24, 0.65);
-  }
-  [data-drive="mcs"] .m-mode-btn {
-    background: linear-gradient(135deg, #EAB308, #A16207);
-    color: #0F172A;
-    border-color: rgba(254, 240, 138, 0.65);
-    box-shadow: 0 0 18px rgba(250, 204, 21, 0.55);
-  }
-
-  /* Wrench Icon Torque Spin on Tap */
-  .app-icon-box {
-    cursor: pointer;
-    transition: transform 0.2s var(--ease-bounce), box-shadow 0.25s ease;
-  }
-  .app-icon-box:active { transform: scale(0.9); }
-  .app-icon-box.torque-spin svg {
-    animation: wrenchTorque 0.62s var(--ease-bounce);
-  }
-  @keyframes wrenchTorque {
-    0% { transform: rotate(0deg) scale(1); }
-    30% { transform: rotate(-28deg) scale(1.14); }
-    72% { transform: rotate(378deg) scale(1.06); }
-    100% { transform: rotate(360deg) scale(1); }
-  }
-
-  /* M-Mode Cockpit Banner */
-  .mode-hud-banner {
-    position: fixed;
-    top: calc(var(--safe-top) + 54px);
-    left: 50%;
-    transform: translate(-50%, -22px) scale(0.9);
-    z-index: 130;
-    padding: 8px 18px;
-    border-radius: 14px;
-    background: rgba(8, 12, 22, 0.92);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid var(--border-strong);
-    box-shadow: 0 14px 34px rgba(0,0,0,0.7);
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: #F8FAFC;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.34s var(--ease-bounce);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .mode-hud-banner.show {
-    opacity: 1;
-    transform: translate(-50%, 0) scale(1);
-  }
-
-  /* Shift-Lights Telemetry Bar inside Orders Hero Card */
-  .shift-lights-wrap {
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
-  }
-  .shift-lights-hdr {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-  }
-  .shift-lights-row {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
     gap: 4px;
   }
-  .shift-led {
-    height: 6px;
-    border-radius: 99px;
-    background: rgba(148, 163, 184, 0.14);
-    transform: scaleY(0.75);
-    transition: background 0.28s ease, box-shadow 0.28s ease, transform 0.28s var(--ease-bounce);
+  .field-lbl {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
   }
-  .shift-led.lit {
-    transform: scaleY(1);
-    animation: ledPop 0.38s var(--ease-bounce) both;
+  .field-inp {
+    background: var(--surface-input);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
   }
-  .shift-led.lit.c-cyan { background: #38BDF8; box-shadow: 0 0 8px rgba(56, 189, 248, 0.8); }
-  .shift-led.lit.c-blue { background: #0A84FF; box-shadow: 0 0 8px rgba(10, 132, 255, 0.8); }
-  .shift-led.lit.c-gold { background: #F59E0B; box-shadow: 0 0 9px rgba(245, 158, 11, 0.85); }
-  .shift-led.lit.c-red  { background: #F43F5E; box-shadow: 0 0 10px rgba(244, 63, 94, 0.9); }
-  @keyframes ledPop {
-    0% { opacity: 0.2; transform: scaleY(0.4); }
-    60% { opacity: 1; transform: scaleY(1.35); }
-    100% { opacity: 1; transform: scaleY(1); }
-  }
+  .field-inp:focus { border-color: var(--accent); }
 
-  /* Directional Date / Period Slide Transitions */
-  .slide-from-right {
-    animation: slideFromRight 0.34s var(--ease-spring) both;
-  }
-  .slide-from-left {
-    animation: slideFromLeft 0.34s var(--ease-spring) both;
-  }
-  @keyframes slideFromRight {
-    from { opacity: 0; transform: translateX(22px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-  @keyframes slideFromLeft {
-    from { opacity: 0; transform: translateX(-22px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-
-  /* Tab View Cross-Fade + Spring Lift */
-  .view-enter {
-    animation: viewLiftIn 0.34s var(--ease-spring) both;
-  }
-  @keyframes viewLiftIn {
-    from { opacity: 0; transform: translateY(12px) scale(0.99); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  /* Bottom Dock Sliding Glass Pill + Per-Tab Micro-Animations */
-  .tabbar-dock {
-    position: fixed;
-    overflow: hidden;
-  }
-  .tab-pill-slider {
-    position: absolute;
-    top: 6px;
-    bottom: 6px;
-    left: 6px;
-    width: calc((100% - 12px - 16px) / 5);
-    border-radius: 18px;
-    background: rgba(10, 132, 255, 0.18);
-    box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.36), 0 4px 16px -4px var(--accent-glow);
-    transition: transform 0.38s cubic-bezier(0.32, 1.28, 0.56, 1), background 0.3s ease;
-    pointer-events: none;
-    z-index: 0;
-  }
-  [data-drive="sport"] .tab-pill-slider {
-    background: rgba(226, 39, 24, 0.22);
-    box-shadow: inset 0 0 0 1px rgba(244, 63, 94, 0.45), 0 4px 16px -4px rgba(226, 39, 24, 0.5);
-  }
-  [data-drive="mcs"] .tab-pill-slider {
-    background: rgba(234, 179, 8, 0.22);
-    box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.48), 0 4px 16px -4px rgba(234, 179, 8, 0.45);
-  }
-  .tab-item {
-    position: relative;
-    z-index: 1;
-  }
-  .tab-item.active {
-    background: transparent !important;
-    box-shadow: none !important;
-    color: var(--accent-blue);
-  }
-  .tab-item svg {
-    transition: transform 0.28s var(--ease-bounce);
-  }
-  .tab-item:active svg { transform: scale(0.84); }
-  .tab-item.active[data-tab="orders"] svg { animation: iconPop 0.42s var(--ease-bounce); }
-  .tab-item.active[data-tab="schedule"] svg { animation: iconTilt 0.44s var(--ease-bounce); }
-  .tab-item.active[data-tab="stats"] svg { animation: iconPop 0.42s var(--ease-bounce); }
-  .tab-item.active[data-tab="history"] svg { animation: iconSpinBack 0.52s var(--ease-spring); }
-  .tab-item.active[data-tab="settings"] svg { animation: iconGearTurn 0.58s var(--ease-spring); }
-  @keyframes iconPop {
-    0% { transform: scale(0.82) translateY(2px); }
-    60% { transform: scale(1.16) translateY(-2px); }
-    100% { transform: scale(1) translateY(0); }
-  }
-  @keyframes iconTilt {
-    0% { transform: rotate(0deg) scale(0.9); }
-    45% { transform: rotate(-10deg) scale(1.14); }
-    100% { transform: rotate(0deg) scale(1); }
-  }
-  @keyframes iconSpinBack {
-    0% { transform: rotate(110deg) scale(0.85); }
-    100% { transform: rotate(0deg) scale(1); }
-  }
-  @keyframes iconGearTurn {
-    0% { transform: rotate(0deg) scale(0.9); }
-    60% { transform: rotate(105deg) scale(1.14); }
-    100% { transform: rotate(90deg) scale(1); }
-  }
-
-  /* Touch Ripple Effect */
-  .bmw-ripple-host {
-    position: relative;
-    overflow: hidden;
-  }
-  .bmw-ripple {
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0);
-    background: radial-gradient(circle, rgba(255,255,255,0.34) 0%, rgba(56,189,248,0.18) 50%, transparent 72%);
-    pointer-events: none;
-    animation: bmwRippleOut 0.55s ease-out forwards;
-    z-index: 4;
-  }
-  @keyframes bmwRippleOut {
-    to { transform: scale(3.4); opacity: 0; }
-  }
-
-  /* Order Card Delete / Clone / License Plate Glint */
-  .order-card {
-    transition: transform 0.25s var(--ease-spring), opacity 0.25s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
-  }
-  .order-card.order-exit {
-    transform: translateX(72px) scale(0.94);
-    opacity: 0;
-    border-color: rgba(244, 63, 94, 0.55);
-    box-shadow: -12px 0 28px rgba(244, 63, 94, 0.35);
-    pointer-events: none;
-  }
-  .order-card.order-clone-in {
-    animation: cloneFlash 0.65s var(--ease-spring) both;
-  }
-  @keyframes cloneFlash {
-    0% { opacity: 0; transform: translateY(-14px) scale(0.95); box-shadow: 0 0 0 2px var(--accent), 0 0 28px var(--accent-glow); }
-    55% { opacity: 1; transform: translateY(0) scale(1.01); box-shadow: 0 0 0 1.5px var(--accent), 0 0 20px var(--accent-glow); }
-    100% { opacity: 1; transform: translateY(0) scale(1); box-shadow: var(--shadow-card); }
-  }
-  .ru-plate {
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-  }
-  .ru-plate::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.85) 50%, transparent 75%);
-    transform: translateX(-140%);
-  }
-  .ru-plate.glint::after {
-    animation: plateGlint 0.55s ease;
-  }
-  @keyframes plateGlint {
-    from { transform: translateX(-140%); }
-    to { transform: translateX(150%); }
-  }
-
-  /* Order Editor: Torque Bar, Money Pop, Job Row Enter/Exit */
-  .live-torque-track {
-    width: 100%;
-    height: 4px;
-    border-radius: 99px;
-    background: rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-    margin-top: 8px;
-  }
-  .live-torque-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 99px;
-    background: linear-gradient(90deg, #00A0E3 0%, #38BDF8 50%, #10B981 82%, #F59E0B 100%);
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.65);
-    transition: width 0.34s var(--ease-spring);
-  }
-  .money-pop {
-    animation: moneyBounce 0.32s var(--ease-bounce);
-  }
-  @keyframes moneyBounce {
-    0% { transform: scale(1); }
-    45% { transform: scale(1.12); text-shadow: 0 0 18px var(--green-glow); }
-    100% { transform: scale(1); }
-  }
-  .job-row-enter {
-    animation: jobRowIn 0.28s var(--ease-spring) both;
-  }
-  .job-row-exit {
-    animation: jobRowOut 0.22s ease forwards;
-    overflow: hidden;
-  }
-  @keyframes jobRowIn {
-    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  @keyframes jobRowOut {
-    to { opacity: 0; transform: translateX(28px) scale(0.95); max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; border-width: 0; }
-  }
-
-  /* Calendar Diagonal Wave & Status Pulse */
-  .cal-cell-wave {
-    animation: calPopIn 0.34s var(--ease-spring) both;
-  }
-  @keyframes calPopIn {
-    from { opacity: 0; transform: scale(0.84) translateY(6px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-  .cal-cell.status-flash {
-    animation: calStatusLock 0.58s var(--ease-bounce);
-  }
-  @keyframes calStatusLock {
-    0% { transform: scale(0.86); }
-    50% { transform: scale(1.1); box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.45); }
-    100% { transform: scale(1); }
-  }
-
-  /* Stats Live Cockpit Ring Gauge & Rising Bars */
-  .stats-hero-flex {
+  .summary-banner {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 14px;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(10, 132, 255, 0.12);
+    border: 1px solid rgba(10, 132, 255, 0.3);
+    margin: 12px 0;
   }
-  .cockpit-ring-wrap {
-    position: relative;
-    width: 78px;
-    height: 78px;
-    flex-shrink: 0;
+
+  /* Calendar */
+  .cal-table {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-top: 10px;
   }
-  .cockpit-ring-svg {
-    width: 78px;
-    height: 78px;
-    transform: rotate(-90deg);
+  .cal-dow {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-muted);
+    padding-bottom: 4px;
   }
-  .cockpit-ring-bg {
-    fill: none;
-    stroke: rgba(255, 255, 255, 0.1);
-    stroke-width: 7;
-  }
-  .cockpit-ring-fg {
-    fill: none;
-    stroke: url(#mGaugeGrad);
-    stroke-width: 7;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 0.95s cubic-bezier(0.22, 1, 0.36, 1);
-    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.65));
-  }
-  .cockpit-ring-center {
-    position: absolute;
-    inset: 0;
+  .cal-cell {
+    height: 60px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    justify-content: space-between;
+    padding: 5px 3px;
+    cursor: pointer;
+    transition: all 0.16s;
   }
-  .bar-grow {
-    transform-box: fill-box;
-    transform-origin: bottom center;
-    animation: barRise 0.56s var(--ease-spring) both;
-  }
-  @keyframes barRise {
-    from { transform: scaleY(0); opacity: 0.25; }
-    to { transform: scaleY(1); opacity: 1; }
-  }
+  .cal-cell:active { transform: scale(0.92); }
+  .cal-cell.work { background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); }
+  .cal-cell.selected { border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  .cal-cell-num { font-size: 12px; font-weight: 800; text-align: right; padding-right: 2px; }
+  .cal-cell-m { font-size: 9px; font-weight: 800; color: var(--green); text-align: center; }
+  .cal-cell-tag { font-size: 9px; font-weight: 800; color: var(--text-secondary); text-align: center; }
 
-  /* M-Performance Save Micro-Sparks */
-  .m-spark {
+  /* Toast */
+  .toast {
     position: fixed;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+    top: calc(var(--safe-top) + 12px);
+    left: 50%;
+    transform: translate(-50%, -80px);
+    background: rgba(15, 21, 35, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-strong);
+    color: #F8FAFC;
+    padding: 9px 18px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 700;
+    z-index: 300;
     pointer-events: none;
-    z-index: 160;
-    animation: sparkFly 0.72s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: transform 0.3s var(--ease-spring), opacity 0.3s;
+    opacity: 0;
   }
-  @keyframes sparkFly {
-    0% { opacity: 1; transform: translate(0, 0) scale(1.1); }
-    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.1); }
-  }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; }
 
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
-<!-- BMW M-Telemetry Ignition Splash -->
-<div id="bmwSplash" class="bmw-splash gone" onclick="closeBmwSplash()">
-  <div class="splash-stage">
-    <div class="splash-beam-left"></div>
-    <div class="splash-beam-right"></div>
-    <div class="splash-flare"></div>
+<div id="toast" class="toast">Готово</div>
 
-    <svg class="bmw-front-svg" viewBox="0 0 420 170" aria-hidden="true">
-      <!-- Subtle Hood Contours -->
-      <path class="bmw-hood-line" d="M 122,30 Q 158,62 174,84" />
-      <path class="bmw-hood-line" d="M 298,30 Q 262,62 246,84" />
-
-      <!-- Left Headlight Assembly (BMW LCI Twin L-DRL + Laserlight Blue Core) -->
-      <path class="bmw-brow" d="M 38,83 Q 92,70 147,82" />
-      <path class="bmw-drl" d="M 38,94 L 58,108 L 88,108 L 97,85" />
-      <path class="bmw-drl" d="M 96,108 L 126,106 L 136,86" />
-      <line class="bmw-laser-core" x1="64" y1="93" x2="82" y2="93" />
-      <line class="bmw-laser-core" x1="106" y1="92" x2="122" y2="92" />
-
-      <!-- Right Headlight Assembly (Mirror) -->
-      <path class="bmw-brow" d="M 382,83 Q 328,70 273,82" />
-      <path class="bmw-drl" d="M 382,94 L 362,108 L 332,108 L 323,85" />
-      <path class="bmw-drl" d="M 324,108 L 294,106 L 284,86" />
-      <line class="bmw-laser-core" x1="356" y1="93" x2="338" y2="93" />
-      <line class="bmw-laser-core" x1="314" y1="92" x2="298" y2="92" />
-
-      <!-- Iconic Glow Double Kidney Grille -->
-      <path class="bmw-kidney" d="M 203,92 L 171,88 C 161,88 156,95 157,106 L 162,132 C 164,142 172,147 182,145 L 201,141 C 204,140 205,137 205,131 L 205,98 C 205,94 204,92 203,92 Z" />
-      <path class="bmw-kidney" d="M 217,92 L 249,88 C 259,88 264,95 263,106 L 258,132 C 256,142 248,147 238,145 L 219,141 C 216,140 215,137 215,131 L 215,98 C 215,94 216,92 217,92 Z" />
-
-      <!-- M Horizontal Grille Slats -->
-      <line class="bmw-slat" x1="164" y1="104" x2="199" y2="105" />
-      <line class="bmw-slat" x1="165" y1="115" x2="199" y2="116" />
-      <line class="bmw-slat" x1="167" y1="126" x2="199" y2="127" />
-      <line class="bmw-slat" x1="221" y1="105" x2="256" y2="104" />
-      <line class="bmw-slat" x1="221" y1="116" x2="255" y2="115" />
-      <line class="bmw-slat" x1="221" y1="127" x2="253" y2="126" />
-    </svg>
-
-    <div class="splash-m-bar"></div>
-
-    <div class="splash-rpm-wrap">
-      <div class="splash-rpm-track">
-        <div class="splash-rpm-fill"></div>
-      </div>
-    </div>
-
-    <div class="splash-title">M-TELEMETRY</div>
-    <div class="splash-sub" id="splashStatusText">IGNITION · SYSTEM READY</div>
-  </div>
-  <div class="splash-skip-hint">Нажмите, чтобы пропустить</div>
-</div>
-
-<div id="mSaveFlash" class="m-save-flash"></div>
-<div id="modeHudBanner" class="mode-hud-banner">
-  <span class="m-stripe" style="width:24px;"></span>
-  <span id="modeHudText">M1 MODE · SPORT+</span>
-</div>
-
-
-<div class="ambient-orb orb-1"></div>
-<div class="ambient-orb orb-2"></div>
-
-<div id="toast" class="island-toast">Готово</div>
-
+<!-- Hidden inputs for photos -->
 <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
 <input type="file" id="galleryInput" accept="image/*" class="hidden">
 <input type="file" id="jsonFileInput" accept=".json,application/json" class="hidden">
 
 <div class="app-shell">
-  <!-- Top Header matching screenshots -->
-  <header class="top-header">
-    <div class="header-left">
-      <div class="app-icon-box" id="appLogoIcon" onclick="revAppLogo()" title="M-Telemetry">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-        </svg>
-      </div>
-      <div>
-        <div class="header-eyebrow">
-          <span>НОРМО-ЧАСЫ</span>
-          <span class="m-stripe"></span>
-        </div>
-        <h1 class="header-page-title" id="pageHeaderTitle">Заказы</h1>
+  <!-- Status & Drive Mode Row -->
+  <div class="status-row">
+    <div id="pwaStatus" style="font-size:11px;font-weight:800;color:var(--green);display:flex;align-items:center;gap:4px;">
+      ● IndexedDB Active
+    </div>
+    <div class="m-drive-pill" id="driveModeBtn" onclick="cycleDriveMode()">
+      SPORT+ · M1
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div>
+      <div class="header-eyebrow">M-TELEMETRY COCKPIT</div>
+      <div class="header-title-box">
+        <h1 class="header-title" id="pageTitle">Заказ-наряды</h1>
+        <span class="m-stripe"></span>
       </div>
     </div>
     <div class="header-actions">
-      <button class="m-mode-btn" id="mModeBtn" onclick="cycleDriveMode()" title="Режим M-Drive (Comfort / M1 Sport+ / M CS)">M1</button>
-      <button class="ignition-pill-btn" onclick="playBmwIgnition(true)" title="Запуск BMW Ignition">
-      <span class="ignition-dot"></span>
-      <svg width="24" height="12" viewBox="0 0 36 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M2 8 L6 12 L13 12 L15 4" stroke="#F8FAFC"/>
-        <path d="M34 8 L30 12 L23 12 L21 4" stroke="#F8FAFC"/>
-        <circle cx="18" cy="8" r="1.3" fill="#38BDF8" stroke="none"/>
-      </svg>
-    </button>
+      <div class="icon-circle-btn" onclick="openOrderModal()" title="Добавить">+</div>
+      <div class="icon-circle-btn" onclick="triggerPhoto('camera')" title="Камера">📷</div>
     </div>
   </header>
 
+  <!-- View Container -->
   <main id="mainView"></main>
 </div>
 
-<!-- Bottom Navigation Dock -->
-<nav class="tabbar-dock" aria-label="Навигация">
-  <div class="tab-pill-slider" id="tabPillSlider" aria-hidden="true"></div>
-  <button class="tab-item active" data-tab="orders">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
-    <span class="lbl">Заказы</span>
+<!-- Floating Bottom Nav Bar -->
+<nav class="bottom-dock">
+  <button class="dock-item active" data-tab="orders">
+    <span style="font-size:18px;">📋</span>
+    <span class="dock-item-lbl">Заказы</span>
   </button>
-  <button class="tab-item" data-tab="schedule">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-    <span class="lbl">График</span>
+  <button class="dock-item" data-tab="schedule">
+    <span style="font-size:18px;">📅</span>
+    <span class="dock-item-lbl">График</span>
   </button>
-  <button class="tab-item" data-tab="stats">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    <span class="lbl">Статистика</span>
+  <button class="dock-item" data-tab="stats">
+    <span style="font-size:18px;">📊</span>
+    <span class="dock-item-lbl">Телеметрия</span>
   </button>
-  <button class="tab-item" data-tab="history">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
-    <span class="lbl">История</span>
+  <button class="dock-item" data-tab="history">
+    <span style="font-size:18px;">📁</span>
+    <span class="dock-item-lbl">Архив</span>
   </button>
-  <button class="tab-item" data-tab="settings">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    <span class="lbl">Настройки</span>
+  <button class="dock-item" data-tab="settings">
+    <span style="font-size:18px;">⚙️</span>
+    <span class="dock-item-lbl">Опции</span>
   </button>
 </nav>
 
-<!-- Order Editor Sheet -->
+<!-- Order Edit Modal Sheet -->
 <div class="sheet-backdrop" id="orderSheet">
   <div class="sheet-panel">
     <div class="sheet-grabber"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h2 id="sheetTitle" style="font-size:18px;font-weight:800;">Новый заказ-наряд</h2>
-      <button class="mini-btn" id="closeSheetBtn">Закрыть</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="font-size:18px;font-weight:800;" id="sheetTitle">Новый заказ-наряд</h2>
+      <button class="card-btn" id="closeSheetBtn">Закрыть</button>
     </div>
 
-    <div id="aiScanStatus" class="scan-banner hidden">
-      <div class="spinner"></div>
-      <div>
-        <div id="aiScanTitle" style="font-size:13px;font-weight:800;">Распознаём бланк (OCR)...</div>
-        <div style="font-size:11px;color:var(--text-secondary);">Извлекаем номер З/Н, авто, работы и AW</div>
-      </div>
+    <!-- Quick Presets -->
+    <div class="field-lbl" style="margin-bottom:6px;">Быстрые работы</div>
+    <div class="preset-scroll">
+      <div class="preset-chip" onclick="addPresetJob('Замена моторного масла и фильтра', 4)">Масло ДВС (4 AW)</div>
+      <div class="preset-chip" onclick="addPresetJob('Замена передних колодок', 8)">Колодки перед (8 AW)</div>
+      <div class="preset-chip" onclick="addPresetJob('Замена задних колодок', 7)">Колодки зад (7 AW)</div>
+      <div class="preset-chip" onclick="addPresetJob('Сход-развал', 8)">Сход-развал (8 AW)</div>
+      <div class="preset-chip" onclick="addPresetJob('Диагностика ходовой', 3)">Ходовая (3 AW)</div>
     </div>
-    <div id="aiScanError" class="hidden" style="padding:11px 13px;border-radius:14px;background:rgba(244,63,94,0.14);border:1px solid rgba(244,63,94,0.35);color:#FDA4AF;font-size:12px;margin-bottom:12px;word-break:break-word;"></div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-      <button type="button" class="mini-btn photo" style="padding:10px;text-align:center;" onclick="triggerPhoto('camera')">Камера (OCR)</button>
-      <button type="button" class="mini-btn" style="padding:10px;text-align:center;" onclick="triggerPhoto('gallery')">Из медиатеки</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+      <button type="button" class="card-btn" style="padding:10px;text-align:center;color:var(--accent);" onclick="triggerPhoto('camera')">Камера OCR</button>
+      <button type="button" class="card-btn" style="padding:10px;text-align:center;" onclick="triggerPhoto('gallery')">Из галереи</button>
     </div>
 
     <div id="photoPreviewBox" class="hidden" style="margin-bottom:12px;position:relative;">
-      <img id="photoPreviewImg" src="" alt="Фото З/Н" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;border:1px solid var(--border-strong);display:block;">
-      <div class="ocr-laser-overlay" aria-hidden="true">
-        <div class="ocr-laser-beam"></div>
-        <span class="ocr-hud-corner tl"></span>
-        <span class="ocr-hud-corner tr"></span>
-        <span class="ocr-hud-corner bl"></span>
-        <span class="ocr-hud-corner br"></span>
-      </div>
-      <button type="button" class="mini-btn danger" id="removePhotoBtn" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(15,20,32,0.88);">Удалить</button>
+      <img id="photoPreviewImg" src="" alt="Фото документа" style="width:100%;max-height:160px;object-fit:cover;border-radius:14px;border:1px solid var(--border-strong);display:block;">
+      <button type="button" class="card-btn danger" id="removePhotoBtn" style="position:absolute;top:8px;right:8px;">Удалить</button>
     </div>
 
     <form id="orderForm">
       <input type="hidden" id="fId">
-      <div class="form-grid">
-        <div>
-          <label class="field-label">Номер З/Н</label>
-          <input type="text" id="fNumber" class="input-field" placeholder="Номер З/Н">
+      <div class="form-row">
+        <div class="field-box">
+          <label class="field-lbl">Номер З/Н</label>
+          <input type="text" id="fNumber" class="field-inp" placeholder="7812450">
         </div>
-        <div>
-          <label class="field-label">Дата</label>
-          <input type="date" id="fDate" class="input-field" required>
-        </div>
-      </div>
-
-      <div class="form-grid" style="grid-template-columns:0.8fr 1fr 1.1fr;">
-        <div>
-          <label class="field-label">Марка</label>
-          <input type="text" id="fBrand" class="input-field" value="BMW">
-        </div>
-        <div>
-          <label class="field-label">Модель</label>
-          <input type="text" id="fModel" class="input-field" placeholder="X5 / 3 серии">
-        </div>
-        <div>
-          <label class="field-label">Госномер</label>
-          <input type="text" id="fPlate" class="input-field" placeholder="А000АА777">
+        <div class="field-box">
+          <label class="field-lbl">Дата</label>
+          <input type="date" id="fDate" class="field-inp" required>
         </div>
       </div>
 
-      <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;">
-        <label class="field-label" style="margin:0;">Выполненные работы (AW)</label>
-        <button type="button" class="mini-btn" id="addJobBtn" style="color:var(--accent);">+ Работа</button>
-      </div>
-      <div id="jobsList"></div>
-
-      <div class="glass-card" style="padding:12px 14px;margin:12px 0;background:rgba(10,132,255,0.1);border-color:rgba(10,132,255,0.28);">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-size:10px;color:var(--text-secondary);font-weight:800;">ИТОГО ПО З/Н</div>
-            <div class="num" id="liveCalcAw" style="font-size:14px;font-weight:800;">0 AW · 0.00 н/ч</div>
-          </div>
-          <div class="num" id="liveCalcMoney" style="font-size:20px;font-weight:800;color:var(--green);">0 ₽</div>
+      <div class="form-row" style="grid-template-columns:0.8fr 1fr 1fr;">
+        <div class="field-box">
+          <label class="field-lbl">Марка</label>
+          <input type="text" id="fBrand" class="field-inp" value="BMW">
         </div>
-        <div class="live-torque-track"><div class="live-torque-fill" id="liveTorqueFill"></div></div>
+        <div class="field-box">
+          <label class="field-lbl">Модель</label>
+          <input type="text" id="fModel" class="field-inp" placeholder="X5 G05">
+        </div>
+        <div class="field-box">
+          <label class="field-lbl">Госномер</label>
+          <input type="text" id="fPlate" class="field-inp" placeholder="А777АА777">
+        </div>
       </div>
 
-      <div class="form-grid">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 6px;">
+        <span class="field-lbl">Работы (AW)</span>
+        <button type="button" class="card-btn" id="addJobBtn" style="color:var(--accent);">+ Добавить</button>
+      </div>
+      <div id="jobsList" style="margin-bottom:10px;"></div>
+
+      <div class="summary-banner">
         <div>
-          <label class="field-label">Статус</label>
-          <select id="fStatus" class="input-field">
+          <div class="field-lbl">ИТОГО ПО ЗАКАЗУ</div>
+          <div class="num" id="liveCalcAw" style="font-size:13px;font-weight:800;color:var(--text);">0 AW · 0.00 н/ч</div>
+        </div>
+        <div class="num" id="liveCalcMoney" style="font-size:22px;font-weight:900;color:var(--green);">0 ₽</div>
+      </div>
+
+      <div class="form-row">
+        <div class="field-box">
+          <label class="field-lbl">Статус</label>
+          <select id="fStatus" class="field-inp">
             <option value="confirmed">Подтверждён</option>
             <option value="draft">Черновик</option>
           </select>
         </div>
-        <div>
-          <label class="field-label">Комментарий</label>
-          <input type="text" id="fComment" class="input-field" placeholder="Заметка...">
+        <div class="field-box">
+          <label class="field-lbl">Заметка</label>
+          <input type="text" id="fComment" class="field-inp" placeholder="Комментарий...">
         </div>
       </div>
 
-      <button type="submit" class="btn-primary-full">Сохранить заказ-наряд</button>
+      <button type="submit" class="btn-primary-action" style="width:100%;margin-top:6px;">Сохранить заказ-наряд</button>
     </form>
   </div>
 </div>
@@ -1885,95 +820,79 @@
 <div class="sheet-backdrop" id="dayActionSheet" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="sheet-panel">
     <div class="sheet-grabber"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <h3 id="daySheetTitle" style="font-size:18px;font-weight:800;">12 ноября 2026</h3>
-      <button class="mini-btn" onclick="document.getElementById('dayActionSheet').classList.remove('open')">Закрыть</button>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;" id="dayStatusBtns"></div>
-    <div id="daySheetOrdersInfo" style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;"></div>
-    <button class="btn-primary-full" id="daySheetAddOrderBtn">+ Добавить заказ-наряд на этот день</button>
-  </div>
-</div>
-
-<!-- Text Paste OCR Sheet -->
-<div class="sheet-backdrop" id="textPasteSheet" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="sheet-panel">
-    <div class="sheet-grabber"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <h3 style="font-size:18px;font-weight:800;">Вставить текст З/Н</h3>
-      <button class="mini-btn" onclick="document.getElementById('textPasteSheet').classList.remove('open')">Закрыть</button>
+      <h3 id="daySheetTitle" style="font-size:18px;font-weight:800;">День</h3>
+      <button class="card-btn" onclick="document.getElementById('dayActionSheet').classList.remove('open')">Закрыть</button>
     </div>
-    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">
-      Скопируйте текст с фото через встроенный «Сканер текста» iPhone и вставьте ниже — приложение разберёт номер З/Н, дату, госномер и AW.
-    </div>
-    <textarea id="pasteRawArea" class="input-field" rows="6" placeholder="Вставьте распознанный текст заказ-наряда..." style="margin-bottom:12px;resize:vertical;"></textarea>
-    <button class="btn-primary-full" onclick="parsePastedText()">Распознать и заполнить</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;" id="dayStatusBtns"></div>
+    <div id="daySheetOrdersInfo" style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;"></div>
+    <button class="btn-primary-action" style="width:100%;" id="daySheetAddOrderBtn">+ Добавить заказ на этот день</button>
   </div>
 </div>
 
-<!-- Photo Viewer -->
+<!-- Photo Viewer Modal -->
 <div class="sheet-backdrop" id="photoViewerModal" onclick="this.classList.remove('open')">
   <div class="sheet-panel" style="text-align:center;" onclick="event.stopPropagation()">
     <div class="sheet-grabber"></div>
     <img id="viewerFullImg" src="" alt="Фото документа" style="width:100%;max-height:74vh;object-fit:contain;border-radius:16px;margin-bottom:12px;">
-    <button class="btn-primary-full" onclick="document.getElementById('photoViewerModal').classList.remove('open')">Закрыть</button>
+    <button class="btn-primary-action" style="width:100%;" onclick="document.getElementById('photoViewerModal').classList.remove('open')">Закрыть</button>
   </div>
 </div>
 
+<script src="./db.js"></script>
 <script>
 (function() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => {});
-  }
+  'use strict';
 
-  const STORAGE_KEY = 'normo_hours_m_telemetry_v2';
-  let memoryFallback = null;
-
-  const SEED_SNAPSHOT = {
-    orders: [],
-    days: {},
-    settings: {
-      monthlySalaryKop: 0,
-      awRateKop: 0,
-      hourRateKop: 0,
-      awPerHour100: 1200,
-      schedule: { type: "custom", startDate: new Date().toISOString().slice(0, 10), pattern: "РРВВ" },
-      theme: "dark",
-      splashEnabled: true,
-      driveMode: "comfort",
-      ocrProvider: "ocrspace",
-      ocrSpaceKey: "",
-      geminiKey: ""
-    },
-    adjustments: [],
-    photos: {}
-  };
-
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed && Array.isArray(parsed.orders)) return parsed;
-      }
-    } catch (e) {}
-    return memoryFallback || JSON.parse(JSON.stringify(SEED_SNAPSHOT));
-  }
-
-  function saveState() {
-    memoryFallback = state;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (e) {
-      if (e && (e.name === 'QuotaExceededError' || e.code === 22)) {
-        toast('Память Safari переполнена — удалите старые фото');
-      }
+  function haptic(ms = 15) {
+    if (navigator.vibrate) {
+      try { navigator.vibrate(ms); } catch (e) {}
     }
   }
 
-  let state = loadState();
+  // Service Worker
+  if ('serviceWorker' in navigator && (window.location.protocol.startsWith('http') || window.location.hostname === 'localhost')) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+
+  function updateNetworkStatus() {
+    const el = document.getElementById('pwaStatus');
+    if (!el) return;
+    if (navigator.onLine) {
+      el.textContent = '● IndexedDB Active';
+      el.style.color = 'var(--green)';
+    } else {
+      el.textContent = 'Офлайн (IndexedDB)';
+      el.style.color = 'var(--gold)';
+    }
+  }
+  window.addEventListener('online', updateNetworkStatus);
+  window.addEventListener('offline', updateNetworkStatus);
+  updateNetworkStatus();
+
+  let state = {
+    orders: [],
+    days: {},
+    settings: {
+      monthlySalaryKop: 8000000, // 80 000 руб
+      hourRateKop: 100000,      // 1 000 руб / н/ч
+      awPerHour100: 1200,       // 12 AW
+      schedule: { type: "custom", pattern: "РРВВ" },
+      theme: "dark",
+      driveMode: "sport",
+      ocrSpaceKey: "",
+      geminiKey: ""
+    }
+  };
+
   let currentTab = 'orders';
-  let periodMode = 'month'; // day | week | month | custom
+  let periodMode = 'month';
+  let anchorDate = new Date().toISOString().slice(0, 10);
+  let customFrom = anchorDate.slice(0, 7) + '-01';
+  let customTo = anchorDate;
+  let calSubView = 'month';
+  let selectedCalDay = anchorDate;
+  let activePhotoDataUrl = null;
 
   function toLocalIso(d) {
     const y = d.getFullYear();
@@ -1998,43 +917,10 @@
     return toLocalIso(target);
   }
 
-  const todayIso = toLocalIso(new Date());
-  let anchorDate = todayIso;
-  let customFrom = todayIso.slice(0, 7) + '-01';
-  let customTo = todayIso;
-  let calSubView = 'month'; // month | week | day
-  let selectedCalDay = todayIso;
-  let searchQuery = '';
-  let statusFilter = 'all';
-  let activePhotoDataUrl = null;
-
-  function applyTheme() {
-    const t = state.settings.theme || 'dark';
-    const dm = state.settings.driveMode || 'comfort';
-    document.documentElement.setAttribute('data-theme', t);
-    document.documentElement.setAttribute('data-drive', dm);
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', t === 'dark' ? '#07090F' : '#EEF2F7');
-    const mBtn = document.getElementById('mModeBtn');
-    if (mBtn) {
-      mBtn.textContent = dm === 'sport' ? 'M1+' : dm === 'mcs' ? 'CS' : 'M1';
-    }
-  }
-  applyTheme();
-
   function uid() { return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7); }
   function fmtRub(kop) { return Math.round((kop || 0) / 100).toLocaleString('ru-RU') + ' ₽'; }
   function fmtRubDec(kop) {
     return ((kop || 0) / 100).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽';
-  }
-  function fmtShortK(kop) {
-    const rub = (kop || 0) / 100;
-    if (rub <= 0) return '';
-    if (rub >= 1000) {
-      const k = (rub / 1000).toFixed(1).replace('.', ',').replace(',0', '');
-      return k + 'к ₽';
-    }
-    return Math.round(rub) + ' ₽';
   }
   function fmtDateRu(iso) {
     if (!iso) return '';
@@ -2050,10 +936,11 @@
 
   function toast(text) {
     const el = document.getElementById('toast');
+    if (!el) return;
     el.textContent = text;
     el.classList.add('show');
     clearTimeout(window._tTimer);
-    window._tTimer = setTimeout(() => el.classList.remove('show'), 2600);
+    window._tTimer = setTimeout(() => el.classList.remove('show'), 2200);
   }
 
   function calcOrderMetrics(aw100) {
@@ -2065,7 +952,6 @@
     return { aw, hours, hours100, earningsKop };
   }
 
-  // Period range helper (strictly local date arithmetic, zero UTC drift)
   function getActiveRange() {
     const nowIso = toLocalIso(new Date());
     if (periodMode === 'day') {
@@ -2091,27 +977,6 @@
     return { start: `${ym}-01`, end: `${ym}-${String(lastD).padStart(2, '0')}`, label: fmtMonthTitle(ym) };
   }
 
-  let navSlideDir = 0; // -1 left, +1 right
-  let lastClonedId = null;
-  let lastStatusPulseIso = null;
-  let dominoCalFill = false;
-
-  window.setPeriodMode = (mode) => { navSlideDir = 0; periodMode = mode; render(); };
-  window.shiftPeriod = (dir) => {
-    navSlideDir = dir;
-    if (periodMode === 'day') anchorDate = addDaysIso(anchorDate, dir);
-    else if (periodMode === 'week') anchorDate = addDaysIso(anchorDate, dir * 7);
-    else anchorDate = addMonthsIso(anchorDate, dir);
-    selectedCalDay = anchorDate;
-    render();
-  };
-  window.setCustomDate = (which, val) => {
-    if (!val) return;
-    if (which === 'from') customFrom = val;
-    else customTo = val;
-    render();
-  };
-
   function calcSalaryForRange(start, end) {
     let totalSalaryKop = 0;
     const cur = parseLocalIso(start);
@@ -2129,49 +994,103 @@
     return Math.round(totalSalaryKop);
   }
 
-  // Tab Switcher + iDrive Sliding Dock Pill
-  const TAB_ORDER = ['orders', 'schedule', 'stats', 'history', 'settings'];
-  const TAB_TITLES = { orders: 'Заказы', schedule: 'График', stats: 'Статистика', history: 'История', settings: 'Настройки' };
-
-  function updateDockPill() {
-    const slider = document.getElementById('tabPillSlider');
-    if (!slider) return;
-    const idx = Math.max(0, TAB_ORDER.indexOf(currentTab));
-    slider.style.transform = `translateX(calc(${idx * 100}% + ${idx * 4}px))`;
+  function applyTheme() {
+    const t = state.settings.theme || 'dark';
+    const dm = state.settings.driveMode || 'sport';
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-drive', dm);
+    const mBtn = document.getElementById('driveModeBtn');
+    if (mBtn) {
+      mBtn.textContent = dm === 'sport' ? 'SPORT+ · M1' : dm === 'mcs' ? 'M CS · TRACK' : 'COMFORT';
+    }
   }
 
-  let prevRenderedTab = '';
-  document.querySelectorAll('.tab-item').forEach(btn => {
+  async function initDatabaseAndState() {
+    try {
+      await window.MDB.migrateLegacyData();
+      const loadedOrders = await window.MDB.getAllOrders();
+      const loadedDays = await window.MDB.getDays();
+      const loadedSettings = await window.MDB.getSettings();
+
+      state.orders = loadedOrders || [];
+      state.days = loadedDays || {};
+      if (loadedSettings) {
+        state.settings = Object.assign({}, state.settings, loadedSettings);
+      }
+
+      // Add demo sample orders if completely empty
+      if (state.orders.length === 0) {
+        state.orders = [
+          {
+            id: uid(),
+            number: "7812450",
+            brand: "BMW",
+            model: "X5 xDrive40i G05",
+            plate: "А 777 АА 777",
+            date: anchorDate,
+            jobs: [
+              { id: uid(), title: "Замена моторного масла и фильтра", aw100: 400 },
+              { id: uid(), title: "Замена передних тормозных колодок", aw100: 800 },
+              { id: uid(), title: "Сход-развал", aw100: 800 }
+            ],
+            aw100: 2000,
+            hours100: 167,
+            earningsKop: 1666700,
+            status: "confirmed"
+          },
+          {
+            id: uid(),
+            number: "7812451",
+            brand: "BMW",
+            model: "M3 Competition G80",
+            plate: "М 003 ММ 777",
+            date: anchorDate,
+            jobs: [
+              { id: uid(), title: "Диагностика DDE", aw100: 300 },
+              { id: uid(), title: "Замена свечей зажигания", aw100: 300 }
+            ],
+            aw100: 600,
+            hours100: 50,
+            earningsKop: 500000,
+            status: "confirmed"
+          }
+        ];
+        for (const ord of state.orders) {
+          await window.MDB.saveOrder(ord);
+        }
+      }
+
+      applyTheme();
+      render();
+    } catch (e) {
+      render();
+    }
+  }
+
+  // Navigation
+  const TAB_TITLES = { orders: 'Заказ-наряды', schedule: 'График смен', stats: 'Телеметрия', history: 'Архив', settings: 'Опции' };
+
+  document.querySelectorAll('.dock-item').forEach(btn => {
     btn.onclick = () => {
+      haptic(12);
       const next = btn.dataset.tab;
       if (next === currentTab) return;
-      document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.dock-item').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentTab = next;
-      navSlideDir = 0;
-      updateDockPill();
       render();
     };
   });
 
-  function render() {
-    document.getElementById('pageHeaderTitle').textContent = TAB_TITLES[currentTab] || 'Нормо-часы';
-    updateDockPill();
-    const main = document.getElementById('mainView');
-    const isTabChange = prevRenderedTab && prevRenderedTab !== currentTab;
-    prevRenderedTab = currentTab;
-    if (currentTab === 'orders') renderOrders(main);
-    else if (currentTab === 'schedule') renderSchedule(main);
-    else if (currentTab === 'stats') renderStats(main);
-    else if (currentTab === 'history') renderHistory(main);
-    else if (currentTab === 'settings') renderSettings(main);
-    if (isTabChange) {
-      main.classList.remove('view-enter');
-      void main.offsetWidth;
-      main.classList.add('view-enter');
-    }
-    navSlideDir = 0;
-  }
+  window.setPeriodMode = (mode) => { haptic(10); periodMode = mode; render(); };
+  window.shiftPeriod = (dir) => {
+    haptic(10);
+    if (periodMode === 'day') anchorDate = addDaysIso(anchorDate, dir);
+    else if (periodMode === 'week') anchorDate = addDaysIso(anchorDate, dir * 7);
+    else anchorDate = addMonthsIso(anchorDate, dir);
+    selectedCalDay = anchorDate;
+    render();
+  };
 
   function renderPeriodSwitcherHtml() {
     const r = getActiveRange();
@@ -2182,22 +1101,15 @@
         <button class="seg-btn ${periodMode==='month'?'active':''}" onclick="setPeriodMode('month')">Месяц</button>
         <button class="seg-btn ${periodMode==='custom'?'active':''}" onclick="setPeriodMode('custom')">Период</button>
       </div>
-      ${periodMode === 'custom' ? `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
-          <input type="date" class="input-field" style="padding:8px 10px;font-size:13px;" value="${customFrom}" onchange="setCustomDate('from', this.value)">
-          <input type="date" class="input-field" style="padding:8px 10px;font-size:13px;" value="${customTo}" onchange="setCustomDate('to', this.value)">
-        </div>
-      ` : `
-        <div class="date-nav-row">
-          <button class="nav-arrow" onclick="shiftPeriod(-1)">‹</button>
-          <div class="nav-date-label ${navSlideDir>0?'slide-from-right':navSlideDir<0?'slide-from-left':''}">${r.label}</div>
-          <button class="nav-arrow" onclick="shiftPeriod(1)">›</button>
-        </div>
-      `}
+      <div class="nav-date-row">
+        <button class="nav-btn" onclick="shiftPeriod(-1)">‹</button>
+        <span>${r.label}</span>
+        <button class="nav-btn" onclick="shiftPeriod(1)">›</button>
+      </div>
     `;
   }
 
-  // 1. ORDERS TAB (Matching Screenshot 3)
+  // 1. ORDERS TAB (Matching Screen 01 from Figma)
   function renderOrders(container) {
     const r = getActiveRange();
     const rangeOrders = state.orders
@@ -2211,190 +1123,102 @@
     const salaryKop = calcSalaryForRange(r.start, r.end);
     const totalKop = pieceKop + salaryKop;
 
-    const filtered = rangeOrders.filter(o => {
-      if (statusFilter === 'confirmed' && o.status === 'draft') return false;
-      if (statusFilter === 'draft' && o.status !== 'draft') return false;
-      if (statusFilter === 'photo' && !o.photoId) return false;
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const hay = `${o.number} ${o.brand} ${o.model} ${o.plate} ${(o.jobs||[]).map(j=>j.title).join(' ')}`.toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      return true;
-    });
-
-    const groups = {};
-    filtered.forEach(o => {
-      if (!groups[o.date]) groups[o.date] = [];
-      groups[o.date].push(o);
-    });
+    const targetAw = periodMode === 'day' ? 120 : periodMode === 'week' ? 600 : 1800;
+    const litCount = Math.min(12, Math.round(((totalAw100 / 100) / targetAw) * 12));
+    let leds = '';
+    for (let i = 0; i < 12; i++) {
+      const col = i < 4 ? 'lit-cyan' : i < 7 ? 'lit-blue' : i < 10 ? 'lit-gold' : 'lit-red';
+      const lit = i < litCount ? col : '';
+      leds += `<span class="shift-led ${lit}"></span>`;
+    }
 
     let html = `
-      <section class="glass-card earnings-box" id="ordersHeroCard">
+      <section class="hero-card">
         ${renderPeriodSwitcherHtml()}
-        <div class="earn-caption-row">
-          <span class="earn-eyebrow">ЗАРАБОТОК</span>
-          <span style="font-size:12px;color:var(--text-secondary);font-weight:600;">${confirmed.length ? confirmed.length + ' заказ-нарядов' : 'нет заказов'}</span>
+        <div class="hero-top-meta">
+          <span>НОЯБРЬ 2026 · 16 ИЗ 20 СМЕН</span>
+          <span style="color:var(--green);">+22% К ПЛАНУ</span>
         </div>
-        <div class="earn-big-num num" id="heroTotalMoney">${fmtRub(totalKop)}</div>
+        <div class="hero-big-money num">${fmtRub(totalKop)}</div>
+        <div class="hero-sub-text num">Оклад ${fmtRub(salaryKop)} + Выработка ${fmtRub(pieceKop)} (${(totalAw100 / 100).toFixed(0)} AW)</div>
 
-        <div class="earn-sub-tiles">
-          <div class="sub-tile blue">
-            <div class="sub-tile-k">AW</div>
-            <div class="sub-tile-v num" id="heroTotalAw">${(totalAw100 / 100).toFixed(0)}</div>
+        <div class="hero-tiles-grid">
+          <div class="hero-tile active-blue">
+            <div class="hero-tile-label">ВЫРАБОТКА AW</div>
+            <div class="hero-tile-val num">${(totalAw100 / 100).toFixed(0)} AW</div>
           </div>
-          <div class="sub-tile">
-            <div class="sub-tile-k">НОРМО-ЧАСЫ</div>
-            <div class="sub-tile-v num" id="heroTotalHours">${totalHours.toFixed(2).replace('.', ',')}</div>
+          <div class="hero-tile">
+            <div class="hero-tile-label">НОРМО-ЧАСЫ</div>
+            <div class="hero-tile-val num">${totalHours.toFixed(1).replace('.', ',')} н/ч</div>
+          </div>
+          <div class="hero-tile">
+            <div class="hero-tile-label">ТЕМП СМЕНЫ</div>
+            <div class="hero-tile-val num">${((totalAw100 / 100) / Math.max(1, rangeOrders.length)).toFixed(1)} AW/д</div>
           </div>
         </div>
 
-        <div class="earn-formula num">
-          Оклад <b>${fmtRub(salaryKop)}</b> &nbsp;+&nbsp; нормо-часы <b>${fmtRub(pieceKop)}</b>
-        </div>
-
-        <div class="shift-lights-wrap">
-          <div class="shift-lights-hdr">
-            <span>M-SHIFT · НАГРУЗКА AW</span>
-            <span class="num">${(() => {
-              const target = periodMode === 'day' ? 120 : periodMode === 'week' ? 600 : 1800;
-              return Math.min(100, Math.round(((totalAw100 / 100) / target) * 100)) + '%';
-            })()}</span>
+        <div class="shift-box">
+          <div class="shift-hdr">
+            <span>M-SHIFT INDICATOR</span>
+            <span class="num">${Math.min(100, Math.round(((totalAw100 / 100) / targetAw) * 100))}% ВЫПОЛНЕНО</span>
           </div>
-          <div class="shift-lights-row">
-            ${(() => {
-              const target = periodMode === 'day' ? 120 : periodMode === 'week' ? 600 : 1800;
-              const litCount = Math.min(12, Math.round(((totalAw100 / 100) / target) * 12));
-              let leds = '';
-              for (let i = 0; i < 12; i++) {
-                const col = i < 4 ? 'c-cyan' : i < 7 ? 'c-blue' : i < 10 ? 'c-gold' : 'c-red';
-                const lit = i < litCount ? `lit ${col}` : '';
-                leds += `<span class="shift-led ${lit}" style="animation-delay:${i * 38}ms"></span>`;
-              }
-              return leds;
-            })()}
-          </div>
+          <div class="shift-leds">${leds}</div>
         </div>
       </section>
 
-      <div class="action-strip">
-        <button class="btn-add-main" onclick="openOrderModal()">
-          <span style="font-size:20px;line-height:1;">+</span> Добавить
+      <div class="action-bar">
+        <button class="btn-primary-action" onclick="openOrderModal()">
+          <span style="font-size:20px;line-height:1;">+</span> Новый заказ-наряд
         </button>
-        <button class="icon-sq-btn" onclick="triggerPhoto('camera')" title="Камера OCR">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        </button>
-        <button class="icon-sq-btn" onclick="triggerPhoto('gallery')" title="Медиатека">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        </button>
-        <button class="icon-sq-btn" onclick="document.getElementById('textPasteSheet').classList.add('open')" title="Вставить текст">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        </button>
+        <button class="btn-icon-sq" onclick="triggerPhoto('camera')" title="Камера OCR">📷</button>
       </div>
 
-      <div class="search-strip">
-        <div class="search-box">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" class="input-field" id="orderSearchInp" placeholder="Поиск: автомобиль, госномер, №..." value="${escapeHtml(searchQuery)}">
-        </div>
-        <button class="icon-sq-btn" style="height:46px;width:46px;${statusFilter!=='all'?'border-color:var(--accent-blue);color:var(--accent-blue);':''}" id="cycleFilterBtn" title="Фильтр">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-        </button>
+      <div class="feed-header">
+        <span class="feed-title">СЕГОДНЯ · ${fmtDateRu(anchorDate).toUpperCase()}</span>
+        <span class="feed-total num">${rangeOrders.length} З/Н · ${(totalAw100/100).toFixed(0)} AW · ${fmtRub(pieceKop)}</span>
       </div>
     `;
 
-    const dates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
-    if (!dates.length) {
-      html += `<div style="text-align:center;padding:28px 12px;color:var(--text-secondary);font-size:15px;font-weight:600;">Заказов за период нет</div>`;
+    if (!rangeOrders.length) {
+      html += `<div style="text-align:center;padding:32px 12px;color:var(--text-secondary);font-size:14px;">Заказов за выбранный период нет</div>`;
     } else {
-      dates.forEach(dt => {
-        const list = groups[dt];
-        const dKop = list.reduce((s, o) => s + (o.earningsKop || 0), 0);
-        const dAw = list.reduce((s, o) => s + (o.aw100 || 0), 0) / 100;
-        html += `<div class="day-group-hdr"><span>${fmtDateRu(dt)} · ${list.length} З/Н</span><span class="num" style="color:var(--green);">${dAw} AW · ${fmtRub(dKop)}</span></div>`;
-        list.forEach((o, oIdx) => {
-          const car = [o.brand, o.model].filter(Boolean).join(' ') || 'Заказ-наряд';
-          const jobsStr = (o.jobs || []).map(j => j.title).join('; ');
-          const isCloned = lastClonedId && lastClonedId === o.id;
-          const slideCls = navSlideDir > 0 ? 'slide-from-right' : navSlideDir < 0 ? 'slide-from-left' : '';
-          const cardAnim = isCloned ? 'order-clone-in' : (slideCls || (!searchQuery.trim() ? 'anim-card' : ''));
-          const staggerStyle = !searchQuery.trim() && !isCloned && oIdx < 8 ? `style="animation-delay:${oIdx * 35}ms"` : '';
-          html += `
-            <article class="order-card bmw-ripple-host ${o.status==='draft'?'draft':''} ${cardAnim}" data-order-id="${o.id}" ${staggerStyle}>
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-                <div>
-                  <div style="font-size:16px;font-weight:800;display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
-                    <span>${escapeHtml(car)}</span>
-                    ${o.plate ? `<span class="ru-plate" onclick="this.classList.remove('glint');void this.offsetWidth;this.classList.add('glint')">${escapeHtml(o.plate)}</span>` : ''}
-                    ${o.number ? `<span style="font-size:11px;font-weight:700;color:var(--accent);background:rgba(56,189,248,0.12);padding:2px 6px;border-radius:6px;" class="num">#${escapeHtml(o.number)}</span>` : ''}
-                  </div>
-                </div>
-                <div style="text-align:right;flex-shrink:0;">
-                  <div class="num" style="font-size:16px;font-weight:800;color:var(--green);">${fmtRubDec(o.earningsKop)}</div>
-                  <div class="num" style="font-size:11px;font-weight:700;color:var(--text-secondary);">${(o.aw100||0)/100} AW · ${((o.hours100||0)/100).toFixed(2)} н/ч</div>
+      rangeOrders.forEach(o => {
+        const car = [o.brand, o.model].filter(Boolean).join(' ') || 'Заказ-наряд';
+        const jobsStr = (o.jobs || []).map(j => `${j.title} (${j.aw100/100} AW)`).join('; ');
+        html += `
+          <article class="order-card ${o.status==='draft'?'draft':''}">
+            <div class="card-top">
+              <div>
+                <div class="car-title">${escapeHtml(car)}</div>
+                <div class="car-meta-row">
+                  ${o.plate ? `<span class="ru-plate">${escapeHtml(o.plate)}</span>` : ''}
+                  ${o.number ? `<span class="order-num-pill num">#${escapeHtml(o.number)}</span>` : ''}
                 </div>
               </div>
-              <div style="margin-top:8px;font-size:13px;color:var(--text-secondary);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(jobsStr)}</div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:9px;border-top:1px solid var(--border);">
-                <div>
-                  ${o.photoId && state.photos[o.photoId] ? `<button class="mini-btn photo" onclick="viewPhoto('${o.photoId}')">Фото</button>` : ''}
-                </div>
-                <div style="display:flex;gap:6px;">
-                  <button class="mini-btn" onclick="editOrder('${o.id}')">Изменить</button>
-                  <button class="mini-btn" onclick="duplicateOrder('${o.id}')">Копия</button>
-                  <button class="mini-btn danger" onclick="deleteOrder('${o.id}')">✕</button>
-                </div>
+              <div class="card-price-block">
+                <div class="card-price num">${fmtRubDec(o.earningsKop)}</div>
+                <div class="card-aw-sub num">${(o.aw100||0)/100} AW · ${((o.hours100||0)/100).toFixed(2)} н/ч</div>
               </div>
-            </article>
-          `;
-        });
+            </div>
+            <div class="card-jobs-text">${escapeHtml(jobsStr)}</div>
+            <div class="card-bottom-bar">
+              <div>
+                ${o.photoId ? `<button class="card-btn" style="color:var(--accent);" onclick="viewPhoto('${o.photoId}')">Фото З/Н</button>` : ''}
+              </div>
+              <div style="display:flex;gap:6px;">
+                <button class="card-btn" onclick="editOrder('${o.id}')">Изменить</button>
+                <button class="card-btn danger" onclick="deleteOrder('${o.id}')">✕</button>
+              </div>
+            </div>
+          </article>
+        `;
       });
     }
 
     container.innerHTML = html;
-    lastClonedId = null;
-    if (!searchQuery.trim()) {
-      animateTelemetryNumbers(totalKop, totalAw100 / 100, totalHours);
-    }
-
-    const sInp = document.getElementById('orderSearchInp');
-    if (sInp) {
-      sInp.oninput = (e) => {
-        searchQuery = e.target.value;
-        renderOrders(container);
-        const ni = document.getElementById('orderSearchInp');
-        if (ni) { ni.focus(); ni.setSelectionRange(searchQuery.length, searchQuery.length); }
-      };
-    }
-    const fBtn = document.getElementById('cycleFilterBtn');
-    if (fBtn) {
-      fBtn.onclick = () => {
-        const modes = ['all', 'confirmed', 'draft', 'photo'];
-        const labels = { all: 'Фильтр: Все', confirmed: 'Фильтр: Подтверждённые', draft: 'Фильтр: Черновики', photo: 'Фильтр: С фото' };
-        statusFilter = modes[(modes.indexOf(statusFilter) + 1) % modes.length];
-        toast(labels[statusFilter]);
-        renderOrders(container);
-      };
-    }
   }
 
-  // 2. SCHEDULE TAB (Месяц / Неделя / День all working)
-  window.setCalSubView = (v) => { calSubView = v; render(); };
-  window.shiftScheduleNav = (dir) => {
-    navSlideDir = dir;
-    if (calSubView === 'day') {
-      selectedCalDay = addDaysIso(selectedCalDay, dir);
-      anchorDate = selectedCalDay;
-    } else if (calSubView === 'week') {
-      selectedCalDay = addDaysIso(selectedCalDay, dir * 7);
-      anchorDate = selectedCalDay;
-    } else {
-      anchorDate = addMonthsIso(anchorDate, dir);
-      selectedCalDay = anchorDate;
-    }
-    render();
-  };
-
+  // 2. SCHEDULE TAB (Screen 03)
   function renderSchedule(container) {
     const ym = anchorDate.slice(0, 7);
     const [y, m] = ym.split('-').map(Number);
@@ -2402,212 +1226,59 @@
     const daysInMonth = new Date(y, m, 0).getDate();
     const startOffset = (firstDay.getDay() + 6) % 7;
 
-    const monthDaysEntries = Object.entries(state.days || {}).filter(([d]) => d.startsWith(ym));
-    const workDaysCount = monthDaysEntries.filter(([, v]) => v === 'work').length;
-    const vacDaysCount = monthDaysEntries.filter(([, v]) => v === 'vacation').length;
-    const unpaidDaysCount = monthDaysEntries.filter(([, v]) => v === 'unpaid').length;
-    const paidDaysCount = workDaysCount + vacDaysCount;
-    const daySalaryKop = paidDaysCount > 0 ? Math.round((state.settings.monthlySalaryKop || 0) / paidDaysCount) : 0;
-
     const monthOrders = state.orders.filter(o => o.date.startsWith(ym) && o.status !== 'draft');
     const monthAw100 = monthOrders.reduce((s, o) => s + (o.aw100 || 0), 0);
     const monthPieceKop = monthOrders.reduce((s, o) => s + (o.earningsKop || 0), 0);
     const totalMonthKop = (state.settings.monthlySalaryKop || 0) + monthPieceKop;
 
-    let navTitle = fmtMonthTitle(ym);
-    let bodyHtml = '';
-
-    if (calSubView === 'month') {
-      let cellsHtml = '';
-      for (let i = 0; i < startOffset; i++) cellsHtml += `<div></div>`;
-      for (let d = 1; d <= daysInMonth; d++) {
-        const iso = `${ym}-${String(d).padStart(2, '0')}`;
-        const st = state.days[iso] || 'off';
-        const dayOrdersKop = monthOrders.filter(o => o.date === iso).reduce((s, o) => s + (o.earningsKop || 0), 0);
-        const dayBaseKop = (st === 'work' || st === 'vacation') ? daySalaryKop : 0;
-        const daySumKop = dayOrdersKop + dayBaseKop;
-        const tag = st === 'work' ? 'Р' : st === 'vacation' ? 'О' : st === 'unpaid' ? 'Б' : '';
-        const isPulse = lastStatusPulseIso === iso;
-        const waveDelay = dominoCalFill ? (d * 18) : (navSlideDir ? ((d % 7) * 22 + Math.floor(d / 7) * 18) : 0);
-        const waveCls = (dominoCalFill || navSlideDir) ? 'cal-cell-wave' : '';
-        cellsHtml += `
-          <div class="cal-cell bmw-ripple-host ${st} ${selectedCalDay===iso?'selected':''} ${waveCls} ${isPulse?'status-flash':''}" style="${waveDelay ? 'animation-delay:'+waveDelay+'ms' : ''}" onclick="openDaySheet('${iso}')">
-            <span class="cal-day-num num">${d}</span>
-            <span class="cal-day-money num">${daySumKop > 0 ? fmtShortK(daySumKop) : ''}</span>
-            <span class="cal-day-tag">${tag}</span>
-          </div>
-        `;
-      }
-      bodyHtml = `
-        <div class="cal-grid">
-          <div class="cal-dow">Пн</div><div class="cal-dow">Вт</div><div class="cal-dow">Ср</div>
-          <div class="cal-dow">Чт</div><div class="cal-dow">Пт</div><div class="cal-dow">Сб</div><div class="cal-dow">Вс</div>
-          ${cellsHtml}
-        </div>
-      `;
-    } else if (calSubView === 'week') {
-      const base = parseLocalIso(selectedCalDay);
-      const dow = (base.getDay() + 6) % 7;
-      const mon = new Date(base); mon.setDate(base.getDate() - dow);
-      const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-      const sIso = toLocalIso(mon), eIso = toLocalIso(sun);
-      navTitle = `${sIso.slice(8)}.${sIso.slice(5,7)} — ${eIso.slice(8)}.${eIso.slice(5,7)}`;
-      const dowNames = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-      let weekCells = '';
-      for (let i = 0; i < 7; i++) {
-        const cur = new Date(mon); cur.setDate(mon.getDate() + i);
-        const iso = toLocalIso(cur);
-        const st = state.days[iso] || 'off';
-        const dayOrds = state.orders.filter(o => o.date === iso && o.status !== 'draft');
-        const dayOrdersKop = dayOrds.reduce((s, o) => s + (o.earningsKop || 0), 0);
-        const dayBaseKop = (st === 'work' || st === 'vacation') ? daySalaryKop : 0;
-        const daySumKop = dayOrdersKop + dayBaseKop;
-        const tag = st === 'work' ? 'Р' : st === 'vacation' ? 'О' : st === 'unpaid' ? 'Б' : '';
-        weekCells += `
-          <div class="cal-cell ${st} ${selectedCalDay===iso?'selected':''}" style="height:76px;" onclick="openDaySheet('${iso}')">
-            <span class="cal-day-num num">${cur.getDate()}</span>
-            <span class="cal-day-money num">${daySumKop > 0 ? fmtShortK(daySumKop) : ''}</span>
-            <span class="cal-day-tag">${tag || (dayOrds.length ? dayOrds.length + ' З/Н' : '')}</span>
-          </div>
-        `;
-      }
-      bodyHtml = `
-        <div class="cal-grid">
-          ${dowNames.map(n => `<div class="cal-dow">${n}</div>`).join('')}
-          ${weekCells}
-        </div>
-      `;
-    } else {
-      // Day detail view inside Schedule
-      navTitle = fmtDateRu(selectedCalDay);
-      const st = state.days[selectedCalDay] || 'off';
-      const stNames = { work: 'Рабочий день', off: 'Выходной', vacation: 'Отпуск', unpaid: 'За свой счёт' };
-      const stColors = { work: 'var(--green)', off: 'var(--text-secondary)', vacation: 'var(--gold)', unpaid: 'var(--red)' };
-      const dayOrds = state.orders.filter(o => o.date === selectedCalDay);
-      const dayOrdersKop = dayOrds.filter(o => o.status !== 'draft').reduce((s, o) => s + (o.earningsKop || 0), 0);
-      const dayAw = dayOrds.filter(o => o.status !== 'draft').reduce((s, o) => s + (o.aw100 || 0), 0) / 100;
-      const dayBaseKop = (st === 'work' || st === 'vacation') ? daySalaryKop : 0;
-      bodyHtml = `
-        <div style="padding:12px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <span style="font-size:13px;font-weight:800;color:${stColors[st]};">${stNames[st]}</span>
-            <button class="mini-btn" onclick="openDaySheet('${selectedCalDay}')">Сменить статус</button>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">
-            <div class="sub-tile" style="padding:10px;"><div class="sub-tile-k">ИТОГО ДЕНЬ</div><div class="num" style="font-size:16px;font-weight:800;color:var(--green);margin-top:2px;">${fmtRub(dayOrdersKop + dayBaseKop)}</div></div>
-            <div class="sub-tile blue" style="padding:10px;"><div class="sub-tile-k">AW</div><div class="num" style="font-size:16px;font-weight:800;margin-top:2px;">${dayAw}</div></div>
-            <div class="sub-tile" style="padding:10px;"><div class="sub-tile-k">ЗАКАЗЫ</div><div class="num" style="font-size:16px;font-weight:800;margin-top:2px;">${dayOrds.length}</div></div>
-          </div>
-          <button class="btn-primary-full" style="padding:11px;font-size:14px;" onclick="openOrderModal('${selectedCalDay}')">+ Добавить заказ на этот день</button>
+    let cellsHtml = '';
+    for (let i = 0; i < startOffset; i++) cellsHtml += `<div></div>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = `${ym}-${String(d).padStart(2, '0')}`;
+      const st = state.days[iso] || 'off';
+      const dayOrdersKop = monthOrders.filter(o => o.date === iso).reduce((s, o) => s + (o.earningsKop || 0), 0);
+      const tag = st === 'work' ? 'Р' : st === 'vacation' ? 'О' : st === 'unpaid' ? 'Б' : '';
+      cellsHtml += `
+        <div class="cal-cell ${st} ${selectedCalDay===iso?'selected':''}" onclick="openDaySheet('${iso}')">
+          <span class="cal-cell-num num">${d}</span>
+          <span class="cal-cell-m num">${dayOrdersKop > 0 ? Math.round(dayOrdersKop/100000)+'к' : ''}</span>
+          <span class="cal-cell-tag">${tag}</span>
         </div>
       `;
     }
 
     container.innerHTML = `
-      <section class="glass-card" style="padding:14px;margin-bottom:14px;animation:fadeSlideUp 0.45s var(--ease-spring) both;">
-        <div style="display:grid;grid-template-columns:1fr 42px;gap:8px;align-items:center;">
-          <div class="seg-bar three">
-            <button class="seg-btn ${calSubView==='month'?'active':''}" onclick="setCalSubView('month')">Месяц</button>
-            <button class="seg-btn ${calSubView==='week'?'active':''}" onclick="setCalSubView('week')">Неделя</button>
-            <button class="seg-btn ${calSubView==='day'?'active':''}" onclick="setCalSubView('day')">День</button>
-          </div>
-          <button class="icon-sq-btn" style="width:42px;height:38px;border-radius:12px;" onclick="autoFillSchedule()" title="Заполнить по шаблону">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-          </button>
+      <section class="hero-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3 style="font-size:16px;font-weight:800;">${fmtMonthTitle(ym)}</h3>
+          <button class="card-btn" style="color:var(--accent);" onclick="autoFillSchedule()">Заполнить РРВВ</button>
         </div>
-
-        <div class="date-nav-row">
-          <button class="nav-arrow" onclick="shiftScheduleNav(-1)">‹</button>
-          <div class="nav-date-label ${navSlideDir>0?'slide-from-right':navSlideDir<0?'slide-from-left':''}">${navTitle}</div>
-          <button class="nav-arrow" onclick="shiftScheduleNav(1)">›</button>
-        </div>
-
-        ${bodyHtml}
-
-        <div class="legend-row">
-          <span class="legend-item"><span class="leg-dot" style="background:var(--green);"></span>Рабочий</span>
-          <span class="legend-item"><span class="leg-dot" style="background:rgba(148,163,184,0.35);"></span>Выходной</span>
-          <span class="legend-item"><span class="leg-dot" style="background:var(--gold);"></span>Отпуск</span>
-          <span class="legend-item"><span class="leg-dot" style="background:var(--red);"></span>За свой счёт</span>
+        <div class="cal-table">
+          <div class="cal-dow">Пн</div><div class="cal-dow">Вт</div><div class="cal-dow">Ср</div>
+          <div class="cal-dow">Чт</div><div class="cal-dow">Пт</div><div class="cal-dow">Сб</div><div class="cal-dow">Вс</div>
+          ${cellsHtml}
         </div>
       </section>
 
-      <section class="glass-card" style="padding:18px;animation:fadeSlideUp 0.5s var(--ease-spring) both;">
-        <h2 style="font-size:18px;font-weight:800;margin-bottom:6px;">Итоги месяца</h2>
-        <div class="summary-list">
-          <div class="summary-row"><span class="summary-k">Рабочих по графику</span><span class="summary-v num">${paidDaysCount}</span></div>
-          <div class="summary-row"><span class="summary-k">Отмечено рабочих</span><span class="summary-v num">${workDaysCount}</span></div>
-          <div class="summary-row"><span class="summary-k">Отпуск</span><span class="summary-v num">${vacDaysCount}</span></div>
-          <div class="summary-row"><span class="summary-k">За свой счёт</span><span class="summary-v num">${unpaidDaysCount}</span></div>
-          <div class="summary-row"><span class="summary-k">Оклад (месячный)</span><span class="summary-v num">${fmtRub(state.settings.monthlySalaryKop)}</span></div>
-          <div class="summary-row"><span class="summary-k">Оклад за рабочий день</span><span class="summary-v num">${fmtRubDec(daySalaryKop)}</span></div>
-          <div class="summary-row"><span class="summary-k">Начислено оклада</span><span class="summary-v num">${fmtRub(state.settings.monthlySalaryKop)}</span></div>
-          <div class="summary-row"><span class="summary-k">По нормо-часам (${Math.round(monthAw100/100)} AW)</span><span class="summary-v num">${fmtRub(monthPieceKop)}</span></div>
-          <div class="summary-row">
-            <span style="font-size:16px;font-weight:800;">Итого</span>
-            <span class="num" style="font-size:20px;font-weight:800;color:var(--green);">${fmtRub(totalMonthKop)}</span>
-          </div>
+      <section class="hero-card">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:8px;">Итоги месяца</h3>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-secondary);">Оклад (месячный)</span>
+          <span class="num" style="font-weight:800;">${fmtRub(state.settings.monthlySalaryKop)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-secondary);">По нормо-часам (${(monthAw100/100).toFixed(0)} AW)</span>
+          <span class="num" style="font-weight:800;">${fmtRub(monthPieceKop)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0 0;">
+          <span style="font-size:16px;font-weight:800;">Итого</span>
+          <span class="num" style="font-size:20px;font-weight:900;color:var(--green);">${fmtRub(totalMonthKop)}</span>
         </div>
       </section>
     `;
-    lastStatusPulseIso = null;
-    dominoCalFill = false;
   }
 
-  window.openDaySheet = (iso) => {
-    selectedCalDay = iso;
-    anchorDate = iso;
-    document.getElementById('daySheetTitle').textContent = fmtDateRu(iso);
-    const curSt = state.days[iso] || 'off';
-    const statuses = [
-      { id: 'work', label: 'Рабочий (Р)', color: 'var(--green)' },
-      { id: 'off', label: 'Выходной', color: 'var(--text-secondary)' },
-      { id: 'vacation', label: 'Отпуск (О)', color: 'var(--gold)' },
-      { id: 'unpaid', label: 'За свой счёт', color: 'var(--red)' }
-    ];
-    document.getElementById('dayStatusBtns').innerHTML = statuses.map(s => `
-      <button class="mini-btn" style="padding:11px;${curSt===s.id ? 'border-color:'+s.color+';background:rgba(255,255,255,0.1);color:'+s.color : ''}" onclick="setDayStatus('${iso}','${s.id}')">${s.label}</button>
-    `).join('');
-    const dayOrds = state.orders.filter(o => o.date === iso);
-    document.getElementById('daySheetOrdersInfo').textContent = dayOrds.length
-      ? `Заказ-нарядов в этот день: ${dayOrds.length} на сумму ${fmtRub(dayOrds.reduce((s,o)=>s+o.earningsKop,0))}`
-      : 'В этот день заказ-нарядов пока нет.';
-    document.getElementById('daySheetAddOrderBtn').onclick = () => {
-      document.getElementById('dayActionSheet').classList.remove('open');
-      openOrderModal(iso);
-    };
-    document.getElementById('dayActionSheet').classList.add('open');
-    render();
-  };
-
-  window.setDayStatus = (iso, st) => {
-    state.days[iso] = st;
-    lastStatusPulseIso = iso;
-    saveState();
-    document.getElementById('dayActionSheet').classList.remove('open');
-    toast('Статус дня обновлён');
-    render();
-  };
-
-  window.autoFillSchedule = () => {
-    const ym = anchorDate.slice(0, 7);
-    const pat = (state.settings.schedule?.pattern || 'РРВВ').toUpperCase();
-    const startStr = state.settings.schedule?.startDate || `${ym}-01`;
-    const startMs = parseLocalIso(startStr).getTime();
-    const [y, m] = ym.split('-').map(Number);
-    const daysInMonth = new Date(y, m, 0).getDate();
-    for (let d = 1; d <= daysInMonth; d++) {
-      const iso = `${ym}-${String(d).padStart(2, '0')}`;
-      const diff = Math.round((parseLocalIso(iso).getTime() - startMs) / 86400000);
-      if (diff >= 0) state.days[iso] = pat[diff % pat.length] === 'Р' ? 'work' : 'off';
-    }
-    dominoCalFill = true;
-    saveState();
-    toast('График заполнен по шаблону ' + pat);
-    render();
-  };
-
-  // 3. STATS TAB (Matching Screenshots 4 & 5)
+  // 3. STATS TAB (Screen 04)
   function renderStats(container) {
     const r = getActiveRange();
     const orders = state.orders.filter(o => o.date >= r.start && o.date <= r.end && o.status !== 'draft');
@@ -2617,137 +1288,28 @@
     const salaryKop = calcSalaryForRange(r.start, r.end);
     const totalKop = pieceKop + salaryKop;
 
-    const workDaysInRange = Object.entries(state.days).filter(([d, v]) => d >= r.start && d <= r.end && v === 'work').length || 1;
-    const avgEarnDayKop = totalKop / workDaysInRange;
-    const avgAwDay = totalAw / workDaysInRange;
-
-    // Best day & best order
-    const dayTotals = {};
-    orders.forEach(o => { dayTotals[o.date] = (dayTotals[o.date] || 0) + (o.earningsKop || 0); });
-    const bestDayEntry = Object.entries(dayTotals).sort((a, b) => b[1] - a[1])[0];
-    const bestOrder = [...orders].sort((a, b) => (b.earningsKop || 0) - (a.earningsKop || 0))[0];
-
-    // Stacked bar chart data
-    const chartDays = Object.keys(dayTotals).sort();
-    const dayBaseKop = Math.round((state.settings.monthlySalaryKop || 0) / 15);
-    const maxStack = Math.max(...chartDays.map(d => (dayTotals[d] || 0) + dayBaseKop), 1200000);
-    let barsSvg = '';
-    if (chartDays.length) {
-      const colW = 100 / chartDays.length;
-      chartDays.forEach((dt, idx) => {
-        const pH = Math.round(((dayTotals[dt] || 0) / maxStack) * 110);
-        const sH = Math.round((dayBaseKop / maxStack) * 110);
-        const x = idx * colW + colW * 0.35;
-        const w = chartDays.length === 1 ? 22 : Math.max(6, Math.min(18, colW * 1.4));
-        const dly = Math.min(idx * 45, 500);
-        barsSvg += `
-          <rect class="bar-grow" style="animation-delay:${dly}ms" x="${x}%" y="${120 - sH}" width="${w}" height="${sH}" rx="3" fill="#D97706"></rect>
-          <rect class="bar-grow" style="animation-delay:${dly + 90}ms" x="${x}%" y="${118 - sH - pH}" width="${w}" height="${pH}" rx="3" fill="#10B981"></rect>
-          <text x="${x}%" y="135" fill="var(--text-secondary)" font-size="9" font-weight="700">${dt.slice(8)}</text>
-        `;
-      });
-    }
-
     container.innerHTML = `
-      <section class="glass-card" style="padding:14px;margin-bottom:12px;">
+      <section class="hero-card">
         ${renderPeriodSwitcherHtml()}
       </section>
 
-      <section class="glass-card stat-hero-green stats-hero-flex">
-        <div>
-          <div style="font-size:13px;color:var(--text-secondary);font-weight:600;">Общий заработок</div>
-          <div class="num" id="statsHeroMoney" style="font-size:32px;font-weight:800;color:var(--green);margin-top:4px;letter-spacing:-0.03em;">${fmtRub(totalKop)}</div>
-          <div style="font-size:11px;color:var(--text-secondary);margin-top:4px;font-weight:600;">Темп: <b style="color:var(--text);">${avgAwDay.toFixed(1).replace('.', ',')} AW/смена</b></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div class="hero-card" style="margin:0;">
+          <div class="field-lbl">СРЕДНИЙ ЧЕК З/Н</div>
+          <div class="num" style="font-size:18px;font-weight:900;color:var(--text);margin-top:4px;">${orders.length ? fmtRub(pieceKop / orders.length) : '0 ₽'}</div>
         </div>
-        <div class="cockpit-ring-wrap" title="Индекс выработки AW/день (цель 100 AW)">
-          <svg class="cockpit-ring-svg" viewBox="0 0 80 80">
-            <defs>
-              <linearGradient id="mGaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#00A0E3"/>
-                <stop offset="55%" stop-color="#10B981"/>
-                <stop offset="100%" stop-color="#F59E0B"/>
-              </linearGradient>
-            </defs>
-            <circle class="cockpit-ring-bg" cx="40" cy="40" r="33"/>
-            <circle class="cockpit-ring-fg" id="statsGaugeArc" cx="40" cy="40" r="33" stroke-dasharray="207.3" stroke-dashoffset="207.3"/>
-          </svg>
-          <div class="cockpit-ring-center">
-            <span class="num" style="font-size:15px;font-weight:900;line-height:1;">${Math.min(999, Math.round(avgAwDay))}</span>
-            <span style="font-size:8px;font-weight:800;color:var(--text-secondary);letter-spacing:0.06em;margin-top:2px;">AW/ДЕНЬ</span>
-          </div>
-        </div>
-      </section>
-
-      <div class="kpi-grid-2">
-        <div class="kpi-card">
-          <div class="kpi-k">По нормо-часам (AW)</div>
-          <div class="kpi-v num">${fmtRub(pieceKop)}</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-k">Фиксированный оклад</div>
-          <div class="kpi-v num">${fmtRub(salaryKop)}</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-k">Выполнено заказов</div>
-          <div class="kpi-v num">${orders.length}</div>
-        </div>
-        <div class="kpi-card blue-tint">
-          <div class="kpi-k">Всего AW</div>
-          <div class="kpi-v num" style="color:var(--accent-blue);">${Math.round(totalAw)}</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-k">Нормо-часы</div>
-          <div class="kpi-v num">${totalHours.toFixed(2).replace('.', ',')}</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-k">Средний заработок за рабочий день</div>
-          <div class="kpi-v num">${fmtRub(avgEarnDayKop)}</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-k">Среднее AW за рабочий день</div>
-          <div class="kpi-v num">${avgAwDay.toFixed(2).replace('.', ',')}</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-k">Самый прибыльный день</div>
-          <div class="kpi-v num">${bestDayEntry ? fmtRub(bestDayEntry[1]) : '0 ₽'}</div>
-          <div style="font-size:11px;color:var(--text-secondary);margin-top:3px;">${bestDayEntry ? fmtDateRu(bestDayEntry[0]) : ''}</div>
+        <div class="hero-card" style="margin:0;">
+          <div class="field-lbl">ВЫРАБОТКА В СМЕНУ</div>
+          <div class="num" style="font-size:18px;font-weight:900;color:var(--accent);margin-top:4px;">${(totalAw / Math.max(1, orders.length)).toFixed(1)} AW</div>
         </div>
       </div>
 
-      <section class="kpi-card" style="margin-bottom:12px;">
-        <div class="kpi-k">Самый прибыльный заказ</div>
-        <div class="kpi-v num">${bestOrder ? fmtRub(bestOrder.earningsKop) : '0 ₽'}</div>
-        <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">
-          ${bestOrder ? `• ${bestOrder.date.split('-').reverse().join('.')} ${bestOrder.model ? '· BMW ' + bestOrder.model : ''}` : 'Нет данных'}
-        </div>
-      </section>
-
-      <section class="glass-card" style="padding:16px;">
-        <div style="font-size:17px;font-weight:800;margin-bottom:10px;">Заработок по дням</div>
-        ${chartDays.length ? `
-          <svg width="100%" height="145">
-            <line x1="0" y1="10" x2="100%" y2="10" stroke="var(--border)" stroke-dasharray="3"/>
-            <line x1="0" y1="65" x2="100%" y2="65" stroke="var(--border)" stroke-dasharray="3"/>
-            ${barsSvg}
-          </svg>
-          <div style="display:flex;gap:14px;font-size:11px;color:var(--text-secondary);margin-top:6px;">
-            <span><b style="color:#10B981;">■</b> Нормо-часы</span>
-            <span><b style="color:#D97706;">■</b> Оклад</span>
-          </div>
-        ` : '<div style="font-size:13px;color:var(--text-secondary);">Нет заказов за выбранный период</div>'}
+      <section class="hero-card" style="text-align:center;padding:22px;">
+        <div class="field-lbl">ОБЩИЙ ЗАРАБОТОК ЗА ПЕРИОД</div>
+        <div class="num" style="font-size:36px;font-weight:900;color:var(--green);margin-top:4px;">${fmtRub(totalKop)}</div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">${orders.length} заказов · ${totalAw.toFixed(0)} AW · ${totalHours.toFixed(2)} н/ч</div>
       </section>
     `;
-    const arc = document.getElementById('statsGaugeArc');
-    if (arc) {
-      const pct = Math.min(1, avgAwDay / 100);
-      requestAnimationFrame(() => {
-        arc.style.strokeDashoffset = String((207.3 * (1 - pct)).toFixed(1));
-      });
-    }
-    container.querySelectorAll('.kpi-card').forEach((card, i) => {
-      card.classList.add('anim-card');
-      card.style.animationDelay = `${i * 35}ms`;
-    });
   }
 
   // 4. HISTORY TAB
@@ -2763,40 +1325,36 @@
     const yms = Object.keys(monthsMap).sort((a, b) => b.localeCompare(a));
 
     container.innerHTML = `
-      <section class="glass-card" style="padding:16px;margin-bottom:14px;">
+      <section class="hero-card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <div style="font-size:17px;font-weight:800;">Архив по месяцам</div>
-          <button class="mini-btn" style="color:var(--green);" onclick="exportCsv()">Экспорт CSV</button>
+          <h3 style="font-size:17px;font-weight:800;">Архив месяцев</h3>
+          <button class="card-btn" style="color:var(--green);" onclick="exportCsv()">Экспорт CSV</button>
         </div>
-        ${yms.length ? yms.map(ym => {
-          const it = monthsMap[ym];
-          const h = (it.aw100 / 100) / ((state.settings.awPerHour100 || 1200) / 100);
-          return `
-            <div class="order-card" style="cursor:pointer;" onclick="jumpToMonth('${ym}')">
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <div>
-                  <div style="font-size:16px;font-weight:800;">${fmtMonthTitle(ym)}</div>
-                  <div style="font-size:12px;color:var(--text-secondary);">${it.count} З/Н · ${h.toFixed(1)} н/ч (${Math.round(it.aw100/100)} AW)</div>
-                </div>
-                <div class="num" style="font-size:17px;font-weight:800;color:var(--green);">${fmtRub(it.kop)} ›</div>
+        ${yms.length ? yms.map(ym => `
+          <div class="order-card" style="cursor:pointer;" onclick="jumpToMonth('${ym}')">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:16px;font-weight:800;">${fmtMonthTitle(ym)}</div>
+                <div style="font-size:12px;color:var(--text-secondary);">${monthsMap[ym].count} З/Н · ${(monthsMap[ym].aw100/100).toFixed(0)} AW</div>
               </div>
+              <div class="num" style="font-size:17px;font-weight:900;color:var(--green);">${fmtRub(monthsMap[ym].kop)} ›</div>
             </div>
-          `;
-        }).join('') : '<div style="text-align:center;padding:20px 8px;color:var(--text-secondary);font-size:14px;">Архив пока пуст — добавьте первый заказ-наряд</div>'}
+          </div>
+        `).join('') : '<div style="text-align:center;padding:24px;color:var(--text-secondary);">Архив пока пуст</div>'}
       </section>
     `;
   }
 
   window.jumpToMonth = (ym) => {
     anchorDate = `${ym}-01`;
-    selectedCalDay = `${ym}-01`;
     periodMode = 'month';
     currentTab = 'orders';
-    document.querySelectorAll('.tab-item').forEach(b => b.classList.toggle('active', b.dataset.tab === 'orders'));
+    document.querySelectorAll('.dock-item').forEach(b => b.classList.toggle('active', b.dataset.tab === 'orders'));
     render();
   };
 
   window.exportCsv = () => {
+    haptic(15);
     const rows = [['Дата','Номер З/Н','Марка','Модель','Госномер','AW','Нормо-часы','Сумма (руб)','Работы']];
     state.orders.forEach(o => {
       rows.push([o.date, o.number||'', o.brand||'', o.model||'', o.plate||'', (o.aw100||0)/100, ((o.hours100||0)/100).toFixed(2), ((o.earningsKop||0)/100).toFixed(2), (o.jobs||[]).map(j=>j.title).join('; ')]);
@@ -2806,165 +1364,99 @@
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
     a.download = `normo-hours-${anchorDate.slice(0, 7)}.csv`;
     a.click();
-    toast('CSV-файл выгружен');
+    toast('CSV выгружен');
   };
 
   // 5. SETTINGS TAB
   function renderSettings(container) {
     const s = state.settings;
     container.innerHTML = `
-      <section class="glass-card" style="padding:16px;margin-bottom:12px;">
-        <div style="font-size:16px;font-weight:800;margin-bottom:4px;">Распознавание фото (OCR)</div>
-        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">
-          <b>OCR.space</b> работает бесплатно и <b>без VPN</b> (если поле ключа пустое, используется тестовый ключ). Свой бесплатный ключ можно получить на <b>ocr.space/ocrapi/freekey</b>.
+      <section class="hero-card">
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:12px;">Ставки и оклад</h3>
+        <div class="form-row">
+          <div class="field-box">
+            <label class="field-lbl">Оклад в месяц (₽)</label>
+            <input type="number" id="setSalary" class="field-inp" value="${Math.round((s.monthlySalaryKop || 0) / 100)}">
+          </div>
+          <div class="field-box">
+            <label class="field-lbl">Ставка за 1 н/ч (₽)</label>
+            <input type="number" id="setHourRate" class="field-inp" value="${Math.round((s.hourRateKop || 0) / 100)}">
+          </div>
         </div>
-        <div style="margin-bottom:10px;">
-          <label class="field-label">Сервис распознавания</label>
-          <select id="setOcrProvider" class="input-field">
-            <option value="ocrspace" ${(s.ocrProvider||'ocrspace')==='ocrspace'?'selected':''}>OCR.space (бесплатно, без VPN)</option>
-            <option value="gemini" ${s.ocrProvider==='gemini'?'selected':''}>Gemini Vision (нужен VPN)</option>
-          </select>
+        <div class="form-row">
+          <div class="field-box">
+            <label class="field-lbl">AW в 1 часе</label>
+            <input type="number" id="setAwPerHour" class="field-inp" value="${(s.awPerHour100 || 1200) / 100}">
+          </div>
+          <div class="field-box">
+            <label class="field-lbl">Шаблон смен</label>
+            <input type="text" id="setPattern" class="field-inp" value="${escapeHtml(s.schedule?.pattern || 'РРВВ')}">
+          </div>
         </div>
-        <label class="field-label">OCR.space API Key (необязательно)</label>
-        <div style="display:flex;gap:8px;margin-bottom:10px;">
-          <input type="password" id="setOcrSpaceKey" class="input-field" placeholder="Оставьте пустым для теста или введите K8..." value="${escapeHtml(s.ocrSpaceKey || '')}">
-          <button class="mini-btn" onclick="const i=document.getElementById('setOcrSpaceKey');i.type=i.type==='password'?'text':'password'">Показать</button>
-        </div>
-        <label class="field-label">Gemini API Key (если выбран Gemini)</label>
-        <div style="display:flex;gap:8px;">
-          <input type="password" id="setGeminiKey" class="input-field" placeholder="AIzaSy..." value="${escapeHtml(s.geminiKey || '')}">
-          <button class="mini-btn" onclick="const i=document.getElementById('setGeminiKey');i.type=i.type==='password'?'text':'password'">Показать</button>
-        </div>
+        <button class="btn-primary-action" style="width:100%;margin-top:6px;" onclick="saveSettingsForm()">Сохранить настройки</button>
       </section>
 
-      <section class="glass-card" style="padding:16px;margin-bottom:12px;">
-        <div style="font-size:16px;font-weight:800;margin-bottom:12px;">Ставки и график</div>
-        <div class="form-grid">
-          <div>
-            <label class="field-label">Оклад в месяц (₽)</label>
-            <input type="number" id="setSalary" class="input-field" value="${Math.round((s.monthlySalaryKop || 0) / 100)}">
-          </div>
-          <div>
-            <label class="field-label">Ставка за 1 н/ч (₽)</label>
-            <input type="number" id="setHourRate" class="input-field" value="${Math.round((s.hourRateKop || 0) / 100)}">
-          </div>
+      <section class="hero-card">
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px;">Хранилище IndexedDB</h3>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">
+          Все данные и фото заказ-нарядов сохраняются локально в защищенную базу данных браузера.
         </div>
-        <div class="form-grid">
-          <div>
-            <label class="field-label">AW в 1 н/ч</label>
-            <input type="number" id="setAwPerHour" class="input-field" value="${(s.awPerHour100 || 1200) / 100}">
-          </div>
-          <div>
-            <label class="field-label">Шаблон смен</label>
-            <input type="text" id="setPattern" class="input-field" value="${escapeHtml(s.schedule?.pattern || 'РРВВ')}">
-          </div>
-        </div>
-        <div class="form-grid">
-          <div>
-            <label class="field-label">Тема оформления</label>
-            <select id="setTheme" class="input-field">
-              <option value="dark" ${s.theme==='dark'?'selected':''}>M-Dark (Тёмная)</option>
-              <option value="light" ${s.theme==='light'?'selected':''}>Silver (Светлая)</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">Заставка BMW</label>
-            <select id="setSplashEnabled" class="input-field">
-              <option value="1" ${s.splashEnabled!==false?'selected':''}>Фары при входе (Вкл)</option>
-              <option value="0" ${s.splashEnabled===false?'selected':''}>Выкл (мгновенно)</option>
-            </select>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
-          <button class="btn-primary-full" onclick="saveSettingsForm()">Сохранить настройки</button>
-          <button type="button" class="mini-btn" style="padding:0 14px;border-radius:15px;color:var(--accent);" onclick="playBmwIgnition(true)">Тест фар</button>
-        </div>
-      </section>
-
-      <section class="glass-card" style="padding:16px;">
-        <div style="font-size:16px;font-weight:800;margin-bottom:10px;">Резервная копия JSON</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button class="mini-btn" style="padding:11px;text-align:center;" onclick="exportBackupJson()">Экспорт JSON</button>
-          <button class="mini-btn" style="padding:11px;text-align:center;" onclick="document.getElementById('jsonFileInput').click()">Импорт JSON</button>
+          <button class="card-btn" style="padding:10px;" onclick="exportFullJsonBackup()">Экспорт JSON</button>
+          <button class="card-btn" style="padding:10px;" onclick="document.getElementById('jsonFileInput').click()">Импорт JSON</button>
         </div>
       </section>
     `;
   }
 
-  window.saveSettingsForm = () => {
-    state.settings.ocrProvider = document.getElementById('setOcrProvider').value || 'ocrspace';
-    state.settings.ocrSpaceKey = document.getElementById('setOcrSpaceKey').value.trim();
-    state.settings.geminiKey = document.getElementById('setGeminiKey').value.trim();
+  window.saveSettingsForm = async () => {
+    haptic(15);
     state.settings.monthlySalaryKop = Math.round((parseFloat(document.getElementById('setSalary').value) || 0) * 100);
     state.settings.hourRateKop = Math.round((parseFloat(document.getElementById('setHourRate').value) || 0) * 100);
     const awH = parseFloat(document.getElementById('setAwPerHour').value) || 12;
     state.settings.awPerHour100 = Math.round(awH * 100);
-    state.settings.awRateKop = Math.round(state.settings.hourRateKop / awH);
-    if (!state.settings.schedule) state.settings.schedule = { type: 'custom', startDate: todayIso, pattern: 'РРВВ' };
+    if (!state.settings.schedule) state.settings.schedule = { type: 'custom', pattern: 'РРВВ' };
     state.settings.schedule.pattern = document.getElementById('setPattern').value.trim() || 'РРВВ';
-    state.settings.theme = document.getElementById('setTheme').value;
-    const spEl = document.getElementById('setSplashEnabled');
-    if (spEl) state.settings.splashEnabled = spEl.value !== '0';
+
     state.orders.forEach(o => {
       const m = calcOrderMetrics(o.aw100 || 0);
       o.hours100 = m.hours100;
       o.earningsKop = m.earningsKop;
     });
-    applyTheme();
-    saveState();
+
+    await window.MDB.saveSettings(state.settings);
     toast('Настройки сохранены');
     render();
   };
 
-  window.exportBackupJson = () => {
-    const clean = JSON.parse(JSON.stringify(state));
-    if (clean.settings) { clean.settings.geminiKey = ''; clean.settings.ocrSpaceKey = ''; }
-    const payload = { app: 'normo-hours', version: 1, exportedAt: new Date().toISOString(), snapshot: clean };
+  window.exportFullJsonBackup = async () => {
+    haptic(15);
+    const backup = await window.MDB.exportBackup();
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' }));
     a.download = `normo-hours-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
-    toast('Резервная копия скачана');
+    toast('Бэкап скачан');
   };
 
   document.getElementById('jsonFileInput').onchange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       try {
         const parsed = JSON.parse(reader.result);
         const snap = parsed.snapshot || parsed;
-        if (!Array.isArray(snap.orders)) throw new Error();
-        const keepGemini = state.settings.geminiKey || '';
-        const keepOcrKey = state.settings.ocrSpaceKey || '';
-        const keepProvider = state.settings.ocrProvider || 'ocrspace';
-        const keepModel = state.settings.workingModel || '';
-        state = {
-          orders: snap.orders || [],
-          days: snap.days || {},
-          settings: {
-            ...SEED_SNAPSHOT.settings,
-            ...(snap.settings || {}),
-            geminiKey: snap.settings?.geminiKey || keepGemini,
-            ocrSpaceKey: snap.settings?.ocrSpaceKey || keepOcrKey,
-            ocrProvider: snap.settings?.ocrProvider || keepProvider,
-            workingModel: snap.settings?.workingModel || keepModel
-          },
-          adjustments: snap.adjustments || [],
-          photos: snap.photos || {}
-        };
-        applyTheme();
-        saveState();
-        toast(`Загружено ${state.orders.length} заказ-нарядов`);
-        render();
+        await window.MDB.importBackup(snap);
+        toast('База восстановлена');
+        initDatabaseAndState();
       } catch (err) { toast('Ошибка чтения JSON'); }
     };
     reader.readAsText(file);
     e.target.value = '';
   };
 
-  // ORDER SHEET & JOBS
+  // Order Sheet
   const sheet = document.getElementById('orderSheet');
   document.getElementById('closeSheetBtn').onclick = () => sheet.classList.remove('open');
   sheet.onclick = (e) => { if (e.target === sheet) sheet.classList.remove('open'); };
@@ -2975,45 +1467,58 @@
     (jobs && jobs.length ? jobs : [{ id: uid(), title: '', aw100: 0 }]).forEach(j => {
       const row = document.createElement('div');
       row.className = 'job-item-row';
+      row.style.display = 'flex';
+      row.style.gap = '6px';
+      row.style.marginBottom = '6px';
       row.innerHTML = `
-        <div style="display:flex;gap:6px;align-items:center;">
-          <input type="text" class="input-field job-title-inp" placeholder="Работа..." value="${escapeHtml(j.title || '')}" style="flex:1;padding:9px 10px;">
-          <input type="number" step="0.1" class="input-field job-aw-inp num" placeholder="AW" value="${j.aw100 ? j.aw100 / 100 : ''}" style="width:74px;padding:9px 6px;text-align:center;">
-          <button type="button" class="mini-btn danger del-job-btn">✕</button>
-        </div>
+        <input type="text" class="field-inp job-title-inp" placeholder="Работа..." value="${escapeHtml(j.title || '')}" style="flex:1;padding:8px 10px;">
+        <input type="number" step="0.1" class="field-inp job-aw-inp num" placeholder="AW" value="${j.aw100 ? j.aw100 / 100 : ''}" style="width:72px;padding:8px 6px;text-align:center;">
+        <button type="button" class="card-btn danger del-job-btn">✕</button>
       `;
-      row.querySelector('.del-job-btn').onclick = () => removeJobRowSmooth(row, list);
+      row.querySelector('.del-job-btn').onclick = () => {
+        haptic(10);
+        if (list.children.length > 1) { row.remove(); updateLiveCalc(); }
+      };
       row.querySelector('.job-aw-inp').oninput = updateLiveCalc;
       list.appendChild(row);
     });
     updateLiveCalc();
   }
 
-  function removeJobRowSmooth(row, list) {
-    if (list.children.length <= 1) return;
-    row.classList.add('job-row-exit');
-    setTimeout(() => { row.remove(); updateLiveCalc(); }, 210);
-  }
-
-  document.getElementById('addJobBtn').onclick = () => {
+  window.addPresetJob = (title, aw) => {
+    haptic(12);
     const list = document.getElementById('jobsList');
+    const firstTitle = list.querySelector('.job-title-inp');
+    const firstAw = list.querySelector('.job-aw-inp');
+    if (firstTitle && !firstTitle.value.trim() && (!firstAw.value || firstAw.value === '0')) {
+      firstTitle.value = title;
+      firstAw.value = aw;
+      updateLiveCalc();
+      return;
+    }
     const row = document.createElement('div');
-    row.className = 'job-item-row job-row-enter';
+    row.style.display = 'flex';
+    row.style.gap = '6px';
+    row.style.marginBottom = '6px';
     row.innerHTML = `
-      <div style="display:flex;gap:6px;align-items:center;">
-        <input type="text" class="input-field job-title-inp" placeholder="Работа..." style="flex:1;padding:9px 10px;">
-        <input type="number" step="0.1" class="input-field job-aw-inp num" placeholder="AW" style="width:74px;padding:9px 6px;text-align:center;">
-        <button type="button" class="mini-btn danger del-job-btn">✕</button>
-      </div>
+      <input type="text" class="field-inp job-title-inp" placeholder="Работа..." value="${escapeHtml(title)}" style="flex:1;padding:8px 10px;">
+      <input type="number" step="0.1" class="field-inp job-aw-inp num" placeholder="AW" value="${aw}" style="width:72px;padding:8px 6px;text-align:center;">
+      <button type="button" class="card-btn danger del-job-btn">✕</button>
     `;
-    row.querySelector('.del-job-btn').onclick = () => removeJobRowSmooth(row, list);
+    row.querySelector('.del-job-btn').onclick = () => {
+      haptic(10);
+      if (list.children.length > 1) { row.remove(); updateLiveCalc(); }
+    };
     row.querySelector('.job-aw-inp').oninput = updateLiveCalc;
     list.appendChild(row);
-    const titleInp = row.querySelector('.job-title-inp');
-    if (titleInp) titleInp.focus();
+    updateLiveCalc();
   };
 
-  let lastLiveMoneyStr = '';
+  document.getElementById('addJobBtn').onclick = () => {
+    haptic(10);
+    addPresetJob('', '');
+  };
+
   function updateLiveCalc() {
     let totalAw100 = 0;
     document.querySelectorAll('.job-aw-inp').forEach(inp => {
@@ -3022,22 +1527,11 @@
     });
     const m = calcOrderMetrics(totalAw100);
     document.getElementById('liveCalcAw').textContent = `${m.aw} AW · ${m.hours.toFixed(2)} н/ч`;
-    const moneyEl = document.getElementById('liveCalcMoney');
-    const nextStr = fmtRubDec(m.earningsKop);
-    moneyEl.textContent = nextStr;
-    if (nextStr !== lastLiveMoneyStr && m.aw > 0) {
-      moneyEl.classList.remove('money-pop');
-      void moneyEl.offsetWidth;
-      moneyEl.classList.add('money-pop');
-    }
-    lastLiveMoneyStr = nextStr;
-    const torque = document.getElementById('liveTorqueFill');
-    if (torque) {
-      torque.style.width = Math.min(100, Math.round((m.aw / 120) * 100)) + '%';
-    }
+    document.getElementById('liveCalcMoney').textContent = fmtRubDec(m.earningsKop);
   }
 
   window.openOrderModal = (presetDate) => {
+    haptic(12);
     document.getElementById('sheetTitle').textContent = 'Новый заказ-наряд';
     document.getElementById('fId').value = '';
     document.getElementById('fNumber').value = '';
@@ -3049,13 +1543,12 @@
     document.getElementById('fComment').value = '';
     activePhotoDataUrl = null;
     document.getElementById('photoPreviewBox').classList.add('hidden');
-    const errB = document.getElementById('aiScanError');
-    if (errB) { errB.classList.add('hidden'); errB.textContent = ''; }
     renderJobInputs([{ id: uid(), title: '', aw100: 0 }]);
     sheet.classList.add('open');
   };
 
-  window.editOrder = (id) => {
+  window.editOrder = async (id) => {
+    haptic(10);
     const o = state.orders.find(x => x.id === id);
     if (!o) return;
     document.getElementById('sheetTitle').textContent = 'Редактировать З/Н';
@@ -3067,63 +1560,48 @@
     document.getElementById('fPlate').value = o.plate || '';
     document.getElementById('fStatus').value = o.status || 'confirmed';
     document.getElementById('fComment').value = o.comment || '';
-    activePhotoDataUrl = (o.photoId && state.photos[o.photoId]) ? state.photos[o.photoId] : null;
+    activePhotoDataUrl = o.photoId ? await window.MDB.getPhoto(o.photoId) : null;
     if (activePhotoDataUrl) {
       document.getElementById('photoPreviewImg').src = activePhotoDataUrl;
       document.getElementById('photoPreviewBox').classList.remove('hidden');
-    } else document.getElementById('photoPreviewBox').classList.add('hidden');
+    } else {
+      document.getElementById('photoPreviewBox').classList.add('hidden');
+    }
     renderJobInputs(o.jobs);
     sheet.classList.add('open');
   };
 
-  window.duplicateOrder = (id) => {
+  window.deleteOrder = async (id) => {
+    haptic(15);
     const o = state.orders.find(x => x.id === id);
-    if (!o) return;
-    const copy = JSON.parse(JSON.stringify(o));
-    copy.id = uid();
-    lastClonedId = copy.id;
-    state.orders.unshift(copy);
-    saveState();
-    toast('Создана копия З/Н');
+    if (o && o.photoId) await window.MDB.deletePhoto(o.photoId);
+    state.orders = state.orders.filter(x => x.id !== id);
+    await window.MDB.deleteOrder(id);
+    toast('Заказ-наряд удалён');
     render();
   };
 
-  window.deleteOrder = (id) => {
-    const card = document.querySelector(`.order-card[data-order-id="${id}"]`);
-    const finishDelete = () => {
-      const o = state.orders.find(x => x.id === id);
-      if (o && o.photoId) delete state.photos[o.photoId];
-      state.orders = state.orders.filter(x => x.id !== id);
-      saveState();
-      toast('Заказ-наряд удалён');
-      render();
-    };
-    if (card) {
-      card.classList.add('order-exit');
-      setTimeout(finishDelete, 260);
-    } else {
-      finishDelete();
-    }
-  };
-
-  window.viewPhoto = (photoId) => {
-    const src = state.photos[photoId];
+  window.viewPhoto = async (photoId) => {
+    haptic(10);
+    const src = await window.MDB.getPhoto(photoId);
     if (!src) return;
     document.getElementById('viewerFullImg').src = src;
     document.getElementById('photoViewerModal').classList.add('open');
   };
 
   document.getElementById('removePhotoBtn').onclick = () => {
+    haptic(10);
     activePhotoDataUrl = null;
     document.getElementById('photoPreviewBox').classList.add('hidden');
   };
 
-  document.getElementById('orderForm').onsubmit = (e) => {
+  document.getElementById('orderForm').onsubmit = async (e) => {
     e.preventDefault();
+    haptic(18);
     const id = document.getElementById('fId').value || uid();
     const jobs = [];
     let totalAw100 = 0;
-    document.querySelectorAll('.job-item-row').forEach(row => {
+    document.querySelectorAll('#jobsList .job-item-row').forEach(row => {
       const title = row.querySelector('.job-title-inp').value.trim();
       const aw = parseFloat(row.querySelector('.job-aw-inp').value);
       if (title || !isNaN(aw)) {
@@ -3132,9 +1610,10 @@
         jobs.push({ id: uid(), title: title || 'Работа без названия', aw100 });
       }
     });
+
     const m = calcOrderMetrics(totalAw100);
     let photoId = activePhotoDataUrl ? 'ph-' + id : null;
-    if (photoId) state.photos[photoId] = activePhotoDataUrl;
+    if (photoId) await window.MDB.savePhoto(photoId, activePhotoDataUrl);
 
     const record = {
       id,
@@ -3143,50 +1622,83 @@
       model: document.getElementById('fModel').value.trim(),
       plate: document.getElementById('fPlate').value.trim().toUpperCase(),
       date: document.getElementById('fDate').value,
-      jobs, aw100: totalAw100, hours100: m.hours100, earningsKop: m.earningsKop,
+      jobs,
+      aw100: totalAw100,
+      hours100: m.hours100,
+      earningsKop: m.earningsKop,
       comment: document.getElementById('fComment').value.trim(),
       status: document.getElementById('fStatus').value,
       photoId
     };
+
     const idx = state.orders.findIndex(x => x.id === id);
     if (idx >= 0) state.orders[idx] = record;
     else state.orders.unshift(record);
-    if (record.date) {
-      anchorDate = record.date;
-      selectedCalDay = record.date;
-    }
-    saveState();
+
+    await window.MDB.saveOrder(record);
     sheet.classList.remove('open');
     toast('Заказ-наряд сохранён');
     render();
-    triggerMSaveCelebration();
   };
 
-  // Text Paste Parser
-  window.parsePastedText = () => {
-    const txt = document.getElementById('pasteRawArea').value || '';
-    document.getElementById('textPasteSheet').classList.remove('open');
-    openOrderModal();
-    const parsed = parseBmwOrderText(txt);
-    if (parsed.number) document.getElementById('fNumber').value = parsed.number;
-    if (parsed.date) document.getElementById('fDate').value = parsed.date;
-    if (parsed.brand) document.getElementById('fBrand').value = parsed.brand;
-    if (parsed.model) document.getElementById('fModel').value = parsed.model;
-    if (parsed.plate) document.getElementById('fPlate').value = parsed.plate;
-    if (parsed.jobs && parsed.jobs.length) {
-      renderJobInputs(parsed.jobs.map(j => ({ id: uid(), title: j.title || '', aw100: Math.round((parseFloat(j.aw) || 0) * 100) })));
+  // Calendar day sheet
+  window.openDaySheet = (iso) => {
+    haptic(10);
+    selectedCalDay = iso;
+    document.getElementById('daySheetTitle').textContent = fmtDateRu(iso);
+    const curSt = state.days[iso] || 'off';
+    const statuses = [
+      { id: 'work', label: 'Рабочий (Р)', color: 'var(--green)' },
+      { id: 'off', label: 'Выходной', color: 'var(--text-secondary)' },
+      { id: 'vacation', label: 'Отпуск (О)', color: 'var(--gold)' },
+      { id: 'unpaid', label: 'За свой счёт', color: 'var(--red)' }
+    ];
+    document.getElementById('dayStatusBtns').innerHTML = statuses.map(s => `
+      <button class="card-btn" style="padding:12px;${curSt===s.id ? 'border-color:'+s.color+';color:'+s.color : ''}" onclick="setDayStatus('${iso}','${s.id}')">${s.label}</button>
+    `).join('');
+    const dayOrds = state.orders.filter(o => o.date === iso);
+    document.getElementById('daySheetOrdersInfo').textContent = dayOrds.length
+      ? `Заказов: ${dayOrds.length} на сумму ${fmtRub(dayOrds.reduce((s,o)=>s+o.earningsKop,0))}`
+      : 'В этот день нарядов пока нет.';
+    document.getElementById('daySheetAddOrderBtn').onclick = () => {
+      document.getElementById('dayActionSheet').classList.remove('open');
+      openOrderModal(iso);
+    };
+    document.getElementById('dayActionSheet').classList.add('open');
+  };
+
+  window.setDayStatus = async (iso, st) => {
+    haptic(12);
+    state.days[iso] = st;
+    await window.MDB.setDayStatus(iso, st);
+    document.getElementById('dayActionSheet').classList.remove('open');
+    toast('График обновлен');
+    render();
+  };
+
+  window.autoFillSchedule = async () => {
+    haptic(15);
+    const ym = anchorDate.slice(0, 7);
+    const pat = (state.settings.schedule?.pattern || 'РРВВ').toUpperCase();
+    const [y, m] = ym.split('-').map(Number);
+    const daysInMonth = new Date(y, m, 0).getDate();
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = `${ym}-${String(d).padStart(2, '0')}`;
+      state.days[iso] = pat[(d - 1) % pat.length] === 'Р' ? 'work' : 'off';
     }
-    toast(parsed.jobs.length ? `Разобрано работ: ${parsed.jobs.length}` : 'Текст разобран');
+    await window.MDB.saveAllDays(state.days);
+    toast('График заполнен: ' + pat);
+    render();
   };
 
-  // Camera & Gemini Vision OCR
   window.triggerPhoto = (source) => {
+    haptic(10);
     if (!sheet.classList.contains('open')) openOrderModal();
     if (source === 'camera') document.getElementById('cameraInput').click();
     else document.getElementById('galleryInput').click();
   };
 
-  function compressImage(file, maxW = 1280, quality = 0.78) {
+  function compressImage(file, maxW = 1280, quality = 0.8) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
@@ -3197,9 +1709,7 @@
           canvas.width = Math.round(img.width * scale);
           canvas.height = Math.round(img.height * scale);
           canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-          let out = canvas.toDataURL('image/jpeg', quality);
-          if (out.length > 1250000) out = canvas.toDataURL('image/jpeg', 0.55);
-          resolve(out);
+          resolve(canvas.toDataURL('image/jpeg', quality));
         };
         img.onerror = reject;
         img.src = reader.result;
@@ -3209,526 +1719,71 @@
     });
   }
 
-  async function callGeminiVision(apiKey, modelName, prompt, base64Data, useThinkingOff = true) {
-    const genCfg = {
-      responseMimeType: 'application/json',
-      temperature: 0,
-      maxOutputTokens: 1024
-    };
-    if (useThinkingOff) {
-      genCfg.thinkingConfig = { thinkingBudget: 0 };
-    }
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 22000);
-    let resp;
-    try {
-      resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        signal: ctrl.signal,
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: base64Data } }] }],
-          generationConfig: genCfg
-        })
-      });
-    } catch (e) {
-      if (e && e.name === 'AbortError') throw new Error('Таймаут ответа Gemini (22 сек). Проверьте VPN.');
-      throw e;
-    } finally {
-      clearTimeout(timer);
-    }
-    const rawBody = await resp.text();
-    let json = {};
-    try { json = JSON.parse(rawBody); } catch (e) {}
-    if (!resp.ok) {
-      const msg = json.error?.message || `HTTP ${resp.status}`;
-      if (useThinkingOff && resp.status === 400 && /thinking/i.test(msg)) {
-        return callGeminiVision(apiKey, modelName, prompt, base64Data, false);
-      }
-      const err = new Error(msg);
-      err.status = resp.status;
-      throw err;
-    }
-    return json;
-  }
-
-  async function getAvailableVisionModels(apiKey, skipSet) {
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
-    const json = await resp.json();
-    if (!resp.ok || !Array.isArray(json.models)) return [];
-    const badRe = /embedding|tts|audio|imagen|veo|aqa|robotics|computer-use|gemma|bison|gecko|learnlm|text-only/i;
-    const candidates = json.models
-      .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
-      .map(m => m.name.replace(/^models\//, ''))
-      .filter(n => /gemini/i.test(n) && !badRe.test(n) && !skipSet.has(n));
-    const score = (n) => {
-      if (/^gemini-3\..*flash(?!-lite)/i.test(n)) return 100;
-      if (/^gemini-3\..*flash/i.test(n)) return 95;
-      if (/^gemini-3\..*pro/i.test(n)) return 90;
-      if (/^gemini-2\.5-flash(?!-lite)/i.test(n)) return 85;
-      if (/^gemini-2\.5-flash/i.test(n)) return 80;
-      if (/^gemini-2\.5-pro/i.test(n)) return 75;
-      if (/^gemini-2\.0-flash/i.test(n)) return 70;
-      if (/flash/i.test(n)) return 60;
-      return 50;
-    };
-    return candidates.sort((a, b) => score(b) - score(a));
-  }
-
-  function parseBmwOrderText(txt) {
-    const res = { number: '', date: '', brand: 'BMW', model: '', plate: '', jobs: [] };
-    if (!txt) return res;
-    const norm = txt.replace(/\r/g, '');
-
-    // 1. Order number (7-8 digits starting with 78, or after Заказ-наряд / З/Н / №)
-    const numM = norm.match(/(?:Заказ-наряд|З\/Н|Заказ\s*наряд)\s*(?:№|#|:)?\s*(\d{6,10})/i)
-      || norm.match(/\b(78\d{5,7})\b/)
-      || norm.match(/№\s*(\d{6,10})/);
-    if (numM) res.number = numM[1];
-
-    // 2. Date: prefer Дата Приема / Дата открытия or current year (2026) over future year (2027)
-    const curYear = new Date().getFullYear();
-    const foundDates = [];
-    for (const m of norm.matchAll(/(\d{2})\.(\d{2})\.(20\d{2}|\d{2})(?!\d)/g)) {
-      const dd = parseInt(m[1], 10), mm = parseInt(m[2], 10);
-      let yy = parseInt(m[3], 10);
-      if (yy < 100) yy += 2000;
-      if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12 && yy >= 2020 && yy <= curYear + 2) {
-        foundDates.push({ iso: `${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`, yy });
-      }
-    }
-    if (foundDates.length) {
-      const bestDate = foundDates.find(d => d.yy === curYear) || foundDates.find(d => d.yy <= curYear) || foundDates[0];
-      res.date = bestDate.iso;
-    }
-
-    // 3. License plate
-    const plateM = norm.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s*\d{2,3}/i);
-    if (plateM) res.plate = plateM[0].replace(/\s+/g, '').toUpperCase();
-
-    // 4. Brand & Model (handles Latin X and Cyrillic Х, plus series like 320d, 530i, X5, X3, etc.)
-    const modelM = norm.match(/\bBMW\s+([XХZM]\d(?:\s*M)?|[1-8]\s*серии|[1-8]\d{2}[idxe]?)/i)
-      || norm.match(/(?:Модель[^\n]*\n[^\n]*?\b|Марка[^\n]*\n[^\n]*?\b)([XХZM]\d|[1-8]\s*серии|[1-8]\d{2}[idxe]?)/i)
-      || norm.match(/(?:^|\s)([XХ][1-7]|Z4|M[2-8]|[1-8]\s*серии|[1-8]\d{2}[idxe])(?=\s|$)/i);
-    if (modelM) res.model = modelM[1].replace(/Х/g, 'X').trim();
-
-    const lines = norm.split('\n').map(l => l.replace(/\t+/g, ' ').replace(/\s{2,}/g, ' ').trim()).filter(Boolean);
-
-    // 5. Extract ONLY pure descriptions (stripping any leading job codes!) and AW values
-    const titles = [];
-    const awValues = [];
-    const headerOrAddrRe = /^(код|описание|ед\.?\s*изм|работа|итого|всего|ндс|нетто|скидка|сумма|город|г\.|химки|москва|область|шоссе|улица|ул\.|владен|россия|домашний|рабочий|моб|дата|время приема|время выдачи|марка|модель|vin|пробег|гос|заказчик|исполнитель|мастер|подпись|комплект расходных|смазки)/i;
-    const skipLineRe = /(?:\+7|8\s*\(\d{3}\)|к-во|ед\.?\s*изм|цена\s+ндс|сумма\s+ндс|всего\s+rub|\b(?:комп|шт|л)\s+\d+[.,]\d+)/i;
-
-    lines.forEach(l => {
-      // Completely skip table headers, phone numbers, totals, and spare parts
-      if (skipLineRe.test(l)) return;
-
-      // Right column AW extraction: require Qty (1,00) before AW value so headers/prices never match
-      const awM = l.match(/(?:^|\s)[AА][WШV]\s+\d+[.,]\d+\s+(\d+(?:[.,]\d+)?)(?=\s|$)/i);
-      if (awM) {
-        const v = parseFloat(awM[1].replace(',', '.'));
-        if (v > 0 && v <= 300) awValues.push(v);
-      }
-
-      // Description extraction:
-      // Case A: line has 7-8 digit code or SERVxxx -> take ONLY the description AFTER the code
-      const codeM = l.match(/(?:^|\s)(?:\d{7,8}|SERV\d{2,4})\s+([А-ЯЁA-Z].*)/i);
-      if (codeM) {
-        let desc = codeM[1]
-          .replace(/\s+[AА][WШV]\b.*$/i, '')
-          .replace(/\s+\d+[.,]\d+.*$/, '')
-          .trim();
-        if (desc.length >= 4 && !headerOrAddrRe.test(desc)) {
-          titles.push(desc);
-        }
-        return;
-      }
-
-      // Case B: description sits on its own line (with AW or known BMW job start)
-      if (/[AА][WШV]\s+\d+[.,]\d+/i.test(l) || /^(время работы|выполнение|замена|диагностика|проверка|снятие|установка|регулировка|программирование|кодирование|[мm][оo0]йка|уборка|обслуживание|ремонт|прокачка|сход|развал|балансировка|шиномонтаж|осмотр|чтение|сброс)/i.test(l)) {
-        let desc = l
-          .replace(/^(?:\d{5,8}|SERV\d{2,4})\s+/i, '')
-          .replace(/\s+[AА][WШV]\b.*$/i, '')
-          .replace(/\s+\d+[.,]\d+.*$/, '')
-          .trim();
-        if (desc.length >= 5 && !headerOrAddrRe.test(desc) && !/^\d+$/.test(desc)) {
-          titles.push(desc);
-        }
-      }
-    });
-
-    if (titles.length && awValues.length) {
-      const count = Math.max(titles.length, awValues.length);
-      for (let i = 0; i < count; i++) {
-        res.jobs.push({
-          title: titles[i] || `Работа ${i + 1}`,
-          aw: awValues[i] || 0
-        });
-      }
-      return res;
-    }
-
-    if (titles.length) {
-      titles.forEach(t => res.jobs.push({ title: t, aw: 0 }));
-      return res;
-    }
-
-    if (awValues.length) {
-      awValues.forEach((v, i) => res.jobs.push({ title: `Работа ${i + 1}`, aw: v }));
-      return res;
-    }
-
-    return res;
-  }
-
-  async function callOcrSpace(apiKey, dataUrl) {
-    const isDemo = !apiKey || apiKey === 'helloworld';
-    const form = new FormData();
-    form.append('base64Image', dataUrl);
-    form.append('language', 'rus');
-    form.append('OCREngine', '2');
-    form.append('isTable', 'true');
-    form.append('scale', 'true');
-    form.append('detectOrientation', 'true');
-    const resp = await fetch('https://api.ocr.space/parse/image', {
-      method: 'POST',
-      headers: { 'apikey': apiKey || 'helloworld' },
-      body: form
-    });
-    if (resp.status === 429) {
-      throw new Error(isDemo
-        ? 'Лимит тестового ключа исчерпан (HTTP 429). Получите бесплатный личный ключ на ocr.space/ocrapi/freekey (25 000 фото/мес) и вставьте в Настройках.'
-        : 'Превышен лимит запросов OCR.space (HTTP 429). Подождите 1 минуту и повторите.');
-    }
-    const rawBody = await resp.text();
-    let json = null;
-    try { json = JSON.parse(rawBody); } catch (e) {
-      throw new Error(`Сервер OCR.space вернул некорректный ответ (HTTP ${resp.status})`);
-    }
-    if (!resp.ok || json.IsErroredOnProcessing) {
-      const msg = Array.isArray(json.ErrorMessage) ? json.ErrorMessage.join('; ') : (json.ErrorMessage || `HTTP ${resp.status}`);
-      throw new Error(msg);
-    }
-    const text = (json.ParsedResults || []).map(r => r.ParsedText || '').join('\n').trim();
-    if (!text) throw new Error('Текст на фото не найден. Попробуйте сделать фото чётче.');
-    return parseBmwOrderText(text);
-  }
-
   async function handlePhotoSelected(e) {
     const file = e.target.files[0];
     e.target.value = '';
     if (!file) return;
-    const errBox = document.getElementById('aiScanError');
-    if (errBox) { errBox.classList.add('hidden'); errBox.textContent = ''; }
-    try {
-      const provider = state.settings.ocrProvider || 'ocrspace';
-      const dataUrl = provider === 'gemini'
-        ? await compressImage(file, 960, 0.68)
-        : await compressImage(file, 1280, 0.76);
 
+    try {
+      const dataUrl = await compressImage(file, 1280, 0.8);
       activePhotoDataUrl = dataUrl;
       document.getElementById('photoPreviewImg').src = dataUrl;
       document.getElementById('photoPreviewBox').classList.remove('hidden');
 
-      const banner = document.getElementById('aiScanStatus');
-      const scanTitle = document.getElementById('aiScanTitle');
+      const form = new FormData();
+      form.append('base64Image', dataUrl);
+      form.append('language', 'rus');
+      form.append('OCREngine', '2');
+      form.append('scale', 'true');
 
-      let parsed = null;
-
-      if (provider === 'ocrspace') {
-        if (scanTitle) scanTitle.textContent = 'OCR.space · M-Laser скан...';
-        banner.classList.remove('hidden');
-        setPhotoScanState('scanning');
-        const ocrKey = (state.settings.ocrSpaceKey || '').trim() || 'helloworld';
-        parsed = await callOcrSpace(ocrKey, dataUrl);
-        banner.classList.add('hidden');
-        setPhotoScanState('ok');
-      } else {
-        const apiKey = (state.settings.geminiKey || '').trim();
-        if (!apiKey) {
-          toast('Фото прикреплено (укажите ключ Gemini в Настройках или выберите OCR.space)');
-          return;
-        }
-        if (scanTitle) scanTitle.textContent = 'Gemini Vision · M-Laser скан...';
-        banner.classList.remove('hidden');
-        setPhotoScanState('scanning');
-        const base64Data = dataUrl.split(',')[1];
-        const prompt = `Извлеки из заказ-наряда BMW JSON: {"number":"","date":"YYYY-MM-DD","brand":"BMW","model":"","plate":"","jobs":[{"title":"","aw":0}]}. Только выполненные работы (без кодов работ, без запчастей и без цен).`;
-
-        let json = null;
-        let lastErr = null;
-        const retryRe = /model|not found|deprecated|supported|no longer available|modality|not enabled|image/i;
-        const tried = new Set();
-
-        // Fast path: use cached working model immediately (1 request, 0 extra roundtrips)
-        if (state.settings.workingModel) {
-          const cached = state.settings.workingModel;
-          tried.add(cached);
-          try {
-            json = await callGeminiVision(apiKey, cached, prompt, base64Data);
-          } catch (err) {
-            lastErr = err;
-            if (retryRe.test(err.message || '')) {
-              state.settings.workingModel = '';
-              saveState();
-            }
-          }
-        }
-
-        // Discovery path (only runs once when no working model is cached)
-        if (!json && (!lastErr || retryRe.test(lastErr.message || ''))) {
-          const autoModels = await getAvailableVisionModels(apiKey, tried);
-          const fallbackList = autoModels.length
-            ? autoModels.slice(0, 3)
-            : ['gemini-2.5-flash-lite', 'gemini-2.0-flash'];
-          for (const mName of fallbackList) {
-            if (!mName || tried.has(mName)) continue;
-            tried.add(mName);
-            try {
-              json = await callGeminiVision(apiKey, mName, prompt, base64Data);
-              state.settings.workingModel = mName;
-              saveState();
-              break;
-            } catch (err) {
-              lastErr = err;
-              if (!retryRe.test(err.message || '')) break;
-            }
-          }
-        }
-
-        banner.classList.add('hidden');
-        if (!json) throw lastErr || new Error('Не удалось получить ответ от Gemini');
-        setPhotoScanState('ok');
-
-        const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-        const cleanedText = rawText.replace(/^```json\s*/i, '').replace(/```$/i, '').trim();
-        parsed = JSON.parse(cleanedText);
+      const resp = await fetch('https://api.ocr.space/parse/image', {
+        method: 'POST',
+        headers: { 'apikey': state.settings.ocrSpaceKey || 'helloworld' },
+        body: form
+      });
+      const json = await resp.json();
+      const text = (json.ParsedResults || []).map(r => r.ParsedText || '').join('\n').trim();
+      if (text) {
+        const numM = text.match(/(?:Заказ-наряд|З\/Н)\s*(?:№|#|:)?\s*(\d{6,10})/i) || text.match(/\b(78\d{5,7})\b/);
+        if (numM) document.getElementById('fNumber').value = numM[1];
+        const plateM = text.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s*\d{2,3}/i);
+        if (plateM) document.getElementById('fPlate').value = plateM[0].replace(/\s+/g, '').toUpperCase();
+        toast('Бланк распознан');
       }
-
-      if (parsed) {
-        if (parsed.number) document.getElementById('fNumber').value = parsed.number;
-        if (parsed.date && /^\d{4}-\d{2}-\d{2}$/.test(parsed.date)) document.getElementById('fDate').value = parsed.date;
-        if (parsed.brand) document.getElementById('fBrand').value = parsed.brand;
-        if (parsed.model) document.getElementById('fModel').value = parsed.model;
-        if (parsed.plate) document.getElementById('fPlate').value = parsed.plate;
-        if (Array.isArray(parsed.jobs) && parsed.jobs.length) {
-          renderJobInputs(parsed.jobs.map(j => ({ id: uid(), title: j.title || '', aw100: Math.round((parseFloat(j.aw) || 0) * 100) })));
-        }
-      }
-      toast(provider === 'ocrspace' ? 'Распознано через OCR.space' : 'Распознано через Gemini');
     } catch (err) {
-      document.getElementById('aiScanStatus').classList.add('hidden');
-      setPhotoScanState('idle');
-      const msg = err.message || 'проверьте сеть или ключ';
-      if (errBox) {
-        errBox.textContent = 'Ошибка OCR: ' + msg;
-        errBox.classList.remove('hidden');
-      }
-      toast('Ошибка распознавания');
+      toast('Фото прикреплено');
     }
   }
 
   document.getElementById('cameraInput').onchange = handlePhotoSelected;
   document.getElementById('galleryInput').onchange = handlePhotoSelected;
 
+  window.cycleDriveMode = () => {
+    haptic(15);
+    const modes = ['comfort', 'sport', 'mcs'];
+    const cur = state.settings.driveMode || 'sport';
+    const next = modes[(modes.indexOf(cur) + 1) % modes.length];
+    state.settings.driveMode = next;
+    applyTheme();
+    window.MDB.saveSettings(state.settings);
+    toast(`M-Drive: ${next.toUpperCase()}`);
+  };
+
   function escapeHtml(str) {
     return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-
-  // ===== BMW M-TELEMETRY ANIMATION ENGINE =====
-  let splashTimer = null;
-  let splashHideTimer = null;
-  let telemetryRaf = null;
-  let lastTelemetryKey = '';
-
-  window.closeBmwSplash = () => {
-    const el = document.getElementById('bmwSplash');
-    if (!el || el.classList.contains('gone')) return;
-    clearTimeout(splashTimer);
-    clearTimeout(splashHideTimer);
-    el.classList.add('closing');
-    splashHideTimer = setTimeout(() => {
-      el.classList.add('gone');
-      el.classList.remove('closing', 'igniting');
-    }, 520);
-  };
-
-  window.playBmwIgnition = (force = false) => {
-    if (!force && state.settings.splashEnabled === false) return;
-    const el = document.getElementById('bmwSplash');
-    if (!el) return;
-    clearTimeout(splashTimer);
-    clearTimeout(splashHideTimer);
-    el.classList.remove('gone', 'closing', 'igniting');
-    // Force reflow so SVG/CSS animations restart cleanly
-    void el.offsetWidth;
-    el.classList.add('igniting');
-    const stEl = document.getElementById('splashStatusText');
-    if (stEl) {
-      stEl.textContent = 'IGNITION · HEADLIGHTS CHECK';
-      setTimeout(() => {
-        if (!el.classList.contains('gone')) stEl.textContent = 'M-TELEMETRY · SYSTEM READY';
-      }, 950);
-    }
-    splashTimer = setTimeout(() => window.closeBmwSplash(), 2350);
-  };
-
-  function setPhotoScanState(mode) {
-    const box = document.getElementById('photoPreviewBox');
-    if (!box) return;
-    box.classList.remove('scanning', 'scan-ok');
-    if (mode === 'scanning') {
-      box.classList.add('scanning');
-    } else if (mode === 'ok') {
-      void box.offsetWidth;
-      box.classList.add('scan-ok');
-      setTimeout(() => box.classList.remove('scan-ok'), 800);
-    }
+  function render() {
+    document.getElementById('pageTitle').textContent = TAB_TITLES[currentTab] || 'Заказ-наряды';
+    const main = document.getElementById('mainView');
+    if (currentTab === 'orders') renderOrders(main);
+    else if (currentTab === 'schedule') renderSchedule(main);
+    else if (currentTab === 'stats') renderStats(main);
+    else if (currentTab === 'history') renderHistory(main);
+    else if (currentTab === 'settings') renderSettings(main);
   }
 
-  window.revAppLogo = () => {
-    const el = document.getElementById('appLogoIcon');
-    if (!el) return;
-    el.classList.remove('torque-spin');
-    void el.offsetWidth;
-    el.classList.add('torque-spin');
-    setTimeout(() => el.classList.remove('torque-spin'), 650);
-  };
-
-  let modeBannerTimer = null;
-  window.cycleDriveMode = () => {
-    const modes = ['comfort', 'sport', 'mcs'];
-    const labels = {
-      comfort: 'COMFORT · ICE BLUE',
-      sport: 'M1 MODE · SPORT+',
-      mcs: 'M CS · RACING YELLOW'
-    };
-    const cur = state.settings.driveMode || 'comfort';
-    const next = modes[(modes.indexOf(cur) + 1) % modes.length];
-    state.settings.driveMode = next;
-    applyTheme();
-    saveState();
-
-    // Flash M-ribbon & HUD banner
-    const bar = document.getElementById('mSaveFlash');
-    if (bar) {
-      bar.classList.remove('fire');
-      void bar.offsetWidth;
-      bar.classList.add('fire');
-      setTimeout(() => bar.classList.remove('fire'), 900);
-    }
-    const hud = document.getElementById('modeHudBanner');
-    const hudTxt = document.getElementById('modeHudText');
-    if (hud && hudTxt) {
-      hudTxt.textContent = labels[next];
-      hud.classList.add('show');
-      clearTimeout(modeBannerTimer);
-      modeBannerTimer = setTimeout(() => hud.classList.remove('show'), 1800);
-    }
-  };
-
-  function spawnMSparks() {
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const colors = ['#00A0E3', '#1D4ED8', '#E22718', '#F8FAFC', '#10B981'];
-    const cx = window.innerWidth / 2;
-    const cy = Math.min(220, window.innerHeight * 0.28);
-    for (let i = 0; i < 16; i++) {
-      const sp = document.createElement('span');
-      sp.className = 'm-spark';
-      const angle = (Math.PI * 2 * i) / 16 + (Math.random() - 0.5) * 0.35;
-      const dist = 55 + Math.random() * 85;
-      sp.style.left = cx + 'px';
-      sp.style.top = cy + 'px';
-      sp.style.background = colors[i % colors.length];
-      sp.style.boxShadow = `0 0 8px ${colors[i % colors.length]}`;
-      sp.style.setProperty('--dx', Math.round(Math.cos(angle) * dist) + 'px');
-      sp.style.setProperty('--dy', Math.round(Math.sin(angle) * dist) + 'px');
-      document.body.appendChild(sp);
-      setTimeout(() => sp.remove(), 760);
-    }
-  }
-
-  function triggerMSaveCelebration() {
-    const bar = document.getElementById('mSaveFlash');
-    if (bar) {
-      bar.classList.remove('fire');
-      void bar.offsetWidth;
-      bar.classList.add('fire');
-      setTimeout(() => bar.classList.remove('fire'), 900);
-    }
-    const hero = document.getElementById('ordersHeroCard');
-    if (hero) {
-      hero.classList.remove('hero-pulse-ok');
-      void hero.offsetWidth;
-      hero.classList.add('hero-pulse-ok');
-    }
-    spawnMSparks();
-  }
-
-  // Global Tactile BMW Touch Ripple (cards & calendar cells)
-  document.addEventListener('pointerdown', (e) => {
-    const host = e.target.closest('.bmw-ripple-host, .btn-add-main, .btn-primary-full');
-    if (!host || e.target.closest('button.mini-btn')) return;
-    const rect = host.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height) * 0.45;
-    const r = document.createElement('span');
-    r.className = 'bmw-ripple';
-    r.style.width = r.style.height = size + 'px';
-    r.style.left = (e.clientX - rect.left - size / 2) + 'px';
-    r.style.top = (e.clientY - rect.top - size / 2) + 'px';
-    host.appendChild(r);
-    setTimeout(() => r.remove(), 580);
-  }, { passive: true });
-
-  // Subtle Ambient Orb Scroll Parallax
-  let scrollTicking = false;
-  window.addEventListener('scroll', () => {
-    if (scrollTicking) return;
-    scrollTicking = true;
-    requestAnimationFrame(() => {
-      const y = window.scrollY || 0;
-      const o1 = document.querySelector('.orb-1');
-      const o2 = document.querySelector('.orb-2');
-      if (o1) o1.style.translate = `0 ${Math.min(60, y * 0.14)}px`;
-      if (o2) o2.style.translate = `0 ${-Math.min(55, y * 0.11)}px`;
-      scrollTicking = false;
-    });
-  }, { passive: true });
-
-  function animateTelemetryNumbers(targetKop, targetAw, targetHours) {
-    const key = `${periodMode}|${anchorDate}|${targetKop}|${targetAw}`;
-    if (key === lastTelemetryKey) return;
-    lastTelemetryKey = key;
-
-    const moneyEl = document.getElementById('heroTotalMoney');
-    const awEl = document.getElementById('heroTotalAw');
-    const hoursEl = document.getElementById('heroTotalHours');
-    if (!moneyEl || !awEl || !hoursEl) return;
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    cancelAnimationFrame(telemetryRaf);
-    const startTs = performance.now();
-    const dur = 420;
-    const step = (now) => {
-      const p = Math.min(1, (now - startTs) / dur);
-      const ease = 1 - Math.pow(1 - p, 3);
-      moneyEl.textContent = fmtRub(Math.round(targetKop * ease));
-      awEl.textContent = Math.round(targetAw * ease).toString();
-      hoursEl.textContent = (targetHours * ease).toFixed(2).replace('.', ',');
-      if (p < 1) telemetryRaf = requestAnimationFrame(step);
-      else {
-        moneyEl.textContent = fmtRub(targetKop);
-        awEl.textContent = targetAw.toFixed(0);
-        hoursEl.textContent = targetHours.toFixed(2).replace('.', ',');
-      }
-    };
-    telemetryRaf = requestAnimationFrame(step);
-  }
-
-  render();
-  playBmwIgnition(false);
+  initDatabaseAndState();
 })();
 </script>
 </body>
