@@ -1,1790 +1,441 @@
 <!DOCTYPE html>
-<!-- M-Telemetry 2.0 (Figma Design System Edition) -->
-<html lang="ru" data-theme="dark" data-drive="sport">
+<!-- Нормо-часы — M-Telemetry Pro 2.0 (Bento Curved Cockpit Edition) -->
+<html lang="ru" data-theme="dark" data-drive="comfort">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="M-Telemetry">
-<meta name="theme-color" content="#07090F">
+<meta name="apple-mobile-web-app-title" content="Нормо-часы">
+<meta name="theme-color" content="#06080D">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" href="./apple-touch-icon.png">
 <link rel="manifest" href="./manifest.webmanifest">
-<title>Нормо-часы — M-Telemetry 2.0</title>
-<style>
-  :root {
-    --bg: #07090F;
-    --bg-mesh: radial-gradient(at 10% 0%, rgba(10, 132, 255, 0.16) 0px, transparent 50%),
-               radial-gradient(at 90% 10%, rgba(226, 39, 24, 0.12) 0px, transparent 45%),
-               radial-gradient(at 50% 95%, rgba(16, 185, 129, 0.10) 0px, transparent 55%);
-    --surface: rgba(15, 21, 35, 0.85);
-    --surface-elevated: #101624;
-    --surface-card: #101624;
-    --surface-input: rgba(0, 0, 0, 0.35);
-    --border: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.14);
-    --text: #F8FAFC;
-    --text-secondary: #94A3B8;
-    --text-muted: #64748B;
-    
-    /* BMW M Heritage Palette */
-    --m-blue: #00A0E3;
-    --m-dark-blue: #1D4ED8;
-    --m-red: #E22718;
-    --accent: #38BDF8;
-    --accent-blue: #0A84FF;
-    --gold: #F59E0B;
-    --green: #10B981;
-    --red: #F43F5E;
-    
-    --shadow-card: 0 16px 36px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    --shadow-float: 0 24px 52px -12px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.1);
-    --radius-2xl: 28px;
-    --radius-xl: 22px;
-    --radius-lg: 18px;
-    --radius-md: 12px;
-    --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
-    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --safe-top: env(safe-area-inset-top, 14px);
-    --safe-bottom: env(safe-area-inset-bottom, 14px);
-  }
-
-  [data-theme="light"] {
-    --bg: #F1F5F9;
-    --bg-mesh: radial-gradient(at 10% 0%, rgba(2, 132, 199, 0.12) 0px, transparent 50%),
-               radial-gradient(at 90% 10%, rgba(226, 39, 24, 0.08) 0px, transparent 45%);
-    --surface: rgba(255, 255, 255, 0.90);
-    --surface-elevated: #FFFFFF;
-    --surface-card: #FFFFFF;
-    --surface-input: rgba(15, 23, 42, 0.05);
-    --border: rgba(15, 23, 42, 0.08);
-    --border-strong: rgba(15, 23, 42, 0.14);
-    --text: #0F172A;
-    --text-secondary: #475569;
-    --text-muted: #94A3B8;
-    --shadow-card: 0 12px 30px -8px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  }
-
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-
-  html, body {
-    background-color: var(--bg);
-    background-image: var(--bg-mesh);
-    background-attachment: fixed;
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Display", Roboto, sans-serif;
-    font-size: 15px;
-    line-height: 1.4;
-    min-height: 100vh;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
-
-  /* M-Stripe Ribbon */
-  .m-stripe {
-    display: inline-block;
-    height: 4px;
-    width: 36px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, #00A0E3 0%, #00A0E3 33.3%, #1D4ED8 33.3%, #1D4ED8 66.6%, #E22718 66.6%, #E22718 100%);
-    vertical-align: middle;
-  }
-
-  /* App Shell */
-  .app-shell {
-    position: relative;
-    z-index: 1;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: calc(var(--safe-top) + 10px) 16px calc(var(--safe-bottom) + 100px);
-  }
-
-  @media (min-width: 860px) {
-    .app-shell { max-width: 600px; padding-top: 24px; }
-  }
-
-  /* Top Status / Drive Mode Bar */
-  .status-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .m-drive-pill {
-    padding: 4px 10px;
-    border-radius: 99px;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    background: rgba(10, 132, 255, 0.16);
-    border: 1px solid rgba(10, 132, 255, 0.4);
-    color: var(--accent);
-    cursor: pointer;
-    transition: transform 0.16s var(--ease-spring);
-  }
-  .m-drive-pill:active { transform: scale(0.92); }
-
-  /* Header */
-  .app-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .header-eyebrow {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-  }
-  .header-title-box {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 2px;
-  }
-  .header-title {
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-  }
-  .header-actions {
-    display: flex;
-    gap: 8px;
-  }
-  .icon-circle-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 14px;
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text);
-    cursor: pointer;
-    box-shadow: var(--shadow-card);
-    transition: transform 0.16s var(--ease-spring);
-  }
-  .icon-circle-btn:active { transform: scale(0.92); }
-
-  /* Hero Telemetry Card */
-  .hero-card {
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: 18px;
-    margin-bottom: 14px;
-    box-shadow: var(--shadow-card);
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-card::after {
-    content: '';
-    position: absolute;
-    right: -40px; bottom: -40px;
-    width: 140px; height: 140px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(10, 132, 255, 0.25) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  /* Segmented Period Tabs */
-  .seg-bar {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 3px;
-    margin-bottom: 14px;
-  }
-  .seg-bar.three { grid-template-columns: repeat(3, 1fr); }
-  [data-theme="light"] .seg-bar { background: rgba(15, 23, 42, 0.06); }
-  .seg-btn {
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 700;
-    padding: 6px 2px;
-    border-radius: 9px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.2s var(--ease-spring);
-  }
-  .seg-btn.active {
-    background: rgba(255, 255, 255, 0.12);
-    color: var(--text);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  }
-  [data-theme="light"] .seg-btn.active {
-    background: #FFFFFF;
-    color: #0F172A;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
-  }
-
-  .nav-date-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    font-size: 14px;
-    font-weight: 700;
-  }
-  .nav-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 18px;
-    width: 32px; height: 32px;
-    cursor: pointer;
-    border-radius: 8px;
-  }
-  .nav-btn:active { background: rgba(255,255,255,0.06); }
-
-  .hero-top-meta {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--text-secondary);
-    letter-spacing: 0.06em;
-    margin-bottom: 4px;
-  }
-  .hero-big-money {
-    font-size: 38px;
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 1.1;
-    margin-bottom: 4px;
-    color: var(--text);
-  }
-  .hero-sub-text {
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: 500;
-    margin-bottom: 14px;
-  }
-
-  /* Sub Tiles */
-  .hero-tiles-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-  .hero-tile {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 8px 10px;
-  }
-  .hero-tile.active-blue {
-    background: rgba(10, 132, 255, 0.14);
-    border-color: rgba(10, 132, 255, 0.35);
-  }
-  .hero-tile-label { font-size: 9px; font-weight: 800; color: var(--text-secondary); letter-spacing: 0.06em; }
-  .hero-tile-val { font-size: 16px; font-weight: 800; margin-top: 2px; color: var(--text); }
-  .hero-tile.active-blue .hero-tile-val { color: var(--accent); }
-
-  /* M-Shift Lights */
-  .shift-box {
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 8px 12px;
-  }
-  .shift-hdr {
-    display: flex;
-    justify-content: space-between;
-    font-size: 9px;
-    font-weight: 800;
-    color: var(--text-secondary);
-    letter-spacing: 0.08em;
-    margin-bottom: 6px;
-  }
-  .shift-leds {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 4px;
-    height: 7px;
-  }
-  .shift-led {
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 0.08);
-  }
-  .shift-led.lit-cyan { background: #00A0E3; box-shadow: 0 0 6px #00A0E3; }
-  .shift-led.lit-blue { background: #1D4ED8; box-shadow: 0 0 6px #1D4ED8; }
-  .shift-led.lit-gold { background: #F59E0B; box-shadow: 0 0 6px #F59E0B; }
-  .shift-led.lit-red  { background: #E22718; box-shadow: 0 0 8px #E22718; }
-
-  /* Main Action Bar */
-  .action-bar {
-    display: grid;
-    grid-template-columns: 1fr 50px;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .btn-primary-action {
-    background: linear-gradient(135deg, #0A84FF 0%, #0060DF 100%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-lg);
-    color: #fff;
-    font-size: 15px;
-    font-weight: 800;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    cursor: pointer;
-    box-shadow: 0 8px 24px -4px rgba(10, 132, 255, 0.5);
-    transition: transform 0.16s var(--ease-spring);
-  }
-  .btn-primary-action:active { transform: scale(0.97); }
-  .btn-icon-sq {
-    height: 50px;
-    border-radius: var(--radius-lg);
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    cursor: pointer;
-    box-shadow: var(--shadow-card);
-    transition: transform 0.16s var(--ease-spring);
-  }
-  .btn-icon-sq:active { transform: scale(0.92); }
-
-  /* Feed Header */
-  .feed-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 16px 2px 8px;
-    font-size: 12px;
-    font-weight: 800;
-  }
-  .feed-title { color: var(--text-secondary); letter-spacing: 0.05em; }
-  .feed-total { color: var(--green); }
-
-  /* Order Card */
-  .order-card {
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow-card);
-    transition: transform 0.16s var(--ease-spring);
-  }
-  .order-card:active { transform: scale(0.985); }
-  .order-card.draft { border-left: 3px solid var(--gold); }
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-  }
-  .car-title {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--text);
-  }
-  .car-meta-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 4px;
-  }
-  .ru-plate {
-    background: #FFFFFF;
-    color: #111;
-    font-weight: 800;
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: -apple-system, monospace;
-    letter-spacing: 0.05em;
-  }
-  .order-num-pill {
-    background: rgba(56, 189, 248, 0.12);
-    color: var(--accent);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 6px;
-  }
-  .card-price-block {
-    text-align: right;
-  }
-  .card-price {
-    font-size: 16px;
-    font-weight: 900;
-    color: var(--green);
-  }
-  .card-aw-sub {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-secondary);
-  }
-  .card-jobs-text {
-    font-size: 13px;
-    color: var(--text-secondary);
-    line-height: 1.4;
-    margin-top: 4px;
-  }
-  .card-bottom-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px solid var(--border);
-  }
-  .card-btn {
-    border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text);
-    font-size: 12px;
-    font-weight: 700;
-    padding: 5px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  .card-btn:active { transform: scale(0.92); }
-  .card-btn.danger { color: var(--red); border-color: rgba(244, 63, 94, 0.3); }
-
-  /* Floating Bottom Nav Dock */
-  .bottom-dock {
-    position: fixed;
-    bottom: calc(var(--safe-bottom) + 10px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 28px);
-    max-width: 440px;
-    height: 64px;
-    border-radius: 24px;
-    background: rgba(12, 16, 28, 0.94);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.8);
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    align-items: center;
-    padding: 0 4px;
-    z-index: 100;
-  }
-  [data-theme="light"] .bottom-dock {
-    background: rgba(255, 255, 255, 0.94);
-    border-color: rgba(15, 23, 42, 0.12);
-  }
-  .dock-item {
-    border: none;
-    background: transparent;
-    color: var(--text-secondary);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    gap: 3px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: color 0.18s, transform 0.14s;
-  }
-  .dock-item:active { transform: scale(0.88); }
-  .dock-item.active { color: var(--accent); }
-  [data-theme="light"] .dock-item.active { color: #0A84FF; }
-  .dock-item-lbl { font-size: 10px; font-weight: 800; }
-
-  /* Sheet Modal */
-  .sheet-backdrop {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(12px);
-    z-index: 200;
-    display: flex;
-    align-items: flex-end;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.28s var(--ease-spring);
-  }
-  .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
-  .sheet-panel {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    background: var(--surface-card);
-    border: 1px solid var(--border-strong);
-    border-bottom: none;
-    border-radius: 28px 28px 0 0;
-    padding: 14px 18px calc(var(--safe-bottom) + 20px);
-    max-height: 90vh;
-    overflow-y: auto;
-    transform: translateY(100%);
-    transition: transform 0.32s var(--ease-spring);
-  }
-  .sheet-backdrop.open .sheet-panel { transform: translateY(0); }
-  .sheet-grabber {
-    width: 38px;
-    height: 4px;
-    border-radius: 99px;
-    background: rgba(255, 255, 255, 0.25);
-    margin: 0 auto 12px;
-  }
-
-  .preset-scroll {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 6px;
-    margin-bottom: 12px;
-  }
-  .preset-chip {
-    flex-shrink: 0;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 6px 10px;
-    border-radius: 99px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--border);
-    color: var(--text);
-    cursor: pointer;
-  }
-  .preset-chip:active { transform: scale(0.92); border-color: var(--accent); }
-
-  /* Form Elements */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .field-box {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .field-lbl {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-  }
-  .field-inp {
-    background: var(--surface-input);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 10px 12px;
-    color: var(--text);
-    font-size: 14px;
-    outline: none;
-    font-family: inherit;
-  }
-  .field-inp:focus { border-color: var(--accent); }
-
-  .summary-banner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 14px;
-    border-radius: 16px;
-    background: rgba(10, 132, 255, 0.12);
-    border: 1px solid rgba(10, 132, 255, 0.3);
-    margin: 12px 0;
-  }
-
-  /* Calendar */
-  .cal-table {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    margin-top: 10px;
-  }
-  .cal-dow {
-    text-align: center;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--text-muted);
-    padding-bottom: 4px;
-  }
-  .cal-cell {
-    height: 60px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 5px 3px;
-    cursor: pointer;
-    transition: all 0.16s;
-  }
-  .cal-cell:active { transform: scale(0.92); }
-  .cal-cell.work { background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); }
-  .cal-cell.selected { border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
-  .cal-cell-num { font-size: 12px; font-weight: 800; text-align: right; padding-right: 2px; }
-  .cal-cell-m { font-size: 9px; font-weight: 800; color: var(--green); text-align: center; }
-  .cal-cell-tag { font-size: 9px; font-weight: 800; color: var(--text-secondary); text-align: center; }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    top: calc(var(--safe-top) + 12px);
-    left: 50%;
-    transform: translate(-50%, -80px);
-    background: rgba(15, 21, 35, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border-strong);
-    color: #F8FAFC;
-    padding: 9px 18px;
-    border-radius: 99px;
-    font-size: 13px;
-    font-weight: 700;
-    z-index: 300;
-    pointer-events: none;
-    transition: transform 0.3s var(--ease-spring), opacity 0.3s;
-    opacity: 0;
-  }
-  .toast.show { transform: translate(-50%, 0); opacity: 1; }
-
-  .hidden { display: none !important; }
-</style>
+<link rel="stylesheet" href="./styles.css">
+<title>Нормо-часы — M-Telemetry Pro</title>
 </head>
 <body>
 
-<div id="toast" class="toast">Готово</div>
+<!-- BMW M-Telemetry Dark-Garage Headlights Ignition Splash -->
+<div id="bmwSplash" class="bmw-splash igniting" onclick="closeBmwSplash()">
+  <script>
+    (function() {
+      try {
+        var raw = localStorage.getItem('normo_hours_m_telemetry_v2');
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && parsed.settings && parsed.settings.splashEnabled === false) {
+            document.getElementById('bmwSplash').className = 'bmw-splash gone';
+          }
+          if (parsed && parsed.settings && parsed.settings.driveMode) {
+            document.documentElement.setAttribute('data-drive', parsed.settings.driveMode);
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <div class="splash-stage">
+    <div class="splash-beam-left"></div>
+    <div class="splash-beam-right"></div>
+    <div class="splash-ground-glow"></div>
+    <div class="splash-flare"></div>
 
-<!-- Hidden inputs for photos -->
+    <svg class="bmw-front-svg" viewBox="0 0 420 170" aria-hidden="true">
+      <path class="bmw-hood-line" d="M 122,30 Q 158,62 174,84" />
+      <path class="bmw-hood-line" d="M 298,30 Q 262,62 246,84" />
+
+      <path class="bmw-brow" d="M 38,83 Q 92,70 147,82" />
+      <path class="bmw-drl" d="M 38,94 L 58,108 L 88,108 L 97,85" />
+      <path class="bmw-drl" d="M 96,108 L 126,106 L 136,86" />
+      <line class="bmw-laser-core" x1="64" y1="93" x2="82" y2="93" />
+      <line class="bmw-laser-core" x1="106" y1="92" x2="122" y2="92" />
+
+      <path class="bmw-brow" d="M 382,83 Q 328,70 273,82" />
+      <path class="bmw-drl" d="M 382,94 L 362,108 L 332,108 L 323,85" />
+      <path class="bmw-drl" d="M 324,108 L 294,106 L 284,86" />
+      <line class="bmw-laser-core" x1="356" y1="93" x2="338" y2="93" />
+      <line class="bmw-laser-core" x1="314" y1="92" x2="298" y2="92" />
+
+      <path class="bmw-kidney" d="M 203,92 L 171,88 C 161,88 156,95 157,106 L 162,132 C 164,142 172,147 182,145 L 201,141 C 204,140 205,137 205,131 L 205,98 C 205,94 204,92 203,92 Z" />
+      <path class="bmw-kidney" d="M 217,92 L 249,88 C 259,88 264,95 263,106 L 258,132 C 256,142 248,147 238,145 L 219,141 C 216,140 215,137 215,131 L 215,98 C 215,94 216,92 217,92 Z" />
+
+      <line class="bmw-slat" x1="164" y1="104" x2="199" y2="105" />
+      <line class="bmw-slat" x1="165" y1="115" x2="199" y2="116" />
+      <line class="bmw-slat" x1="167" y1="126" x2="199" y2="127" />
+      <line class="bmw-slat" x1="221" y1="105" x2="256" y2="104" />
+      <line class="bmw-slat" x1="221" y1="116" x2="255" y2="115" />
+      <line class="bmw-slat" x1="221" y1="127" x2="253" y2="126" />
+    </svg>
+
+    <div class="splash-m-bar"></div>
+    <div class="splash-rpm-wrap">
+      <div class="splash-rpm-track"><div class="splash-rpm-fill"></div></div>
+    </div>
+
+    <div class="splash-title">M-TELEMETRY</div>
+    <div id="splashStatusText" class="splash-sub">WELCOME LIGHTS · IGNITION</div>
+  </div>
+  <div class="splash-skip-hint">Нажмите, чтобы пропустить</div>
+</div>
+
+<div id="mSaveFlash" class="m-save-flash"></div>
+<div id="modeHudBanner" class="mode-hud-banner">
+  <span class="m-stripe" style="width:24px;"></span>
+  <span id="modeHudText">M1 MODE · SPORT+</span>
+</div>
+
+<!-- Ambient Background Orbs -->
+<div class="ambient-orb orb-1"></div>
+<div class="ambient-orb orb-2"></div>
+
+<!-- Dynamic Toast with optional Undo -->
+<div id="toast" class="island-toast">
+  <span id="toastText">Готово</span>
+  <button id="toastUndoBtn" class="toast-undo-btn hidden">Отменить</button>
+</div>
+
+<!-- Hidden File Inputs -->
 <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
 <input type="file" id="galleryInput" accept="image/*" class="hidden">
 <input type="file" id="jsonFileInput" accept=".json,application/json" class="hidden">
 
-<div class="app-shell">
-  <!-- Status & Drive Mode Row -->
-  <div class="status-row">
-    <div id="pwaStatus" style="font-size:11px;font-weight:800;color:var(--green);display:flex;align-items:center;gap:4px;">
-      ● IndexedDB Active
-    </div>
-    <div class="m-drive-pill" id="driveModeBtn" onclick="cycleDriveMode()">
-      SPORT+ · M1
-    </div>
-  </div>
-
-  <!-- Header -->
-  <header class="app-header">
+<div class="cockpit-layout">
+  <!-- Desktop / Tablet Persistent Glass Sidebar Rail -->
+  <aside class="sidebar-rail" aria-label="Боковая панель">
     <div>
-      <div class="header-eyebrow">M-TELEMETRY COCKPIT</div>
-      <div class="header-title-box">
-        <h1 class="header-title" id="pageTitle">Заказ-наряды</h1>
-        <span class="m-stripe"></span>
+      <div class="rail-brand">
+        <div class="app-icon-box" onclick="revAppLogo()" title="M-Telemetry">
+          <svg width="42" height="42" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="32" cy="32" r="30" fill="#0B0E14" stroke="#CBD5E1" stroke-width="2.4"/>
+            <circle cx="32" cy="32" r="19" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.6"/>
+            <path d="M32 14 A18 18 0 0 0 14 32 L32 32 Z" fill="#0076C8"/>
+            <path d="M32 50 A18 18 0 0 0 50 32 L32 32 Z" fill="#0076C8"/>
+            <line x1="32" y1="14" x2="32" y2="50" stroke="#E2E8F0" stroke-width="1.2"/>
+            <line x1="14" y1="32" x2="50" y2="32" stroke="#E2E8F0" stroke-width="1.2"/>
+            <text x="14.5" y="18.2" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="6.4" font-weight="900" text-anchor="middle" transform="rotate(-45 14.5 18.2)">B</text>
+            <text x="32" y="11.2" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="6.4" font-weight="900" text-anchor="middle">M</text>
+            <text x="49.5" y="18.2" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="6.4" font-weight="900" text-anchor="middle" transform="rotate(45 49.5 18.2)">W</text>
+          </svg>
+        </div>
+        <div>
+          <div class="header-eyebrow"><span>M-TELEMETRY</span><span class="m-stripe" style="width:26px;"></span></div>
+          <div style="font-size:16px;font-weight:800;">Нормо-часы</div>
+        </div>
       </div>
-    </div>
-    <div class="header-actions">
-      <div class="icon-circle-btn" onclick="openOrderModal()" title="Добавить">+</div>
-      <div class="icon-circle-btn" onclick="triggerPhoto('camera')" title="Камера">📷</div>
-    </div>
-  </header>
 
-  <!-- View Container -->
-  <main id="mainView"></main>
+      <nav class="rail-nav">
+        <button class="rail-btn active" data-tab="orders">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h4"/></svg>
+          <span>Заказ-наряды</span>
+        </button>
+        <button class="rail-btn" data-tab="schedule">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>График смен</span>
+        </button>
+        <button class="rail-btn" data-tab="stats">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Телеметрия</span>
+        </button>
+        <button class="rail-btn" data-tab="history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+          <span>История и Отчеты</span>
+        </button>
+        <button class="rail-btn" data-tab="settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Настройки</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="rail-footer">
+      <button class="pill-btn drive-active" style="justify-content:center;width:100%;" onclick="cycleDriveMode()" id="railDriveBtn">COMFORT · ICE BLUE</button>
+      <button class="mini-btn" style="width:100%;justify-content:center;" onclick="toggleThemeQuick()" id="railThemeBtn">Тема</button>
+    </div>
+  </aside>
+
+  <!-- Main Shell -->
+  <div class="app-shell">
+    <!-- Top Status Strip -->
+    <div class="status-strip">
+      <div id="pwaStatusBadge" class="status-badge">
+        <span class="status-dot"></span>
+        <span id="pwaStatusText">IndexedDB · Офлайн готов</span>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--text-muted);" id="storageSummaryBadge"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="app-icon-box" id="appLogoIcon" onclick="revAppLogo()" title="M-Telemetry">
+          <svg width="42" height="42" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="32" cy="32" r="30" fill="#0B0E14" stroke="#CBD5E1" stroke-width="2.4"/>
+            <circle cx="32" cy="32" r="19" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.6"/>
+            <path d="M32 14 A18 18 0 0 0 14 32 L32 32 Z" fill="#0076C8"/>
+            <path d="M32 50 A18 18 0 0 0 50 32 L32 32 Z" fill="#0076C8"/>
+            <line x1="32" y1="14" x2="32" y2="50" stroke="#E2E8F0" stroke-width="1.2"/>
+            <line x1="14" y1="32" x2="50" y2="32" stroke="#E2E8F0" stroke-width="1.2"/>
+            <text x="14.5" y="18.2" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="6.4" font-weight="900" text-anchor="middle" transform="rotate(-45 14.5 18.2)">B</text>
+            <text x="32" y="11.2" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="6.4" font-weight="900" text-anchor="middle">M</text>
+            <text x="49.5" y="18.2" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="6.4" font-weight="900" text-anchor="middle" transform="rotate(45 49.5 18.2)">W</text>
+          </svg>
+        </div>
+        <div>
+          <div class="header-eyebrow">
+            <span>НОРМО-ЧАСЫ</span>
+            <span class="m-stripe"></span>
+          </div>
+          <h1 class="header-title" id="pageHeaderTitle">Заказы</h1>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="pill-btn drive-active" id="mModeBtn" onclick="cycleDriveMode()" title="Режим M-Drive">COMFORT</button>
+      </div>
+    </header>
+
+    <!-- Dynamic Main View -->
+    <main id="mainView"></main>
+  </div>
 </div>
 
-<!-- Floating Bottom Nav Bar -->
-<nav class="bottom-dock">
-  <button class="dock-item active" data-tab="orders">
-    <span style="font-size:18px;">📋</span>
-    <span class="dock-item-lbl">Заказы</span>
+<!-- Mobile Bottom Navigation Dock (Pure Vector SVG Icons) -->
+<nav class="tabbar-dock" aria-label="Навигация">
+  <div class="tab-pill-slider" id="tabPillSlider" aria-hidden="true"></div>
+  <button class="tab-item active" data-tab="orders">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h4"/></svg>
+    <span class="lbl">Заказы</span>
   </button>
-  <button class="dock-item" data-tab="schedule">
-    <span style="font-size:18px;">📅</span>
-    <span class="dock-item-lbl">График</span>
+  <button class="tab-item" data-tab="schedule">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span class="lbl">График</span>
   </button>
-  <button class="dock-item" data-tab="stats">
-    <span style="font-size:18px;">📊</span>
-    <span class="dock-item-lbl">Телеметрия</span>
+  <button class="tab-item" data-tab="stats">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span class="lbl">Статистика</span>
   </button>
-  <button class="dock-item" data-tab="history">
-    <span style="font-size:18px;">📁</span>
-    <span class="dock-item-lbl">Архив</span>
+  <button class="tab-item" data-tab="history">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+    <span class="lbl">История</span>
   </button>
-  <button class="dock-item" data-tab="settings">
-    <span style="font-size:18px;">⚙️</span>
-    <span class="dock-item-lbl">Опции</span>
+  <button class="tab-item" data-tab="settings">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span class="lbl">Опции</span>
   </button>
 </nav>
 
-<!-- Order Edit Modal Sheet -->
+<!-- 1. Order Editor Modal Sheet -->
 <div class="sheet-backdrop" id="orderSheet">
   <div class="sheet-panel">
     <div class="sheet-grabber"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <h2 style="font-size:18px;font-weight:800;" id="sheetTitle">Новый заказ-наряд</h2>
-      <button class="card-btn" id="closeSheetBtn">Закрыть</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h2 id="sheetTitle" style="font-size:18px;font-weight:800;">Новый заказ-наряд</h2>
+      <button class="mini-btn" id="closeSheetBtn">Закрыть</button>
+    </div>
+
+    <!-- Voice Status Banner -->
+    <div id="voiceListeningBanner" class="voice-pulse hidden">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+      <span id="voiceTranscriptText">Слушаю... Назовите авто, номер и работы (AW)</span>
+    </div>
+
+    <!-- OCR Scan Banner -->
+    <div id="aiScanStatus" class="hidden" style="display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:14px;background:rgba(10,132,255,0.14);border:1px solid rgba(56,189,248,0.35);margin-bottom:12px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <div>
+        <div id="aiScanTitle" style="font-size:13px;font-weight:800;color:var(--accent);">Распознаём бланк (OCR)...</div>
+        <div style="font-size:11px;color:var(--text-secondary);">Извлекаем номер З/Н, авто, работы и AW</div>
+      </div>
+    </div>
+    <div id="aiScanError" class="hidden" style="padding:11px 13px;border-radius:14px;background:rgba(244,63,94,0.14);border:1px solid rgba(244,63,94,0.35);color:#FDA4AF;font-size:12px;margin-bottom:12px;"></div>
+
+    <!-- Quick Input Modes: Voice / Camera / Gallery / Paste Text -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+      <button type="button" class="mini-btn photo" style="justify-content:center;padding:10px;" onclick="startVoiceInput()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+        <span>Голос AI</span>
+      </button>
+      <button type="button" class="mini-btn" style="justify-content:center;padding:10px;" onclick="triggerPhoto('camera')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span>Камера OCR</span>
+      </button>
+      <button type="button" class="mini-btn" style="justify-content:center;padding:10px;" onclick="triggerPhoto('gallery')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span>Галерея</span>
+      </button>
+    </div>
+
+    <div id="photoPreviewBox" class="hidden" style="margin-bottom:12px;position:relative;overflow:hidden;border-radius:14px;">
+      <img id="photoPreviewImg" src="" alt="Фото З/Н" style="width:100%;max-height:150px;object-fit:cover;border-radius:14px;border:1px solid var(--border-strong);display:block;">
+      <div class="ocr-laser-overlay"><div class="ocr-laser-beam"></div></div>
+      <button type="button" class="mini-btn danger" id="removePhotoBtn" style="position:absolute;top:8px;right:8px;z-index:3;background:rgba(13,18,29,0.9);">Удалить</button>
     </div>
 
     <!-- Quick Presets -->
-    <div class="field-lbl" style="margin-bottom:6px;">Быстрые работы</div>
-    <div class="preset-scroll">
-      <div class="preset-chip" onclick="addPresetJob('Замена моторного масла и фильтра', 4)">Масло ДВС (4 AW)</div>
-      <div class="preset-chip" onclick="addPresetJob('Замена передних колодок', 8)">Колодки перед (8 AW)</div>
-      <div class="preset-chip" onclick="addPresetJob('Замена задних колодок', 7)">Колодки зад (7 AW)</div>
-      <div class="preset-chip" onclick="addPresetJob('Сход-развал', 8)">Сход-развал (8 AW)</div>
-      <div class="preset-chip" onclick="addPresetJob('Диагностика ходовой', 3)">Ходовая (3 AW)</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <span class="field-label" style="margin:0;">Быстрые шаблоны ТО</span>
+      <button type="button" style="background:none;border:none;color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;" onclick="saveFirstJobAsPreset()">+ В шаблоны</button>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-      <button type="button" class="card-btn" style="padding:10px;text-align:center;color:var(--accent);" onclick="triggerPhoto('camera')">Камера OCR</button>
-      <button type="button" class="card-btn" style="padding:10px;text-align:center;" onclick="triggerPhoto('gallery')">Из галереи</button>
-    </div>
-
-    <div id="photoPreviewBox" class="hidden" style="margin-bottom:12px;position:relative;">
-      <img id="photoPreviewImg" src="" alt="Фото документа" style="width:100%;max-height:160px;object-fit:cover;border-radius:14px;border:1px solid var(--border-strong);display:block;">
-      <button type="button" class="card-btn danger" id="removePhotoBtn" style="position:absolute;top:8px;right:8px;">Удалить</button>
-    </div>
+    <div class="presets-scroll" id="presetsContainer"></div>
 
     <form id="orderForm">
       <input type="hidden" id="fId">
-      <div class="form-row">
-        <div class="field-box">
-          <label class="field-lbl">Номер З/Н</label>
-          <input type="text" id="fNumber" class="field-inp" placeholder="7812450">
+      <div class="form-grid">
+        <div>
+          <label class="field-label">Номер З/Н</label>
+          <input type="text" id="fNumber" class="input-field" placeholder="Например, 7812450">
         </div>
-        <div class="field-box">
-          <label class="field-lbl">Дата</label>
-          <input type="date" id="fDate" class="field-inp" required>
+        <div>
+          <label class="field-label">Дата</label>
+          <input type="date" id="fDate" class="input-field" required>
         </div>
       </div>
 
-      <div class="form-row" style="grid-template-columns:0.8fr 1fr 1fr;">
-        <div class="field-box">
-          <label class="field-lbl">Марка</label>
-          <input type="text" id="fBrand" class="field-inp" value="BMW">
+      <div class="form-grid" style="grid-template-columns:0.9fr 1fr 1.1fr;">
+        <div>
+          <label class="field-label">Марка</label>
+          <input type="text" id="fBrand" class="input-field" list="brandList" value="BMW">
+          <datalist id="brandList">
+            <option value="BMW"><option value="MINI"><option value="Mercedes-Benz"><option value="Audi"><option value="Porsche"><option value="Volkswagen"><option value="Skoda"><option value="Geely"><option value="Haval"><option value="Chery"><option value="Toyota"><option value="Lexus">
+          </datalist>
         </div>
-        <div class="field-box">
-          <label class="field-lbl">Модель</label>
-          <input type="text" id="fModel" class="field-inp" placeholder="X5 G05">
+        <div>
+          <label class="field-label">Модель</label>
+          <input type="text" id="fModel" class="input-field" placeholder="X5 G05 / 3 серии">
         </div>
-        <div class="field-box">
-          <label class="field-lbl">Госномер</label>
-          <input type="text" id="fPlate" class="field-inp" placeholder="А777АА777">
+        <div>
+          <label class="field-label">Госномер</label>
+          <input type="text" id="fPlate" class="input-field" placeholder="А000АА777">
         </div>
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 6px;">
-        <span class="field-lbl">Работы (AW)</span>
-        <button type="button" class="card-btn" id="addJobBtn" style="color:var(--accent);">+ Добавить</button>
+        <label class="field-label" style="margin:0;">Выполненные работы (AW)</label>
+        <button type="button" class="mini-btn" id="addJobBtn" style="color:var(--accent);">+ Работа</button>
       </div>
-      <div id="jobsList" style="margin-bottom:10px;"></div>
+      <div id="jobsList"></div>
 
-      <div class="summary-banner">
+      <!-- Multiplier / Split (Partner or Difficulty) -->
+      <div class="form-grid" style="margin-top:8px;">
         <div>
-          <div class="field-lbl">ИТОГО ПО ЗАКАЗУ</div>
-          <div class="num" id="liveCalcAw" style="font-size:13px;font-weight:800;color:var(--text);">0 AW · 0.00 н/ч</div>
+          <label class="field-label">Коэф. / Сплит (напарник)</label>
+          <select id="fMultiplier" class="input-field" onchange="updateLiveCalcGlobal()">
+            <option value="1">1.0 — Один (100%)</option>
+            <option value="0.5">0.5 — В паре (50/50)</option>
+            <option value="0.7">0.7 — С учеником (70%)</option>
+            <option value="1.2">1.2 — Сложный ремонт (+20%)</option>
+            <option value="1.5">1.5 — Ночь / Переработка</option>
+          </select>
         </div>
-        <div class="num" id="liveCalcMoney" style="font-size:22px;font-weight:900;color:var(--green);">0 ₽</div>
-      </div>
-
-      <div class="form-row">
-        <div class="field-box">
-          <label class="field-lbl">Статус</label>
-          <select id="fStatus" class="field-inp">
+        <div>
+          <label class="field-label">Статус</label>
+          <select id="fStatus" class="input-field">
             <option value="confirmed">Подтверждён</option>
             <option value="draft">Черновик</option>
           </select>
         </div>
-        <div class="field-box">
-          <label class="field-lbl">Заметка</label>
-          <input type="text" id="fComment" class="field-inp" placeholder="Комментарий...">
+      </div>
+
+      <div class="glass-card" style="padding:12px 14px;margin:10px 0;background:rgba(10,132,255,0.1);border-color:rgba(56,189,248,0.28);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:10px;color:var(--text-secondary);font-weight:800;">ИТОГО ПО З/Н</div>
+            <div class="num" id="liveCalcAw" style="font-size:14px;font-weight:800;">0 AW · 0.00 н/ч</div>
+          </div>
+          <div class="num" id="liveCalcMoney" style="font-size:21px;font-weight:900;color:var(--green);">0 ₽</div>
         </div>
       </div>
 
-      <button type="submit" class="btn-primary-action" style="width:100%;margin-top:6px;">Сохранить заказ-наряд</button>
+      <div style="margin-bottom:14px;">
+        <label class="field-label">Комментарий</label>
+        <input type="text" id="fComment" class="input-field" placeholder="Заметка, напарник, нюансы...">
+      </div>
+
+      <button type="submit" class="btn-primary-full">Сохранить заказ-наряд</button>
     </form>
   </div>
 </div>
 
-<!-- Calendar Day Action Sheet -->
+<!-- 2. Calendar Day Sheet -->
 <div class="sheet-backdrop" id="dayActionSheet" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="sheet-panel">
     <div class="sheet-grabber"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <h3 id="daySheetTitle" style="font-size:18px;font-weight:800;">День</h3>
-      <button class="card-btn" onclick="document.getElementById('dayActionSheet').classList.remove('open')">Закрыть</button>
+      <button class="mini-btn" onclick="document.getElementById('dayActionSheet').classList.remove('open')">Закрыть</button>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;" id="dayStatusBtns"></div>
-    <div id="daySheetOrdersInfo" style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;"></div>
-    <button class="btn-primary-action" style="width:100%;" id="daySheetAddOrderBtn">+ Добавить заказ на этот день</button>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;" id="dayStatusBtns"></div>
+    <div id="daySheetOrdersInfo" style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;"></div>
+    <button class="btn-primary-full" id="daySheetAddOrderBtn">+ Добавить заказ-наряд на этот день</button>
   </div>
 </div>
 
-<!-- Photo Viewer Modal -->
+<!-- 3. Text Paste OCR Sheet -->
+<div class="sheet-backdrop" id="textPasteSheet" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="sheet-panel">
+    <div class="sheet-grabber"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h3 style="font-size:18px;font-weight:800;">Распознать текст З/Н</h3>
+      <button class="mini-btn" onclick="document.getElementById('textPasteSheet').classList.remove('open')">Закрыть</button>
+    </div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">
+      Скопируйте текст с фото через «Сканер текста» iPhone/Android или из 1С и вставьте ниже — алгоритм извлечет номер З/Н, дату, авто, госномер и AW.
+    </div>
+    <textarea id="pasteRawArea" class="input-field" rows="6" placeholder="Вставьте текст заказ-наряда..." style="margin-bottom:12px;resize:vertical;"></textarea>
+    <button class="btn-primary-full" onclick="parsePastedText()">Распознать и заполнить</button>
+  </div>
+</div>
+
+<!-- 4. Photo Viewer -->
 <div class="sheet-backdrop" id="photoViewerModal" onclick="this.classList.remove('open')">
   <div class="sheet-panel" style="text-align:center;" onclick="event.stopPropagation()">
     <div class="sheet-grabber"></div>
     <img id="viewerFullImg" src="" alt="Фото документа" style="width:100%;max-height:74vh;object-fit:contain;border-radius:16px;margin-bottom:12px;">
-    <button class="btn-primary-action" style="width:100%;" onclick="document.getElementById('photoViewerModal').classList.remove('open')">Закрыть</button>
+    <button class="btn-primary-full" onclick="document.getElementById('photoViewerModal').classList.remove('open')">Закрыть</button>
+  </div>
+</div>
+
+<!-- 5. Goal Setting Sheet -->
+<div class="sheet-backdrop" id="goalModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="sheet-panel">
+    <div class="sheet-grabber"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h3 style="font-size:18px;font-weight:800;">Финансовая цель периода</h3>
+      <button class="mini-btn" onclick="document.getElementById('goalModal').classList.remove('open')">Закрыть</button>
+    </div>
+    <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:12px;">
+      Укажите желаемый доход на месяц (₽) или целевое количество AW в смену — система рассчитает оставшийся темп выработки.
+    </div>
+    <div class="form-grid">
+      <div>
+        <label class="field-label">Цель дохода (₽/мес)</label>
+        <input type="number" id="goalMoneyInput" class="input-field" placeholder="250000">
+      </div>
+      <div>
+        <label class="field-label">Цель AW на смену</label>
+        <input type="number" id="goalAwInput" class="input-field" placeholder="120">
+      </div>
+    </div>
+    <button class="btn-primary-full" onclick="saveGoalSettings()">Применить цель</button>
+  </div>
+</div>
+
+<!-- 6. Printable Official Payslip Modal (PDF / Сверка) -->
+<div class="sheet-backdrop" id="payslipModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="sheet-panel" style="max-width:720px;" onclick="event.stopPropagation()">
+    <div class="sheet-grabber no-print"></div>
+    <div class="no-print" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 style="font-size:18px;font-weight:800;">Расчётный лист для сверки</h3>
+      <div style="display:flex;gap:8px;">
+        <button class="mini-btn photo" onclick="window.print()">Печать / PDF</button>
+        <button class="mini-btn" onclick="document.getElementById('payslipModal').classList.remove('open')">Закрыть</button>
+      </div>
+    </div>
+    <div id="payslipContent" style="font-size:13px;"></div>
   </div>
 </div>
 
 <script src="./db.js"></script>
-<script>
-(function() {
-  'use strict';
-
-  function haptic(ms = 15) {
-    if (navigator.vibrate) {
-      try { navigator.vibrate(ms); } catch (e) {}
-    }
-  }
-
-  // Service Worker
-  if ('serviceWorker' in navigator && (window.location.protocol.startsWith('http') || window.location.hostname === 'localhost')) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  }
-
-  function updateNetworkStatus() {
-    const el = document.getElementById('pwaStatus');
-    if (!el) return;
-    if (navigator.onLine) {
-      el.textContent = '● IndexedDB Active';
-      el.style.color = 'var(--green)';
-    } else {
-      el.textContent = 'Офлайн (IndexedDB)';
-      el.style.color = 'var(--gold)';
-    }
-  }
-  window.addEventListener('online', updateNetworkStatus);
-  window.addEventListener('offline', updateNetworkStatus);
-  updateNetworkStatus();
-
-  let state = {
-    orders: [],
-    days: {},
-    settings: {
-      monthlySalaryKop: 8000000, // 80 000 руб
-      hourRateKop: 100000,      // 1 000 руб / н/ч
-      awPerHour100: 1200,       // 12 AW
-      schedule: { type: "custom", pattern: "РРВВ" },
-      theme: "dark",
-      driveMode: "sport",
-      ocrSpaceKey: "",
-      geminiKey: ""
-    }
-  };
-
-  let currentTab = 'orders';
-  let periodMode = 'month';
-  let anchorDate = new Date().toISOString().slice(0, 10);
-  let customFrom = anchorDate.slice(0, 7) + '-01';
-  let customTo = anchorDate;
-  let calSubView = 'month';
-  let selectedCalDay = anchorDate;
-  let activePhotoDataUrl = null;
-
-  function toLocalIso(d) {
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
-  }
-  function parseLocalIso(iso) {
-    const [y, m, d] = (iso || '').split('-').map(Number);
-    return new Date(y, (m || 1) - 1, d || 1);
-  }
-  function addDaysIso(iso, delta) {
-    const d = parseLocalIso(iso);
-    d.setDate(d.getDate() + delta);
-    return toLocalIso(d);
-  }
-  function addMonthsIso(iso, delta) {
-    const [y, m, day] = iso.split('-').map(Number);
-    const target = new Date(y, m - 1 + delta, 1);
-    const maxD = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
-    target.setDate(Math.min(day, maxD));
-    return toLocalIso(target);
-  }
-
-  function uid() { return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7); }
-  function fmtRub(kop) { return Math.round((kop || 0) / 100).toLocaleString('ru-RU') + ' ₽'; }
-  function fmtRubDec(kop) {
-    return ((kop || 0) / 100).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽';
-  }
-  function fmtDateRu(iso) {
-    if (!iso) return '';
-    const [y, m, d] = iso.split('-');
-    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-    return `${parseInt(d, 10)} ${months[parseInt(m, 10) - 1]} ${y}`;
-  }
-  function fmtMonthTitle(ym) {
-    const [y, m] = ym.split('-').map(Number);
-    const names = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-    return names[m - 1] + ' ' + y;
-  }
-
-  function toast(text) {
-    const el = document.getElementById('toast');
-    if (!el) return;
-    el.textContent = text;
-    el.classList.add('show');
-    clearTimeout(window._tTimer);
-    window._tTimer = setTimeout(() => el.classList.remove('show'), 2200);
-  }
-
-  function calcOrderMetrics(aw100) {
-    const awPerHour = (state.settings.awPerHour100 || 1200) / 100;
-    const aw = aw100 / 100;
-    const hours = aw / awPerHour;
-    const hours100 = Math.round(hours * 100);
-    const earningsKop = Math.round(hours * (state.settings.hourRateKop || 0));
-    return { aw, hours, hours100, earningsKop };
-  }
-
-  function getActiveRange() {
-    const nowIso = toLocalIso(new Date());
-    if (periodMode === 'day') {
-      return { start: anchorDate, end: anchorDate, label: anchorDate === nowIso ? 'Сегодня' : fmtDateRu(anchorDate) };
-    }
-    if (periodMode === 'week') {
-      const d = parseLocalIso(anchorDate);
-      const day = (d.getDay() + 6) % 7;
-      const mon = new Date(d); mon.setDate(d.getDate() - day);
-      const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-      const s = toLocalIso(mon);
-      const e = toLocalIso(sun);
-      return { start: s, end: e, label: `${s.slice(8)}.${s.slice(5,7)} — ${e.slice(8)}.${e.slice(5,7)}` };
-    }
-    if (periodMode === 'custom') {
-      const s = customFrom <= customTo ? customFrom : customTo;
-      const e = customFrom <= customTo ? customTo : customFrom;
-      return { start: s, end: e, label: `${s.slice(8)}.${s.slice(5,7)} — ${e.slice(8)}.${e.slice(5,7)}` };
-    }
-    const ym = anchorDate.slice(0, 7);
-    const [y, m] = ym.split('-').map(Number);
-    const lastD = new Date(y, m, 0).getDate();
-    return { start: `${ym}-01`, end: `${ym}-${String(lastD).padStart(2, '0')}`, label: fmtMonthTitle(ym) };
-  }
-
-  function calcSalaryForRange(start, end) {
-    let totalSalaryKop = 0;
-    const cur = parseLocalIso(start);
-    const last = parseLocalIso(end);
-    while (cur <= last) {
-      const iso = toLocalIso(cur);
-      const ym = iso.slice(0, 7);
-      const st = state.days[iso];
-      if (st === 'work' || st === 'vacation') {
-        const monthWorkDays = Object.entries(state.days).filter(([k, v]) => k.startsWith(ym) && (v === 'work' || v === 'vacation')).length || 15;
-        totalSalaryKop += (state.settings.monthlySalaryKop || 0) / monthWorkDays;
-      }
-      cur.setDate(cur.getDate() + 1);
-    }
-    return Math.round(totalSalaryKop);
-  }
-
-  function applyTheme() {
-    const t = state.settings.theme || 'dark';
-    const dm = state.settings.driveMode || 'sport';
-    document.documentElement.setAttribute('data-theme', t);
-    document.documentElement.setAttribute('data-drive', dm);
-    const mBtn = document.getElementById('driveModeBtn');
-    if (mBtn) {
-      mBtn.textContent = dm === 'sport' ? 'SPORT+ · M1' : dm === 'mcs' ? 'M CS · TRACK' : 'COMFORT';
-    }
-  }
-
-  async function initDatabaseAndState() {
-    try {
-      await window.MDB.migrateLegacyData();
-      const loadedOrders = await window.MDB.getAllOrders();
-      const loadedDays = await window.MDB.getDays();
-      const loadedSettings = await window.MDB.getSettings();
-
-      state.orders = loadedOrders || [];
-      state.days = loadedDays || {};
-      if (loadedSettings) {
-        state.settings = Object.assign({}, state.settings, loadedSettings);
-      }
-
-      // Add demo sample orders if completely empty
-      if (state.orders.length === 0) {
-        state.orders = [
-          {
-            id: uid(),
-            number: "7812450",
-            brand: "BMW",
-            model: "X5 xDrive40i G05",
-            plate: "А 777 АА 777",
-            date: anchorDate,
-            jobs: [
-              { id: uid(), title: "Замена моторного масла и фильтра", aw100: 400 },
-              { id: uid(), title: "Замена передних тормозных колодок", aw100: 800 },
-              { id: uid(), title: "Сход-развал", aw100: 800 }
-            ],
-            aw100: 2000,
-            hours100: 167,
-            earningsKop: 1666700,
-            status: "confirmed"
-          },
-          {
-            id: uid(),
-            number: "7812451",
-            brand: "BMW",
-            model: "M3 Competition G80",
-            plate: "М 003 ММ 777",
-            date: anchorDate,
-            jobs: [
-              { id: uid(), title: "Диагностика DDE", aw100: 300 },
-              { id: uid(), title: "Замена свечей зажигания", aw100: 300 }
-            ],
-            aw100: 600,
-            hours100: 50,
-            earningsKop: 500000,
-            status: "confirmed"
-          }
-        ];
-        for (const ord of state.orders) {
-          await window.MDB.saveOrder(ord);
-        }
-      }
-
-      applyTheme();
-      render();
-    } catch (e) {
-      render();
-    }
-  }
-
-  // Navigation
-  const TAB_TITLES = { orders: 'Заказ-наряды', schedule: 'График смен', stats: 'Телеметрия', history: 'Архив', settings: 'Опции' };
-
-  document.querySelectorAll('.dock-item').forEach(btn => {
-    btn.onclick = () => {
-      haptic(12);
-      const next = btn.dataset.tab;
-      if (next === currentTab) return;
-      document.querySelectorAll('.dock-item').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentTab = next;
-      render();
-    };
-  });
-
-  window.setPeriodMode = (mode) => { haptic(10); periodMode = mode; render(); };
-  window.shiftPeriod = (dir) => {
-    haptic(10);
-    if (periodMode === 'day') anchorDate = addDaysIso(anchorDate, dir);
-    else if (periodMode === 'week') anchorDate = addDaysIso(anchorDate, dir * 7);
-    else anchorDate = addMonthsIso(anchorDate, dir);
-    selectedCalDay = anchorDate;
-    render();
-  };
-
-  function renderPeriodSwitcherHtml() {
-    const r = getActiveRange();
-    return `
-      <div class="seg-bar">
-        <button class="seg-btn ${periodMode==='day'?'active':''}" onclick="setPeriodMode('day')">День</button>
-        <button class="seg-btn ${periodMode==='week'?'active':''}" onclick="setPeriodMode('week')">Неделя</button>
-        <button class="seg-btn ${periodMode==='month'?'active':''}" onclick="setPeriodMode('month')">Месяц</button>
-        <button class="seg-btn ${periodMode==='custom'?'active':''}" onclick="setPeriodMode('custom')">Период</button>
-      </div>
-      <div class="nav-date-row">
-        <button class="nav-btn" onclick="shiftPeriod(-1)">‹</button>
-        <span>${r.label}</span>
-        <button class="nav-btn" onclick="shiftPeriod(1)">›</button>
-      </div>
-    `;
-  }
-
-  // 1. ORDERS TAB (Matching Screen 01 from Figma)
-  function renderOrders(container) {
-    const r = getActiveRange();
-    const rangeOrders = state.orders
-      .filter(o => o.date >= r.start && o.date <= r.end)
-      .sort((a, b) => b.date.localeCompare(a.date));
-
-    const confirmed = rangeOrders.filter(o => o.status !== 'draft');
-    const totalAw100 = confirmed.reduce((s, o) => s + (o.aw100 || 0), 0);
-    const totalHours = (totalAw100 / 100) / ((state.settings.awPerHour100 || 1200) / 100);
-    const pieceKop = confirmed.reduce((s, o) => s + (o.earningsKop || 0), 0);
-    const salaryKop = calcSalaryForRange(r.start, r.end);
-    const totalKop = pieceKop + salaryKop;
-
-    const targetAw = periodMode === 'day' ? 120 : periodMode === 'week' ? 600 : 1800;
-    const litCount = Math.min(12, Math.round(((totalAw100 / 100) / targetAw) * 12));
-    let leds = '';
-    for (let i = 0; i < 12; i++) {
-      const col = i < 4 ? 'lit-cyan' : i < 7 ? 'lit-blue' : i < 10 ? 'lit-gold' : 'lit-red';
-      const lit = i < litCount ? col : '';
-      leds += `<span class="shift-led ${lit}"></span>`;
-    }
-
-    let html = `
-      <section class="hero-card">
-        ${renderPeriodSwitcherHtml()}
-        <div class="hero-top-meta">
-          <span>НОЯБРЬ 2026 · 16 ИЗ 20 СМЕН</span>
-          <span style="color:var(--green);">+22% К ПЛАНУ</span>
-        </div>
-        <div class="hero-big-money num">${fmtRub(totalKop)}</div>
-        <div class="hero-sub-text num">Оклад ${fmtRub(salaryKop)} + Выработка ${fmtRub(pieceKop)} (${(totalAw100 / 100).toFixed(0)} AW)</div>
-
-        <div class="hero-tiles-grid">
-          <div class="hero-tile active-blue">
-            <div class="hero-tile-label">ВЫРАБОТКА AW</div>
-            <div class="hero-tile-val num">${(totalAw100 / 100).toFixed(0)} AW</div>
-          </div>
-          <div class="hero-tile">
-            <div class="hero-tile-label">НОРМО-ЧАСЫ</div>
-            <div class="hero-tile-val num">${totalHours.toFixed(1).replace('.', ',')} н/ч</div>
-          </div>
-          <div class="hero-tile">
-            <div class="hero-tile-label">ТЕМП СМЕНЫ</div>
-            <div class="hero-tile-val num">${((totalAw100 / 100) / Math.max(1, rangeOrders.length)).toFixed(1)} AW/д</div>
-          </div>
-        </div>
-
-        <div class="shift-box">
-          <div class="shift-hdr">
-            <span>M-SHIFT INDICATOR</span>
-            <span class="num">${Math.min(100, Math.round(((totalAw100 / 100) / targetAw) * 100))}% ВЫПОЛНЕНО</span>
-          </div>
-          <div class="shift-leds">${leds}</div>
-        </div>
-      </section>
-
-      <div class="action-bar">
-        <button class="btn-primary-action" onclick="openOrderModal()">
-          <span style="font-size:20px;line-height:1;">+</span> Новый заказ-наряд
-        </button>
-        <button class="btn-icon-sq" onclick="triggerPhoto('camera')" title="Камера OCR">📷</button>
-      </div>
-
-      <div class="feed-header">
-        <span class="feed-title">СЕГОДНЯ · ${fmtDateRu(anchorDate).toUpperCase()}</span>
-        <span class="feed-total num">${rangeOrders.length} З/Н · ${(totalAw100/100).toFixed(0)} AW · ${fmtRub(pieceKop)}</span>
-      </div>
-    `;
-
-    if (!rangeOrders.length) {
-      html += `<div style="text-align:center;padding:32px 12px;color:var(--text-secondary);font-size:14px;">Заказов за выбранный период нет</div>`;
-    } else {
-      rangeOrders.forEach(o => {
-        const car = [o.brand, o.model].filter(Boolean).join(' ') || 'Заказ-наряд';
-        const jobsStr = (o.jobs || []).map(j => `${j.title} (${j.aw100/100} AW)`).join('; ');
-        html += `
-          <article class="order-card ${o.status==='draft'?'draft':''}">
-            <div class="card-top">
-              <div>
-                <div class="car-title">${escapeHtml(car)}</div>
-                <div class="car-meta-row">
-                  ${o.plate ? `<span class="ru-plate">${escapeHtml(o.plate)}</span>` : ''}
-                  ${o.number ? `<span class="order-num-pill num">#${escapeHtml(o.number)}</span>` : ''}
-                </div>
-              </div>
-              <div class="card-price-block">
-                <div class="card-price num">${fmtRubDec(o.earningsKop)}</div>
-                <div class="card-aw-sub num">${(o.aw100||0)/100} AW · ${((o.hours100||0)/100).toFixed(2)} н/ч</div>
-              </div>
-            </div>
-            <div class="card-jobs-text">${escapeHtml(jobsStr)}</div>
-            <div class="card-bottom-bar">
-              <div>
-                ${o.photoId ? `<button class="card-btn" style="color:var(--accent);" onclick="viewPhoto('${o.photoId}')">Фото З/Н</button>` : ''}
-              </div>
-              <div style="display:flex;gap:6px;">
-                <button class="card-btn" onclick="editOrder('${o.id}')">Изменить</button>
-                <button class="card-btn danger" onclick="deleteOrder('${o.id}')">✕</button>
-              </div>
-            </div>
-          </article>
-        `;
-      });
-    }
-
-    container.innerHTML = html;
-  }
-
-  // 2. SCHEDULE TAB (Screen 03)
-  function renderSchedule(container) {
-    const ym = anchorDate.slice(0, 7);
-    const [y, m] = ym.split('-').map(Number);
-    const firstDay = new Date(y, m - 1, 1);
-    const daysInMonth = new Date(y, m, 0).getDate();
-    const startOffset = (firstDay.getDay() + 6) % 7;
-
-    const monthOrders = state.orders.filter(o => o.date.startsWith(ym) && o.status !== 'draft');
-    const monthAw100 = monthOrders.reduce((s, o) => s + (o.aw100 || 0), 0);
-    const monthPieceKop = monthOrders.reduce((s, o) => s + (o.earningsKop || 0), 0);
-    const totalMonthKop = (state.settings.monthlySalaryKop || 0) + monthPieceKop;
-
-    let cellsHtml = '';
-    for (let i = 0; i < startOffset; i++) cellsHtml += `<div></div>`;
-    for (let d = 1; d <= daysInMonth; d++) {
-      const iso = `${ym}-${String(d).padStart(2, '0')}`;
-      const st = state.days[iso] || 'off';
-      const dayOrdersKop = monthOrders.filter(o => o.date === iso).reduce((s, o) => s + (o.earningsKop || 0), 0);
-      const tag = st === 'work' ? 'Р' : st === 'vacation' ? 'О' : st === 'unpaid' ? 'Б' : '';
-      cellsHtml += `
-        <div class="cal-cell ${st} ${selectedCalDay===iso?'selected':''}" onclick="openDaySheet('${iso}')">
-          <span class="cal-cell-num num">${d}</span>
-          <span class="cal-cell-m num">${dayOrdersKop > 0 ? Math.round(dayOrdersKop/100000)+'к' : ''}</span>
-          <span class="cal-cell-tag">${tag}</span>
-        </div>
-      `;
-    }
-
-    container.innerHTML = `
-      <section class="hero-card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <h3 style="font-size:16px;font-weight:800;">${fmtMonthTitle(ym)}</h3>
-          <button class="card-btn" style="color:var(--accent);" onclick="autoFillSchedule()">Заполнить РРВВ</button>
-        </div>
-        <div class="cal-table">
-          <div class="cal-dow">Пн</div><div class="cal-dow">Вт</div><div class="cal-dow">Ср</div>
-          <div class="cal-dow">Чт</div><div class="cal-dow">Пт</div><div class="cal-dow">Сб</div><div class="cal-dow">Вс</div>
-          ${cellsHtml}
-        </div>
-      </section>
-
-      <section class="hero-card">
-        <h3 style="font-size:15px;font-weight:800;margin-bottom:8px;">Итоги месяца</h3>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-          <span style="color:var(--text-secondary);">Оклад (месячный)</span>
-          <span class="num" style="font-weight:800;">${fmtRub(state.settings.monthlySalaryKop)}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
-          <span style="color:var(--text-secondary);">По нормо-часам (${(monthAw100/100).toFixed(0)} AW)</span>
-          <span class="num" style="font-weight:800;">${fmtRub(monthPieceKop)}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;padding:10px 0 0;">
-          <span style="font-size:16px;font-weight:800;">Итого</span>
-          <span class="num" style="font-size:20px;font-weight:900;color:var(--green);">${fmtRub(totalMonthKop)}</span>
-        </div>
-      </section>
-    `;
-  }
-
-  // 3. STATS TAB (Screen 04)
-  function renderStats(container) {
-    const r = getActiveRange();
-    const orders = state.orders.filter(o => o.date >= r.start && o.date <= r.end && o.status !== 'draft');
-    const totalAw = orders.reduce((s, o) => s + (o.aw100 || 0), 0) / 100;
-    const totalHours = totalAw / ((state.settings.awPerHour100 || 1200) / 100);
-    const pieceKop = orders.reduce((s, o) => s + (o.earningsKop || 0), 0);
-    const salaryKop = calcSalaryForRange(r.start, r.end);
-    const totalKop = pieceKop + salaryKop;
-
-    container.innerHTML = `
-      <section class="hero-card">
-        ${renderPeriodSwitcherHtml()}
-      </section>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-        <div class="hero-card" style="margin:0;">
-          <div class="field-lbl">СРЕДНИЙ ЧЕК З/Н</div>
-          <div class="num" style="font-size:18px;font-weight:900;color:var(--text);margin-top:4px;">${orders.length ? fmtRub(pieceKop / orders.length) : '0 ₽'}</div>
-        </div>
-        <div class="hero-card" style="margin:0;">
-          <div class="field-lbl">ВЫРАБОТКА В СМЕНУ</div>
-          <div class="num" style="font-size:18px;font-weight:900;color:var(--accent);margin-top:4px;">${(totalAw / Math.max(1, orders.length)).toFixed(1)} AW</div>
-        </div>
-      </div>
-
-      <section class="hero-card" style="text-align:center;padding:22px;">
-        <div class="field-lbl">ОБЩИЙ ЗАРАБОТОК ЗА ПЕРИОД</div>
-        <div class="num" style="font-size:36px;font-weight:900;color:var(--green);margin-top:4px;">${fmtRub(totalKop)}</div>
-        <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">${orders.length} заказов · ${totalAw.toFixed(0)} AW · ${totalHours.toFixed(2)} н/ч</div>
-      </section>
-    `;
-  }
-
-  // 4. HISTORY TAB
-  function renderHistory(container) {
-    const monthsMap = {};
-    state.orders.forEach(o => {
-      const ym = o.date.slice(0, 7);
-      if (!monthsMap[ym]) monthsMap[ym] = { count: 0, aw100: 0, kop: 0 };
-      monthsMap[ym].count += 1;
-      monthsMap[ym].aw100 += (o.aw100 || 0);
-      monthsMap[ym].kop += (o.earningsKop || 0);
-    });
-    const yms = Object.keys(monthsMap).sort((a, b) => b.localeCompare(a));
-
-    container.innerHTML = `
-      <section class="hero-card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <h3 style="font-size:17px;font-weight:800;">Архив месяцев</h3>
-          <button class="card-btn" style="color:var(--green);" onclick="exportCsv()">Экспорт CSV</button>
-        </div>
-        ${yms.length ? yms.map(ym => `
-          <div class="order-card" style="cursor:pointer;" onclick="jumpToMonth('${ym}')">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div>
-                <div style="font-size:16px;font-weight:800;">${fmtMonthTitle(ym)}</div>
-                <div style="font-size:12px;color:var(--text-secondary);">${monthsMap[ym].count} З/Н · ${(monthsMap[ym].aw100/100).toFixed(0)} AW</div>
-              </div>
-              <div class="num" style="font-size:17px;font-weight:900;color:var(--green);">${fmtRub(monthsMap[ym].kop)} ›</div>
-            </div>
-          </div>
-        `).join('') : '<div style="text-align:center;padding:24px;color:var(--text-secondary);">Архив пока пуст</div>'}
-      </section>
-    `;
-  }
-
-  window.jumpToMonth = (ym) => {
-    anchorDate = `${ym}-01`;
-    periodMode = 'month';
-    currentTab = 'orders';
-    document.querySelectorAll('.dock-item').forEach(b => b.classList.toggle('active', b.dataset.tab === 'orders'));
-    render();
-  };
-
-  window.exportCsv = () => {
-    haptic(15);
-    const rows = [['Дата','Номер З/Н','Марка','Модель','Госномер','AW','Нормо-часы','Сумма (руб)','Работы']];
-    state.orders.forEach(o => {
-      rows.push([o.date, o.number||'', o.brand||'', o.model||'', o.plate||'', (o.aw100||0)/100, ((o.hours100||0)/100).toFixed(2), ((o.earningsKop||0)/100).toFixed(2), (o.jobs||[]).map(j=>j.title).join('; ')]);
-    });
-    const csv = '\uFEFF' + rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\n');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
-    a.download = `normo-hours-${anchorDate.slice(0, 7)}.csv`;
-    a.click();
-    toast('CSV выгружен');
-  };
-
-  // 5. SETTINGS TAB
-  function renderSettings(container) {
-    const s = state.settings;
-    container.innerHTML = `
-      <section class="hero-card">
-        <h3 style="font-size:16px;font-weight:800;margin-bottom:12px;">Ставки и оклад</h3>
-        <div class="form-row">
-          <div class="field-box">
-            <label class="field-lbl">Оклад в месяц (₽)</label>
-            <input type="number" id="setSalary" class="field-inp" value="${Math.round((s.monthlySalaryKop || 0) / 100)}">
-          </div>
-          <div class="field-box">
-            <label class="field-lbl">Ставка за 1 н/ч (₽)</label>
-            <input type="number" id="setHourRate" class="field-inp" value="${Math.round((s.hourRateKop || 0) / 100)}">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="field-box">
-            <label class="field-lbl">AW в 1 часе</label>
-            <input type="number" id="setAwPerHour" class="field-inp" value="${(s.awPerHour100 || 1200) / 100}">
-          </div>
-          <div class="field-box">
-            <label class="field-lbl">Шаблон смен</label>
-            <input type="text" id="setPattern" class="field-inp" value="${escapeHtml(s.schedule?.pattern || 'РРВВ')}">
-          </div>
-        </div>
-        <button class="btn-primary-action" style="width:100%;margin-top:6px;" onclick="saveSettingsForm()">Сохранить настройки</button>
-      </section>
-
-      <section class="hero-card">
-        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px;">Хранилище IndexedDB</h3>
-        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">
-          Все данные и фото заказ-нарядов сохраняются локально в защищенную базу данных браузера.
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button class="card-btn" style="padding:10px;" onclick="exportFullJsonBackup()">Экспорт JSON</button>
-          <button class="card-btn" style="padding:10px;" onclick="document.getElementById('jsonFileInput').click()">Импорт JSON</button>
-        </div>
-      </section>
-    `;
-  }
-
-  window.saveSettingsForm = async () => {
-    haptic(15);
-    state.settings.monthlySalaryKop = Math.round((parseFloat(document.getElementById('setSalary').value) || 0) * 100);
-    state.settings.hourRateKop = Math.round((parseFloat(document.getElementById('setHourRate').value) || 0) * 100);
-    const awH = parseFloat(document.getElementById('setAwPerHour').value) || 12;
-    state.settings.awPerHour100 = Math.round(awH * 100);
-    if (!state.settings.schedule) state.settings.schedule = { type: 'custom', pattern: 'РРВВ' };
-    state.settings.schedule.pattern = document.getElementById('setPattern').value.trim() || 'РРВВ';
-
-    state.orders.forEach(o => {
-      const m = calcOrderMetrics(o.aw100 || 0);
-      o.hours100 = m.hours100;
-      o.earningsKop = m.earningsKop;
-    });
-
-    await window.MDB.saveSettings(state.settings);
-    toast('Настройки сохранены');
-    render();
-  };
-
-  window.exportFullJsonBackup = async () => {
-    haptic(15);
-    const backup = await window.MDB.exportBackup();
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' }));
-    a.download = `normo-hours-backup-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    toast('Бэкап скачан');
-  };
-
-  document.getElementById('jsonFileInput').onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async () => {
-      try {
-        const parsed = JSON.parse(reader.result);
-        const snap = parsed.snapshot || parsed;
-        await window.MDB.importBackup(snap);
-        toast('База восстановлена');
-        initDatabaseAndState();
-      } catch (err) { toast('Ошибка чтения JSON'); }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  };
-
-  // Order Sheet
-  const sheet = document.getElementById('orderSheet');
-  document.getElementById('closeSheetBtn').onclick = () => sheet.classList.remove('open');
-  sheet.onclick = (e) => { if (e.target === sheet) sheet.classList.remove('open'); };
-
-  function renderJobInputs(jobs) {
-    const list = document.getElementById('jobsList');
-    list.innerHTML = '';
-    (jobs && jobs.length ? jobs : [{ id: uid(), title: '', aw100: 0 }]).forEach(j => {
-      const row = document.createElement('div');
-      row.className = 'job-item-row';
-      row.style.display = 'flex';
-      row.style.gap = '6px';
-      row.style.marginBottom = '6px';
-      row.innerHTML = `
-        <input type="text" class="field-inp job-title-inp" placeholder="Работа..." value="${escapeHtml(j.title || '')}" style="flex:1;padding:8px 10px;">
-        <input type="number" step="0.1" class="field-inp job-aw-inp num" placeholder="AW" value="${j.aw100 ? j.aw100 / 100 : ''}" style="width:72px;padding:8px 6px;text-align:center;">
-        <button type="button" class="card-btn danger del-job-btn">✕</button>
-      `;
-      row.querySelector('.del-job-btn').onclick = () => {
-        haptic(10);
-        if (list.children.length > 1) { row.remove(); updateLiveCalc(); }
-      };
-      row.querySelector('.job-aw-inp').oninput = updateLiveCalc;
-      list.appendChild(row);
-    });
-    updateLiveCalc();
-  }
-
-  window.addPresetJob = (title, aw) => {
-    haptic(12);
-    const list = document.getElementById('jobsList');
-    const firstTitle = list.querySelector('.job-title-inp');
-    const firstAw = list.querySelector('.job-aw-inp');
-    if (firstTitle && !firstTitle.value.trim() && (!firstAw.value || firstAw.value === '0')) {
-      firstTitle.value = title;
-      firstAw.value = aw;
-      updateLiveCalc();
-      return;
-    }
-    const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.gap = '6px';
-    row.style.marginBottom = '6px';
-    row.innerHTML = `
-      <input type="text" class="field-inp job-title-inp" placeholder="Работа..." value="${escapeHtml(title)}" style="flex:1;padding:8px 10px;">
-      <input type="number" step="0.1" class="field-inp job-aw-inp num" placeholder="AW" value="${aw}" style="width:72px;padding:8px 6px;text-align:center;">
-      <button type="button" class="card-btn danger del-job-btn">✕</button>
-    `;
-    row.querySelector('.del-job-btn').onclick = () => {
-      haptic(10);
-      if (list.children.length > 1) { row.remove(); updateLiveCalc(); }
-    };
-    row.querySelector('.job-aw-inp').oninput = updateLiveCalc;
-    list.appendChild(row);
-    updateLiveCalc();
-  };
-
-  document.getElementById('addJobBtn').onclick = () => {
-    haptic(10);
-    addPresetJob('', '');
-  };
-
-  function updateLiveCalc() {
-    let totalAw100 = 0;
-    document.querySelectorAll('.job-aw-inp').forEach(inp => {
-      const val = parseFloat(inp.value);
-      if (!isNaN(val)) totalAw100 += Math.round(val * 100);
-    });
-    const m = calcOrderMetrics(totalAw100);
-    document.getElementById('liveCalcAw').textContent = `${m.aw} AW · ${m.hours.toFixed(2)} н/ч`;
-    document.getElementById('liveCalcMoney').textContent = fmtRubDec(m.earningsKop);
-  }
-
-  window.openOrderModal = (presetDate) => {
-    haptic(12);
-    document.getElementById('sheetTitle').textContent = 'Новый заказ-наряд';
-    document.getElementById('fId').value = '';
-    document.getElementById('fNumber').value = '';
-    document.getElementById('fDate').value = presetDate || anchorDate;
-    document.getElementById('fBrand').value = 'BMW';
-    document.getElementById('fModel').value = '';
-    document.getElementById('fPlate').value = '';
-    document.getElementById('fStatus').value = 'confirmed';
-    document.getElementById('fComment').value = '';
-    activePhotoDataUrl = null;
-    document.getElementById('photoPreviewBox').classList.add('hidden');
-    renderJobInputs([{ id: uid(), title: '', aw100: 0 }]);
-    sheet.classList.add('open');
-  };
-
-  window.editOrder = async (id) => {
-    haptic(10);
-    const o = state.orders.find(x => x.id === id);
-    if (!o) return;
-    document.getElementById('sheetTitle').textContent = 'Редактировать З/Н';
-    document.getElementById('fId').value = o.id;
-    document.getElementById('fNumber').value = o.number || '';
-    document.getElementById('fDate').value = o.date;
-    document.getElementById('fBrand').value = o.brand || 'BMW';
-    document.getElementById('fModel').value = o.model || '';
-    document.getElementById('fPlate').value = o.plate || '';
-    document.getElementById('fStatus').value = o.status || 'confirmed';
-    document.getElementById('fComment').value = o.comment || '';
-    activePhotoDataUrl = o.photoId ? await window.MDB.getPhoto(o.photoId) : null;
-    if (activePhotoDataUrl) {
-      document.getElementById('photoPreviewImg').src = activePhotoDataUrl;
-      document.getElementById('photoPreviewBox').classList.remove('hidden');
-    } else {
-      document.getElementById('photoPreviewBox').classList.add('hidden');
-    }
-    renderJobInputs(o.jobs);
-    sheet.classList.add('open');
-  };
-
-  window.deleteOrder = async (id) => {
-    haptic(15);
-    const o = state.orders.find(x => x.id === id);
-    if (o && o.photoId) await window.MDB.deletePhoto(o.photoId);
-    state.orders = state.orders.filter(x => x.id !== id);
-    await window.MDB.deleteOrder(id);
-    toast('Заказ-наряд удалён');
-    render();
-  };
-
-  window.viewPhoto = async (photoId) => {
-    haptic(10);
-    const src = await window.MDB.getPhoto(photoId);
-    if (!src) return;
-    document.getElementById('viewerFullImg').src = src;
-    document.getElementById('photoViewerModal').classList.add('open');
-  };
-
-  document.getElementById('removePhotoBtn').onclick = () => {
-    haptic(10);
-    activePhotoDataUrl = null;
-    document.getElementById('photoPreviewBox').classList.add('hidden');
-  };
-
-  document.getElementById('orderForm').onsubmit = async (e) => {
-    e.preventDefault();
-    haptic(18);
-    const id = document.getElementById('fId').value || uid();
-    const jobs = [];
-    let totalAw100 = 0;
-    document.querySelectorAll('#jobsList .job-item-row').forEach(row => {
-      const title = row.querySelector('.job-title-inp').value.trim();
-      const aw = parseFloat(row.querySelector('.job-aw-inp').value);
-      if (title || !isNaN(aw)) {
-        const aw100 = Math.round((isNaN(aw) ? 0 : aw) * 100);
-        totalAw100 += aw100;
-        jobs.push({ id: uid(), title: title || 'Работа без названия', aw100 });
-      }
-    });
-
-    const m = calcOrderMetrics(totalAw100);
-    let photoId = activePhotoDataUrl ? 'ph-' + id : null;
-    if (photoId) await window.MDB.savePhoto(photoId, activePhotoDataUrl);
-
-    const record = {
-      id,
-      number: document.getElementById('fNumber').value.trim(),
-      brand: document.getElementById('fBrand').value.trim(),
-      model: document.getElementById('fModel').value.trim(),
-      plate: document.getElementById('fPlate').value.trim().toUpperCase(),
-      date: document.getElementById('fDate').value,
-      jobs,
-      aw100: totalAw100,
-      hours100: m.hours100,
-      earningsKop: m.earningsKop,
-      comment: document.getElementById('fComment').value.trim(),
-      status: document.getElementById('fStatus').value,
-      photoId
-    };
-
-    const idx = state.orders.findIndex(x => x.id === id);
-    if (idx >= 0) state.orders[idx] = record;
-    else state.orders.unshift(record);
-
-    await window.MDB.saveOrder(record);
-    sheet.classList.remove('open');
-    toast('Заказ-наряд сохранён');
-    render();
-  };
-
-  // Calendar day sheet
-  window.openDaySheet = (iso) => {
-    haptic(10);
-    selectedCalDay = iso;
-    document.getElementById('daySheetTitle').textContent = fmtDateRu(iso);
-    const curSt = state.days[iso] || 'off';
-    const statuses = [
-      { id: 'work', label: 'Рабочий (Р)', color: 'var(--green)' },
-      { id: 'off', label: 'Выходной', color: 'var(--text-secondary)' },
-      { id: 'vacation', label: 'Отпуск (О)', color: 'var(--gold)' },
-      { id: 'unpaid', label: 'За свой счёт', color: 'var(--red)' }
-    ];
-    document.getElementById('dayStatusBtns').innerHTML = statuses.map(s => `
-      <button class="card-btn" style="padding:12px;${curSt===s.id ? 'border-color:'+s.color+';color:'+s.color : ''}" onclick="setDayStatus('${iso}','${s.id}')">${s.label}</button>
-    `).join('');
-    const dayOrds = state.orders.filter(o => o.date === iso);
-    document.getElementById('daySheetOrdersInfo').textContent = dayOrds.length
-      ? `Заказов: ${dayOrds.length} на сумму ${fmtRub(dayOrds.reduce((s,o)=>s+o.earningsKop,0))}`
-      : 'В этот день нарядов пока нет.';
-    document.getElementById('daySheetAddOrderBtn').onclick = () => {
-      document.getElementById('dayActionSheet').classList.remove('open');
-      openOrderModal(iso);
-    };
-    document.getElementById('dayActionSheet').classList.add('open');
-  };
-
-  window.setDayStatus = async (iso, st) => {
-    haptic(12);
-    state.days[iso] = st;
-    await window.MDB.setDayStatus(iso, st);
-    document.getElementById('dayActionSheet').classList.remove('open');
-    toast('График обновлен');
-    render();
-  };
-
-  window.autoFillSchedule = async () => {
-    haptic(15);
-    const ym = anchorDate.slice(0, 7);
-    const pat = (state.settings.schedule?.pattern || 'РРВВ').toUpperCase();
-    const [y, m] = ym.split('-').map(Number);
-    const daysInMonth = new Date(y, m, 0).getDate();
-    for (let d = 1; d <= daysInMonth; d++) {
-      const iso = `${ym}-${String(d).padStart(2, '0')}`;
-      state.days[iso] = pat[(d - 1) % pat.length] === 'Р' ? 'work' : 'off';
-    }
-    await window.MDB.saveAllDays(state.days);
-    toast('График заполнен: ' + pat);
-    render();
-  };
-
-  window.triggerPhoto = (source) => {
-    haptic(10);
-    if (!sheet.classList.contains('open')) openOrderModal();
-    if (source === 'camera') document.getElementById('cameraInput').click();
-    else document.getElementById('galleryInput').click();
-  };
-
-  function compressImage(file, maxW = 1280, quality = 0.8) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const img = new Image();
-        img.onload = () => {
-          const scale = Math.min(1, maxW / Math.max(img.width, img.height));
-          const canvas = document.createElement('canvas');
-          canvas.width = Math.round(img.width * scale);
-          canvas.height = Math.round(img.height * scale);
-          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', quality));
-        };
-        img.onerror = reject;
-        img.src = reader.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function handlePhotoSelected(e) {
-    const file = e.target.files[0];
-    e.target.value = '';
-    if (!file) return;
-
-    try {
-      const dataUrl = await compressImage(file, 1280, 0.8);
-      activePhotoDataUrl = dataUrl;
-      document.getElementById('photoPreviewImg').src = dataUrl;
-      document.getElementById('photoPreviewBox').classList.remove('hidden');
-
-      const form = new FormData();
-      form.append('base64Image', dataUrl);
-      form.append('language', 'rus');
-      form.append('OCREngine', '2');
-      form.append('scale', 'true');
-
-      const resp = await fetch('https://api.ocr.space/parse/image', {
-        method: 'POST',
-        headers: { 'apikey': state.settings.ocrSpaceKey || 'helloworld' },
-        body: form
-      });
-      const json = await resp.json();
-      const text = (json.ParsedResults || []).map(r => r.ParsedText || '').join('\n').trim();
-      if (text) {
-        const numM = text.match(/(?:Заказ-наряд|З\/Н)\s*(?:№|#|:)?\s*(\d{6,10})/i) || text.match(/\b(78\d{5,7})\b/);
-        if (numM) document.getElementById('fNumber').value = numM[1];
-        const plateM = text.match(/[АВЕКМНОРСТУХABEKMHOPCTYX]\s*\d{3}\s*[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\s*\d{2,3}/i);
-        if (plateM) document.getElementById('fPlate').value = plateM[0].replace(/\s+/g, '').toUpperCase();
-        toast('Бланк распознан');
-      }
-    } catch (err) {
-      toast('Фото прикреплено');
-    }
-  }
-
-  document.getElementById('cameraInput').onchange = handlePhotoSelected;
-  document.getElementById('galleryInput').onchange = handlePhotoSelected;
-
-  window.cycleDriveMode = () => {
-    haptic(15);
-    const modes = ['comfort', 'sport', 'mcs'];
-    const cur = state.settings.driveMode || 'sport';
-    const next = modes[(modes.indexOf(cur) + 1) % modes.length];
-    state.settings.driveMode = next;
-    applyTheme();
-    window.MDB.saveSettings(state.settings);
-    toast(`M-Drive: ${next.toUpperCase()}`);
-  };
-
-  function escapeHtml(str) {
-    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  function render() {
-    document.getElementById('pageTitle').textContent = TAB_TITLES[currentTab] || 'Заказ-наряды';
-    const main = document.getElementById('mainView');
-    if (currentTab === 'orders') renderOrders(main);
-    else if (currentTab === 'schedule') renderSchedule(main);
-    else if (currentTab === 'stats') renderStats(main);
-    else if (currentTab === 'history') renderHistory(main);
-    else if (currentTab === 'settings') renderSettings(main);
-  }
-
-  initDatabaseAndState();
-})();
-</script>
+<script src="./app.js"></script>
 </body>
 </html>
